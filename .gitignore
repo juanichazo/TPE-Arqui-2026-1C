@@ -10,6 +10,8 @@
 #Object files
 *.o
 
-complileAndRun.sh
-complile.sh
+*.sh
+*.sh
 .bashrc
+
+.bash_history
