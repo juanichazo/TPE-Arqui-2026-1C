@@ -9,3 +9,7 @@
 
 #Object files
 *.o
+
+complileAndRun.sh
+complile.sh
+.bashrc
