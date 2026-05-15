@@ -100,5 +100,7 @@ int main()
 	ncNewline();
 
 	ncPrint("[Finished]");
+
+	puts("Hello world!");
 	return 0;
 }
