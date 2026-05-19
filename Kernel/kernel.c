@@ -3,6 +3,7 @@
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
+#include <console.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -101,6 +102,7 @@ int main()
 
 	ncPrint("[Finished]");
 
-	puts("Hello world!");
+	puts("hola me llamo juan\ny esto es un kernel");
+	puts("Esta es la funcion puts");
 	return 0;
 }

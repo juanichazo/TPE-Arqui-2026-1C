@@ -50,27 +50,10 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     framebuffer[offset+2]   =  (hexColor >> 16) & 0xFF;
 }
 
-// Archivo con los mapas para cada char de la fuente usada
-#include <ubuntuMono.h>
-
-void putChar(char c, uint64_t offset_x, uint64_t offset_y, uint32_t fg, uint32_t bg){
-
-	for(int j = 0; j < ubuntuMono_inf.height; j++){
-		for(int i = 0; i < ubuntuMono_inf.width; i++){
-			if(ubuntuMono_bmp[c][j] & (1 << i)){
-				putPixel(fg, i + offset_x, j + offset_y);
-			} else {
-				putPixel(bg, i + offset_x, j + offset_y);
-			}
-		}
-	}
+int getScreenHeight(){
+	return VBE_mode_info->pitch;
 }
 
-void puts(char* string){ //TODO: hacer una variable global que trackee la posición de la próxima letra
-	int x = 3;
-	do{
-		putChar(*string, x, 3, 0xFFFFFF, 0);
-		x += 8;
-	}while(*(string++));
+int getScreenWidth(){
+	return VBE_mode_info->width;
 }
-
