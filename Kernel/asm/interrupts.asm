@@ -96,17 +96,20 @@ SECTION .text
 	; [rsp+40] = saved rdi
 	; [rsp+48] = saved rsi
 
+	; Move syscall number (saved rax) -> rdi
 	mov rdi, [rsp]
+	; Move first param (saved rdi) -> rsi
 	mov rsi, [rsp + 40]
+	; Move second param (saved rsi) -> rdx
 	mov rdx, [rsp + 48]
+	; Move third param (saved rdx) -> rcx
 	mov rcx, [rsp + 24]
 
 	call syscallDispatcher
-	mov [rsp], rax
 
- 	popState
- 	iretq
- %endmacro
+	popState
+	iretq
+%endmacro
 
 
 _hlt:
