@@ -1,4 +1,5 @@
 GLOBAL cpuVendor
+GLOBAL readKeyboard
 
 section .text
 	
@@ -24,4 +25,9 @@ cpuVendor:
 
 	mov rsp, rbp
 	pop rbp
+	ret
+
+readKeyboard:
+	xor rax, rax
+	in al, 60h
 	ret
