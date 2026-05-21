@@ -1,0 +1,1000 @@
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+git restore .
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+cd TPE2
+make clean && make
+time ./cityServicesNYC ../dataG/requestsNYC.csv ../data/typesNYC.csv
+./cityServicesNYC ../dataG/requestsNYC.csv ../data/typesNYC.csv
+time ./cityServicesNYC ../dataG/requestsNYC.csv ../data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ../dataG/requestsNYC.csv ../data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ../dataG/requestsNYC.csv ../data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ../dataG/requestsNYC.csv ../data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ../dataG/requestsNYC.csv ../data/typesNYC.csv
+make clean && make
+cd ..
+cd FINAL
+make clean && make
+time ./cityServicesNYC ../TPE/dataG/requestsNYC.csv ../TPE/data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ../TPE/dataG/requestsNYC.csv ../TPE/data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ../TPE/dataG/requestsNYC.csv ../TPE/data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ../TPE/dataG/requestsNYC.csv ../TPE/data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ../TPE/dataG/requestsNYC.csv ../TPE/data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ../TPE/dataG/requestsNYC.csv ../TPE/data/typesNYC.csv
+cd ..
+cd TPE
+make clean && make
+time ./cityServicesNYC ./TPE/dataG/requestsNYC.csv ./data/typesNYC.csv
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+git add .
+git commit -m "improved code"
+git push
+cd TPE
+make clean
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+git restore .
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+git add .
+git commit -m "documenting functions"
+git push
+make clean
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean
+git add .
+git commit -m "organizing"
+git push
+make clean
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+diff query1.csv query1NYC.csv
+diff query2.csv query2NYC.csv
+diff query2.csv query3NYC.csv
+diff query3.csv query3NYC.csv
+make clean
+git add .
+git commit -m "modified query 3"
+git push
+git pull
+cd TPE
+git pull
+git status
+git reset HEAD~1
+git push --force-with-lease origin main
+git add .
+git commit -m "Modified query 3"
+git push
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+diff query1.csv query1NYC.csv
+diff query2.csv query2NYC.csv
+diff query3.csv query3NYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+git add .
+git commit -m "still modularizing"
+git push
+make clean
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+git add .
+git commit -m "separating front from back"
+git push
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+diff query1.csv query1NYC.csv
+diff query1.csv query2NYC.csv
+diff query2.csv query2NYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+diff query2.csv query2NYC.csv
+diff query1.csv query1NYC.csv
+diff query3.csv query3NYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv 2015
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv 2020 2025
+git add .
+git commit -m "getters are working"
+git push
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+git add .
+git commit -m "adding comments"
+git push
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+git add .
+git commit -m "testing"
+git push
+git pull
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+git pull
+git fetch
+git reset --hard origin/main
+git pull
+git fetch
+git reset --hard origin/main
+git pull
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+diff query1.csv query1NYC.csv
+diff query2.csv query2NYC.csv
+diff query3.csv query3NYC.csv
+make clean && make
+git add .
+git commit -m "readme"
+git push
+git add .
+git commit -m "readme"
+git push
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+diff query1.csv query1NYC.csv
+diff query2.csv query2NYC.csv
+diff query3.csv query3NYC.csv
+make clean
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean
+make clean && make
+time ./cityServicesNYC ./data/requestsCHI.csv ./data/typesCHI.csv
+make clean && make
+time ./cityServicesCHI ./data/requestsCHI.csv ./data/typesCHI.csv
+make clean && make
+time ./cityServicesCHI ./data/requestsCHI.csv ./data/typesCHI.csv
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean
+git add .
+git commit -m "minor changes"
+git push
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesCHI ./dataG/requestsCHI.csv ./data/typesCHI.csv
+make clean && make
+time ./cityServicesCHI ./data/requestsCHI.csv ./data/typesCHI.csv
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+git restore
+git restore .
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./data/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+make clean && make
+time ./cityServicesCHI ./dataG/requestsCHI.csv ./data/typesCHI.csv
+make clean && make
+time ./cityServicesCHI ./dataG/requestsCHI.csv ./data/typesCHI.csv
+make clean && make
+time ./cityServicesNYC ./dataG/requestsNYC.csv ./data/typesNYC.csv
+git add .
+git commit -m "final commit"
+git push
+make clean
+git add .
+git commit -m "final commit"
+git push
+xeyes
+cd ~
+cd binarios/binarios
+ls
+d./fortune_64
+ls
+sudo apt install ghex
+sudo ghex
+explorer.exe
+xeyes
+sudo apt install x11-apps
+xeyes
+sudo apt install bless
+cd ~
+ls
+cd binarios
+ls
+cd binarios
+ls
+fortune_64
+./fortune_64
+sudo fortune_64
+ls
+sudo ./fortune_64
+sudo ./fortune
+sudo
+cd~
+cd ~
+cd binarios/binarios
+ls
+cd../
+cd ../
+ls
+rm ./binarios
+cd ..
+ls
+cd binarios
+ls
+./fortune
+sudo ./fortune
+chmod 777 ./fortune_64
+sudo ./fortune_64
+sudo ghex ./fortune_64
+sudo apt install bless
+sudo ghex ./fortune_64
+./fortune_64
+sudo ./fortune_64
+cd ~
+cd binarios
+ls
+sudo chmod 777 ./fortune_64
+sudo ghex fortune_64
+sudo ./fortune_64
+sudo ghex ./fortune_64
+sudo apt install hexedit
+ls
+hexedit fortune_64
+sudo ghex ./fortune_64
+sudo ./fortune_64
+sudo ghex ./fortune_64
+cd ~
+cd binarios
+ls
+./fortune_64
+objdump -d -M intel ~/fortune
+objdump -d -M intel ./fortune_64
+objdump -d -M intel ./password_easy
+./password_easy
+strings password_easy
+ghex password_easy
+strings password_easy
+ghex password_easy
+strings password_easy
+ghex password_easy
+strings password_easy
+strings password_ofuscated1
+ls
+strings password_ofuscated
+objdump -d -M intel ./password_ofuscated
+nano ./matriz.c
+gcc -o matriz ./matriz.c
+ls -lh matriz.c
+sudo apt install edb-debugger
+edb --run ./fortune
+edb --run ./fortune_64
+h
+edb --run ./fortune_64
+ls
+cd binarios
+ls
+strings fortune_64
+bless binarios
+bless fortune_64
+ghex fortune_64
+strings fortune_64
+strings fortune
+ghex fortune_64
+strings fortune
+strings fortune_64
+ghex fortune_64
+strings fortune_64
+objdump -d -M intel fortune_64
+ls
+strings password_easy
+password_easy
+sudo password_easy
+./password_easy
+chmod 777 password_easy
+./password_easy
+ls
+strings password_ofuscated
+objdump -d -M intel password_ofuscated
+ghex password_ofuscated
+edb --run password_ofuscated
+edb --run password_ofuscated_64
+chmod 777 password_ofuscated
+edb --run password_ofuscated_64
+edb --run password_ofuscated
+ls
+cd fuentes
+ls
+cd fuente
+cd fuentes
+ls
+nasm -f elf 0_hello.asm
+sudo apt install nasm
+nasm -f elf 0_hello.asm
+ld -m elf_i386 hello.o -o hello
+ls
+nasm -f elf 0_hello.asm
+ld -m elf_i386 hello.o -o hello
+ld -m elf_i386 0_hello.o -o hello
+ls
+./0_hello
+./0_hello.o
+chmod 777 0_hello.o
+./0_hello.o
+./0_hello
+./hello
+nano 0_hello.asm
+nano ej1.asm
+nasm -f elf ej1.asm
+ld -m elf_i386 ej1.o -o ej1
+./ej1
+nano ej1.asm
+nasm -f elf ej1.asm
+ld -m elf_i386 ej1.o -o ej1
+./ej1
+nano ej1.asm
+nano ej2.asm
+nasm -f elf ej2.asm
+nano ej2.asm
+nasm -f elf ej2.asm
+ld -m elf_i386 ej1.o -o ej1
+ld -m elf_i386 ej2.o -o ej2
+ej2
+./ej2
+nano ej2.asm
+nasm -f elf ej2.asm
+ld -m elf_i386 ej2.o -o ej2
+./ej2
+nano ej3.asm
+ls
+cd fuentes/fuentes
+ls
+nano ej3.asm
+nano ej2.asm
+cd fuentes/fuentes
+nano ej3.asm
+ls
+nano 2_README
+nano 2_ARMAR.SH
+nano 2_hello.asm
+nano 3_README
+nano 3_hello.asm
+nano ej2
+nano ej2.asm
+./ej2
+nano ej3.asm
+nano ej2.asm
+nano ej3.asm
+nasm -f elf ej3.asm
+ld -m elf_i386 ej3.o -o ej3
+./ej3
+nano ej3.asm
+./ej3
+nasm -f elf ej3.asm
+ld -m elf_i386 ej3.o -o ej3
+./ej3
+nano ej3.asm
+nano ej4.asm
+ls
+nano 4_hello.asm
+nano ej4.asm
+nano ej3.asm
+nano ej4.asm
+nasm -f elf ej4.asm
+ld -m elf_i386 ej4.o -o ej4
+./ej4
+nano ej4.asm
+nasm -f elf ej4.asm
+ld -m elf_i386 ej4.o -o ej4
+./ej4
+nano ej4.asm
+nasm -f elf ej4.asm
+ld -m elf_i386 ej4.o -o ej4
+./ej4
+nano ej5.asm
+nano ej4.asm
+nano ej5.asm
+nasm -f elf ej5.asm
+nano ej5.asm
+nasm -f elf ej5.asm
+ld -m elf_i386 ej5.o -o ej5
+./ej5
+nano ej5.asm
+nasm -f elf ej5.asm
+ld -m elf_i386 ej5.o -o ej5
+./ej5
+nano ej5.asm
+nasm -f elf ej5.asm
+ld -m elf_i386 ej5.o -o ej5
+./ej5
+nano ej5.asm
+nasm -f elf ej5.asm
+ld -m elf_i386 ej5.o -o ej5
+./ej5
+nano ej5.asm
+nasm -f elf ej5.asm
+ld -m elf_i386 ej5.o -o ej5
+./ej5
+nano ej5.asm
+nano ej6.asm
+nasm -f elf ej6.asm
+nano ej5.asm
+nano ej6.asm
+nasm -f elf ej6.asm
+ld -m elf_i386 ej6.o -o ej6
+./ej6
+nano ej6.asm
+nasm -f elf ej6.asm
+ld -m elf_i386 ej6.o -o ej6
+./ej6
+nano ej6.asm
+nasm -f elf ej6.asm
+ld -m elf_i386 ej6.o -o ej6
+./ej6
+nano ej6.asm
+nasm -f elf ej6.asm
+ld -m elf_i386 ej6.o -o ej6
+./ej6
+nano ej4.asm
+nano ej7.asm
+nano ej6.asm
+nano ej7.asm
+nasm -f elf ej7.asm
+nano ej7.asm
+nasm -f elf ej7.asm
+ld -m elf_i386 ej7.o -o ej7
+./ej7
+nano ej7.asm
+nasm -f elf ej7.asm
+ld -m elf_i386 ej7.o -o ej7
+./ej7
+nano ej7.asm
+nasm -f elf ej7.asm
+ld -m elf_i386 ej7.o -o ej7
+./ej7
+nano ej7.asm
+nasm -f elf ej7.asm
+ld -m elf_i386 ej7.o -o ej7
+./ej7
+nano ej7.asm
+nasm -f elf ej7.asm
+ld -m elf_i386 ej7.o -o ej7
+./ej7
+nano ej7.asm
+nasm -f elf ej7.asm
+ld -m elf_i386 ej7.o -o ej7
+./ej7
+nano ej7.asm
+nano ej8.asm
+nano ej9.asm
+nano ej7.asm
+nano ej9.asm
+nasm -f elf ej9.asm
+ld -m elf_i386 ej9.o -o ej9
+./ej9
+nano ej9.asm
+nano ej9.asm 3
+nano ej9.asm 
+./ej9 3
+nano ej9.asm 
+nasm -f elf ej9.asm
+ld -m elf_i386 ej9.o -o ej9
+./ej9 3
+./ej9 
+./ej9 23 4 5} 8
+nano ej9.asm 
+nasm -f elf ej9.asm
+nano ej9.asm afffffkos
+nano ej10.asm
+ls
+cd fuentes/fuentes
+ls
+nano ej10.asm
+nasm -f elf ej10.asm
+ld -m elf_i386 ej10.o -o ej10
+./ej10
+./ej10 hola estos son los argumentos del programa
+nano ej11.asm
+nasm -f elf ej11.asm
+ld -m elf_i386 ej11.o -o ej11
+./ej11
+ls
+cd fuentes/fuentes
+ls
+nano ej12.asm
+nano ej11.asm
+nano ej12.asm
+nano ej3.asm
+nano ej9.asm
+nano ej12.asm
+ps ax
+nano ej13.asm
+nasm -f elf ej13.asm
+nano ej13.asm
+nasm -f elf ej13.asm
+ld -m elf_i386 ej13.o -o ej13
+./ej13
+nano ej13.asm
+nano ej3.asm
+nano ej13.asm
+nasm -f elf ej13.asm
+ld -m elf_i386 ej13.o -o ej13
+./ej13
+nano ej13.asm
+nasm -f elf ej13.asm
+ld -m elf_i386 ej13.o -o ej13
+./ej13
+nano ej9.asm
+nano ej13.asm
+nasm -f elf ej13.asm
+ld -m elf_i386 ej13.o -o ej13
+./ej13
+nano ej13.asm
+nano ej14.asm
+nano ej13.asm
+./ej13
+man 2 fork
+nano ej14.asm
+nasm -f elf ej14.asm
+ld -m elf_i386 ej14.o -o ej14
+./rj14
+./ej14
+nano ej14.asm
+nano ej15.asm
+nasm -f elf ej15.asm
+ld -m elf_i386 ej15.o -o ej15
+./ej15
+ls
+cd fuentes2
+ls
+nano ej_debug_1.asm
+nano hello.c
+nano main.asm
+nasm -f elf32 main.asm
+gcc -c -m32 hello.c
+ls
+nano hello.c
+sudo apt update
+sudo apt install gcc-multilib
+gcc -c -m32 hello.c
+gcc -m32 main.o hello.o -o hello
+./hello
+nano arguments.c
+ls
+./arguments.s
+chmod 777 ./arguments.s
+./arguments.s
+nano ej5.asm
+ls
+nano hello.c
+nano ej4.c
+nano ej5.asm
+nano ej4.c
+ls
+nasm -f elf32 ej5.asm
+gcc -c -m32 ej4.c
+nano ej4.c
+nano ej5.asm
+nasm -f elf32 ej5.asm
+gcc -c -m32 ej4.c
+nano ej4.c
+nasm -f elf32 ej5.asm
+gcc -c -m32 ej4.c
+nano ej4.c
+nasm -f elf32 ej5.asm
+gcc -c -m32 ej4.c
+nasm -f elf32 ej5.asm
+nasm -f elf32 ej5.asm
+gcc -c -m32 ej4.c
+gcc -m32 ej4.o ej5.o -o ej4
+nano ej4.c
+nano ej5.asm
+nano ej4.c
+nasm -f elf32 ej5.asm
+gcc -c -m32 ej4.c
+nasm -f elf32 ej5.asm -o ej5.o
+gcc -m32 ej4.c ej5.o -o ej5
+nano ej4.c
+nasm -f elf32 ej5.asm -o ej5.o
+gcc -m32 ej4.c ej5.o -o ej5
+./ej5
+nano ej5.asm
+ls
+nano main.asm
+nano libasm.asm
+ls
+nano sys_exit.asm
+nano ej4.asm
+nano ej4.c
+nano ej8.c
+nano ej4.c
+nano ej8.c
+nano ej4.c
+nano ej8.c
+ls
+nano sys_exit.asm
+nano ej8.c
+nano sys_exit.asm
+nano ej8.c
+nasm -f elf32 sys_exit.asm -o sys_exit.o
+gcc -m32 ej8.c sys_exit.o -o ej8
+./ej8
+nano ej8.c
+nano sys_exit.asm
+cd
+ls
+sudo apt install npm
+npm install -g @angular/cli
+sudo npm install -g @angular/cli
+sudo npm install -g firebase-tools
+ls
+cd fuentes2
+ls
+cd ej8
+./ej8
+nano ej8.c
+nano sys_exit.asm
+nano ej8.c
+nasm -f elf32 sys_exit.asm -o sys_exit.o
+gcc -m32 ej8.c sys_exit.o -o ej8
+./ej8
+nano libasm.asm
+nano sys_exit.asm
+nano libasm.asm
+nano ej8.c
+nasm -f elf32 libasm.asm -o libasm.o
+gcc -m32 ej8.c libasm.o -o ej8
+nano ej8.c
+nasm -f elf32 libasm.asm -o libasm.o
+gcc -m32 ej8.c libasm.o -o ej8
+./ej8
+nano ej8.c
+nasm -f elf32 libasm.asm -o libasm.o
+gcc -m32 ej8.c libasm.o -o ej8
+./ej8
+nano libasm.asm
+nano ej8.c
+nano libasm.asm
+nano ej8.c
+nasm -f elf32 libasm.asm -o libasm.o
+gcc -m32 ej8.c libasm.o -o ej8
+./ej8
+nano libasm.asm
+nano ej8.c
+nano ej10.c
+gcc -m32 -S -fno-asynchronous-unwind-tables ej10.c -o ej10.s
+ls
+nano ej1o.s
+nano ej10.s
+gcc -m32 -S -fno-asynchronous-unwind-tables -masm=intel ej10.c -o ej10.s
+nano ej10.s
+npm install --global yarn
+yarn --version
+ng new <prueba>
+npm install -g @angular/cli
+ls
+cd fuentes2
+ls
+nano ej1_debug_1.asm
+nano ej_debug_1.asm
+nasm -f elf32 ej_debug_1.asm -o ej_debug_1.o
+gcc -m32 ej_debug_1.c ej_debug_1.o -o ej_debug_1
+gcc -m32 ej_debug_1.o -o ej_debug_1
+ls
+./ej_debug_!
+./ej_debug_1
+./ej_debug_1 hola
+nano ej_debug_!
+nano ej_debug_1
+nano ej_debug_1.asm
+nano ej_debug_2.asm
+nasm -f elf32 ej_debug_2.asm -o ej_debug_2.o
+gcc -m32 ej_debug_2.o -o ej_debug_2
+./ej_debug_2
+nasm qemu gcc make
+cd
+ls
+git clone https://github.com/alejoaquili/x64BareBones.git
+apt-get install qemu-system
+sudo apt-get install qemu-system
+sudo apt install qemu-system-x86 qemu-utils
+./run.sh
+sudo ./run.sh 
+ls
+exit
+run.sh
+./run.sh
+sudo run.sh
+sudo ./run.sh
+ls
+./run.sh
+sed -i 's/\r$//' run.sh
+cat ./run.sh 
+cd ~
+ls
+cd x64BareBones/
+cd /mnt/c/Users/aleja/ARQUI/x64BareBones
+./run.sh 
+sudo ./run.sh 
+vi ./compile.sh
+./compile.sh 
+vi ./compile.sh
+./compile.sh 
+vi ./compile.sh
+./compile.sh 
+ls
+cd Kernel
+ls
+cd ..
+./compile.sh 
+sudo ./run.sh 
+./compile.sh 
+ls
+vim compile.sh
+sudo compile.sh
+./compile.sh
+./run.sh
+sudo ./run.sh
+./compile.sh
+sudo ./run.sh
+./compile.sh
+sudo ./run.sh
+ls
+cd fuentes
+ls
+cd fuentes
+ls
+nano ej14
+nano ej14.asm
+nano ej10.asm
+cd fuentes/fuentes
+nano ej12.asm
+nano ej10.asm
+nano ej8.asm
+nano ej7.asm
+ls
+cd x64BareBones
+ls
+cd ..
+cd x64BareBones
+ls
+run.sh
+sudo ./run.sh
+ls
+./compile.sh
+./run.sh
+sudo ./run.sh
+./compile.sh
+sudo ./run.sh
+./compile.sh
+sudo ./run.sh
+./compile.sh
+sudo ./run.sh
+./compile.sh
+sudo ./run.sh
+./compile.sh
+sudo ./run.sh
+./compile.sh
+sudo ./run.sh
+./compile.sh
+sudo ./run.sh
+./compile.sh
+sudo ./run.sh
+./compile.sh
+sudo ./run.sh
+./compile.sh
+ls
+sudo ./compile.sj
+sudo ./compile.sh
+ls
+./compile.sh
+./run.sh
+./compile.sh
+sudo ./run.sh
+code .
+ls
+git init
+rm /git
+ls
+docker run -d -v ${PWD}:/root --security-opt seccomp:unconfined -it --name TPE-Arqui agodio/itba-so:2.0 
+docker start TPE-Arqui
+docker exec -it TPE-Arqui bash
+ls
+sudo ./run.sh
+sudo run.sh
+sudo ./run.sh
+,/run.sh
+./run.sh
+ls
+chmod 777 run.sh
+sudo ./run.sh
+sudo run.sh
+./run.sh
+ls
+sudo ./run.sh
+./run.sh
+sudo bash run.sh
+git add .
+git pull
+git clone https://github.com/juanichazo/TPE-Arqui-2026-2C.git
+ls
+cd TPE-Arqui-2026-2C
+ls
+docker start TPE-Arqui
+docker run -d -v ${PWD}:/root --security-opt seccomp:unconfined -it --name TPE-Arqui agodio/itba-so:2.0 
+docker start TPE-Arqui
+docker exec -it TPE-Arqui bash
+sudo run.sh
+sudo ./run.sh
+git pull
+vim compile.sh
+LS
+ls
+code .
+sudo ./compile.sh
+ls
+compile.sh
+./compile.sh
+chmod 777 compile.sh
+./compile.sh
+./run.sh
+chmod 777 run.sh
+./run.sh
+sudo ./run.sh
+sudo apt install fontforge
+ls
+git pull
+ls
+cd TPE-Arqui-2026-2C
+git pull
+ls
+cd TPE-Arqui-2026-2C
+git pull
+git remote set-url origin git@github.com:juanichazo/TPE-Arqui-2026-2C.git
+git pull
+ssh-keygen -t ed25519 -C "fede18046@gmail.com"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+cat ~/.ssh/id_ed25519.pub
+ssh -T git@github.com
+git pull
+find /home/fedegomboc/TPE-Arqui-2026-2C -type f -name "*.c" -o -name "*.h" | head -20
+cat /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/kernel.c
+cat /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/irqDispatcher.c
+cat /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/exceptions.c
+cat /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/include/interrupts.h
+cat /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/lib.c
+cat /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/include/lib.h
+grep -r "puts" /home/fedegomboc/TPE-Arqui-2026-2C/Kernel --include="*.c" --include="*.h"
+cat /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/asm/libasm.asm | head -100
+cat /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/console.c
+cat /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/loader.asm | head -150
+cat /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/idtLoader.c
+cat /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/include/idtLoader.h
+cat /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/asm/interrupts.asm
+git add .
+git commit -m "starting int 80h"
+git push
+make -C /home/fedegomboc/TPE-Arqui-2026-2C/Kernel -j$(nproc)
+nm /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/syscallDispatcher.o | sed -n '1,200p'
+grep -R "load_idt" -n /home/fedegomboc/TPE-Arqui-2026-2C || true
+git pull
+ls -la /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/asm | sed -n '1,200p'
+make -C /home/fedegomboc/TPE-Arqui-2026-2C/Kernel -j$(nproc)
+grep -R "inb(" -n /home/fedegomboc/TPE-Arqui-2026-2C || true
+make -C /home/fedegomboc/TPE-Arqui-2026-2C/Kernel -j$(nproc)
+ls -la /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/asm | sed -n '1,200p'
+sudo chown $(whoami):$(whoami) /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/asm/libasm.o
+ls -la /home/fedegomboc/TPE-Arqui-2026-2C/Kernel/asm | sed -n '1,200p'
+make -C /home/fedegomboc/TPE-Arqui-2026-2C/Kernel -j$(nproc)
+ls -la /home/fedegomboc/TPE-Arqui-2026-2C/Kernel | sed -n '1,200p'
+git add .
+git commit -m "feat: inb and outb"
+git push
+git add .
+git commit -m "feat: pushee .idea"
+git push
+git pull
+git status
+git commit
