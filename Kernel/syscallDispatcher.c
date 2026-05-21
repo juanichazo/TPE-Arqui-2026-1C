@@ -21,5 +21,8 @@ void syscallDispatcher(uint64_t syscall, uint64_t p1, uint64_t p2, uint64_t p3) 
         case 1:
             sys_write(p1, (char *)p2, p3);
             break;
+        default:
+            ncPrint("[syscall unknown]\n");
+            break;
     }
 }

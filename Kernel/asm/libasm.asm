@@ -1,4 +1,6 @@
 GLOBAL cpuVendor
+GLOBAL inb
+GLOBAL outb
 
 section .text
 	
@@ -25,3 +27,23 @@ cpuVendor:
 	mov rsp, rbp
 	pop rbp
 	ret
+
+inb:
+    push rbp
+    mov rbp, rsp
+    mov dx, di
+    in al, dx
+    movzx rax, al
+    mov rsp, rbp
+    pop rbp
+    ret
+
+outb:
+    push rbp
+    mov rbp, rsp
+    mov dx, di
+    mov al, sil
+    out dx, al
+    mov rsp, rbp
+    pop rbp
+    ret
