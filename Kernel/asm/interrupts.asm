@@ -1,4 +1,3 @@
-
 GLOBAL _cli
 GLOBAL _sti
 GLOBAL picMasterMask
@@ -14,9 +13,11 @@ GLOBAL _irq04Handler
 GLOBAL _irq05Handler
 
 GLOBAL _exception0Handler
+GLOBAL _syscall80Handler
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
+EXTERN syscallDispatcher
 
 SECTION .text
 
@@ -82,6 +83,16 @@ SECTION .text
 	iretq
 %endmacro
 
+%macro syscallHandler 0
+	pushState
+
+	mov rdi, rsp    ; pasaje de puntero al estado guardado (stack) en RDI
+	call syscallDispatcher
+
+	popState
+	iretq
+%endmacro
+
 
 _hlt:
 	sti
@@ -142,6 +153,10 @@ _irq05Handler:
 ;Zero Division Exception
 _exception0Handler:
 	exceptionHandler 0
+
+; Software interrupt - Syscall (int 0x80)
+_syscall80Handler:
+	syscallHandler
 
 haltcpu:
 	cli

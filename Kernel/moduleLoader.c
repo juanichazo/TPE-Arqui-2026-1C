@@ -3,6 +3,7 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 
+
 static void loadModule(uint8_t ** module, void * targetModuleAddress);
 static uint32_t readUint32(uint8_t ** address);
 
