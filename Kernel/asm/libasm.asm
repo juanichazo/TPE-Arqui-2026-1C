@@ -1,5 +1,7 @@
 GLOBAL cpuVendor
 GLOBAL readKeyboard
+GLOBAL inb
+GLOBAL outb
 
 section .text
 	
@@ -27,7 +29,28 @@ cpuVendor:
 	pop rbp
 	ret
 
+inb:
+    push rbp
+    mov rbp, rsp
+    mov dx, di
+    in al, dx
+    movzx rax, al
+    mov rsp, rbp
+    pop rbp
+    ret
+
+outb:
+    push rbp
+    mov rbp, rsp
+    mov dx, di
+    mov al, sil
+    out dx, al
+    mov rsp, rbp
+    pop rbp
+    ret
+
 readKeyboard:
 	xor rax, rax
 	in al, 60h
+	movzx rax, al
 	ret

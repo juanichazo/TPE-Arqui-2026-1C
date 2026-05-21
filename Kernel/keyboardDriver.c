@@ -1,15 +1,72 @@
 #include <stdint.h>
 
-char buffer = 0;
+#define KEYBOARD_BUFFER_SIZE 128
 
-uint8_t getKeyboardStatus(){
-    return 0;
+static char keyboardBuffer[KEYBOARD_BUFFER_SIZE];
+static uint64_t keyboardReadIndex = 0;
+static uint64_t keyboardWriteIndex = 0;
+
+static const char scancodeToAscii[128] = {
+    0,  27, '1','2','3','4','5','6','7','8','9','0','-','=', '\b',
+    '\t','q','w','e','r','t','y','u','i','o','p','[',']','\n', 0,
+    'a','s','d','f','g','h','j','k','l',';','\'','`', 0,'\\',
+    'z','x','c','v','b','n','m',',','.','/', 0,   '*', 0,  ' ',
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+};
+
+static uint64_t keyboard_next(uint64_t index) {
+    return (index + 1) % KEYBOARD_BUFFER_SIZE;
 }
 
-void getKey(){
-    return buffer;
+uint64_t keyboard_buffer_available(void) {
+    if (keyboardWriteIndex >= keyboardReadIndex) {
+        return keyboardWriteIndex - keyboardReadIndex;
+    }
+    return KEYBOARD_BUFFER_SIZE - (keyboardReadIndex - keyboardWriteIndex);
 }
 
-void saveKey(){
-    buffer = readKeyboard();
+void keyboard_push(char c) {
+    uint64_t next = keyboard_next(keyboardWriteIndex);
+    if (next == keyboardReadIndex) {
+        return; // buffer full, drop char
+    }
+    keyboardBuffer[keyboardWriteIndex] = c;
+    keyboardWriteIndex = next;
+}
+
+uint64_t keyboard_read(char *buffer, uint64_t maxLen) {
+    uint64_t count = 0;
+
+    while (count < maxLen) {
+        while (keyboard_buffer_available() == 0) {
+            // Busy-wait until a key arrives. IRQ1 will keep filling the buffer.
+        }
+
+        char c = keyboardBuffer[keyboardReadIndex];
+        keyboardReadIndex = keyboard_next(keyboardReadIndex);
+        buffer[count++] = c;
+
+        if (c == '\n') {
+            break;
+        }
+    }
+
+    return count;
+}
+
+#include <console.h>
+
+void saveKeyToBuffer(){
+	uint8_t scancode = readKeyboard();
+
+    if (scancode < 0x80) {
+        char c = scancodeToAscii[scancode];
+        if (c != 0) {
+            keyboard_push(c);
+            putChar(c, 1, 1, 0xFFFFFF, 0x0);
+        } 
+    }
 }
