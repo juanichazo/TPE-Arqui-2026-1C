@@ -45,10 +45,7 @@ int runConsole(){
 	char key;
 
 	while(1){
-		if((key = getKey()) == 0){
-			putChar(key, (nextCharPos % getScreenWidth()) + 1, (nextCharPos / getScreenWidth()) * 17, fc, bc);
-			nextCharPos += 8;
-		}
+		
 	}
 }
 
