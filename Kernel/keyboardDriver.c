@@ -6,6 +6,8 @@ static char keyboardBuffer[KEYBOARD_BUFFER_SIZE];
 static uint64_t keyboardReadIndex = 0;
 static uint64_t keyboardWriteIndex = 0;
 
+char current = 0;
+
 static const char scancodeToAscii[128] = {
     0,  27, '1','2','3','4','5','6','7','8','9','0','-','=', '\b',
     '\t','q','w','e','r','t','y','u','i','o','p','[',']','\n', 0,
@@ -37,12 +39,14 @@ void keyboard_push(char c) {
     keyboardWriteIndex = next;
 }
 
+
+// copies keyboard buffer, returns 0 if buffer is empty
 uint64_t keyboard_read(char *buffer, uint64_t maxLen) {
     uint64_t count = 0;
 
     while (count < maxLen) {
-        while (keyboard_buffer_available() == 0) {
-            // Busy-wait until a key arrives. IRQ1 will keep filling the buffer.
+        if (keyboard_buffer_available() == 0) {
+            return 0; // Busy-wait until a key arrives. IRQ1 will keep filling the buffer.
         }
 
         char c = keyboardBuffer[keyboardReadIndex];
@@ -66,7 +70,8 @@ void saveKeyToBuffer(){
         char c = scancodeToAscii[scancode];
         if (c != 0) {
             keyboard_push(c);
-            putChar(c, 1, 1, 0xFFFFFF, 0x0);
+            current = c;
+            //putChar(c, 1, 1, 0xFFFFFF, 0x0);
         } 
     }
 }

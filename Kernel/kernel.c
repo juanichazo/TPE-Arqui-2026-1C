@@ -107,8 +107,6 @@ int main()
 
 	puts("hola me llamo juan\ny esto es un kernel");
 	puts("Esta es la funcion puts");
-	while(1){
-		//putChar('a', 9, 1, 0xFFFFFF, 0x000000);
-	}
+	runConsole();
 	return 0;
 }
