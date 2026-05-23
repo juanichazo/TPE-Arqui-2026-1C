@@ -16,6 +16,10 @@
 #define ACS_INT_386 	0x0E		/* Interrupt GATE 32 bits */
 #define ACS_INT         ( ACS_PRESENT | ACS_INT_386 )
 
+//Esto es para las syscalls
+
+#define ACS_DPL_3 0x60 //Descriptor Privilege Level 3 (Userland)
+#define ACS_INT_USER ( ACS_INT | ACS_DPL_3 )
 
 #define ACS_CODE        (ACS_PRESENT | ACS_CSEG | ACS_READ)
 #define ACS_DATA        (ACS_PRESENT | ACS_DSEG | ACS_WRITE)
