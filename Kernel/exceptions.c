@@ -2,6 +2,7 @@
 #define ZERO_EXCEPTION_ID 0
 #define INVALID_OPCODE_EXCEPTION_ID 6
 
+extern void print(char* string); 
 extern void puts(char* string);
 
 static void zero_division(uint64_t *registers);
@@ -31,15 +32,15 @@ static void zero_division(uint64_t *registers) {
 
     // recorremos los 19 registros y los imprimimos
     for (int i = 0; i < 19; i++) {
-        puts((char*)regNames[i]);
-        puts(": ");
-        uint64ToHexStr(registers[i], hexBuffer); // convertimos el numero a string
-        puts(hexBuffer);
-        puts("\n");
+        print((char*)regNames[i]);
+        print(": ");
+        uint64ToHexStr(registers[i], hexBuffer); 
+        print(hexBuffer);
+        print("\n");
     }
 
     puts("\nRecuperando sistema... Volviendo a la Shell.\n");
-    for (volatile int i = 0; i < 150000000; i++); // espero que el usuario lea
+    for (volatile uint64_t i = 0; i < 1000000000; i++); // espero que el usuario lea
 }
 
 static void invalid_opcode(uint64_t *registers) {
@@ -49,15 +50,15 @@ static void invalid_opcode(uint64_t *registers) {
     char hexBuffer[25];
 
     for (int i = 0; i < 19; i++) {
-        puts((char*)regNames[i]);
-        puts(": ");
-        uint64ToHexStr(registers[i], hexBuffer);
-        puts(hexBuffer);
-        puts("\n");
+        print((char*)regNames[i]);
+        print(": ");
+        uint64ToHexStr(registers[i], hexBuffer); 
+        print(hexBuffer);
+        print("\n");
     }
 
     puts("\nRecuperando sistema... Volviendo a la Shell.\n");
-    for (volatile int i = 0; i < 150000000; i++); // espero que el usuario lea
+    for (volatile uint64_t i = 0; i < 1000000000; i++); // espero que el usuario lea
 }
 
 // Función auxiliar que convierte un uint64_t en string Hexadecimal

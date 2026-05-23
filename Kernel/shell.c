@@ -23,6 +23,15 @@ int runShell(){
             puts(line_buffer + 5);
         } else if(strncontains(line_buffer, BUFFER_SIZE, "exit")){
             return 0;
+        } else if(strncontains(line_buffer, BUFFER_SIZE, "divzero")){
+            puts("Provocando division por cero...\n");
+            volatile int a = 10;
+            volatile int b = 0;
+            volatile int c = a / b; 
+        } else if(strncontains(line_buffer, BUFFER_SIZE, "invalidop")){
+            puts("Provocando Invalid Opcode...\n");
+            __asm__("ud2");
+        
         } else {
             print(line_buffer);
             puts(" is not a command");

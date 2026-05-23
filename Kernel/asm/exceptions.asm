@@ -50,10 +50,16 @@ exceptionMasterHandler:
     mov rsi, regs             ; paso el segundo argumento (arreglo de registros)
     call exceptionDispatcher
 
+    ; recuperación
+    mov rcx, [rsp + 8]        ; CS
+    mov rdx, [rsp + 16]       ; RFLAGS
+    call getStackBase         ; lo guarda en rax
+    mov rsp, rax
+    push rdx                  ; 3ro que va a salir: RFLAGS
+    push rcx                  ; 2do que va a salir: CS
+    push 0x400000             ; 1ro que va a salir: RIP (Inicio de Userland/Shell)
     call getStackBase         ; queda en rax 
-    mov qword [rsp], 0x400000 ; modifico el address al inicio de la shell
-    mov [rsp + 24], rax       ; actualizo rsp 
-    iretq                     ; saca automágicamente RIP, CS, RFLAGS, RSP y SS del stack.
+    iretq                     ; popea todo de la pila
 
 section .data
 REGS_AMOUNT equ 19
