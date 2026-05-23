@@ -1,5 +1,6 @@
 #include <videoDriver.h>
 #include <keyboardDriver.h>
+#include <time.h>
 
 // Archivo con los mapas para cada char de la fuente usada
 #include <ubuntuMono.h>
@@ -10,7 +11,7 @@ uint32_t text_color = 0xFFFFFF;
 //color del fondo
 uint32_t bg_color = 0x000000;
 
-char buffer[1000][1000]; // Habría que adaptarlo al tamaño de la pantalla
+//char buffer[1000][1000]; // TODO: Habría que adaptarlo al tamaño de la pantalla
 
 int currentX = 0;
 int currentY = 0;
@@ -26,7 +27,7 @@ void set_text_color(uint32_t new_text_color){
 void putChar(char c){
 
 	int offset_x = currentX * 8 + 1;
-	int offset_y =  1;
+	int offset_y = currentY * 17 + 1;
 
 	for(int j = 0; j < ubuntuMono_inf.height; j++){
 		for(int i = 0; i < ubuntuMono_inf.width; i++){
@@ -40,7 +41,7 @@ void putChar(char c){
 	nextPos();
 }
 
-void puts(char* string){
+void print(char* string){
 	do{
         if(*string == '\n'){
             currentY++;
@@ -48,7 +49,11 @@ void puts(char* string){
         } else { 
 		    putChar(*string);
         }
-	}while(*(string++));
+	}while(*(++string));
+}
+
+void puts(char* string){
+	print(string);
 	currentY++;
 	currentX = 0;
 }
@@ -56,6 +61,62 @@ void puts(char* string){
 void nextPos(){
 	currentX = (currentX+1) % getScreenWidth();
 	if(currentX == 0) currentY++;;
+}
+
+void prevPos(){
+	if(currentX == 0){
+		currentX = getScreenWidth();
+		currentY--;
+	} else {
+		currentX--;
+	}
+}
+
+char active = 0;
+char prev_ticks = 0;
+
+void toggle_cursor(){
+	if(ticks_elapsed() % 20 < 10){
+		putChar('_');
+	} else {
+		putChar(0);
+	}
+	prevPos();
+}
+
+void readLine(char* buffer, uint64_t max){
+	uint64_t count = 0;
+	char key = 0;
+
+	while(count < max){
+		toggle_cursor();
+
+		if(keyboard_read(&key, 1) && key){
+			switch (key){
+				case '\b':
+					if(count == 0) 
+						break;
+					putChar(0);
+					prevPos(); prevPos();
+					putChar(0);
+					prevPos();
+					*(--buffer) = 0;	
+					break;
+				
+				case '\n':
+					currentY++;
+					currentX = 0;
+					return count;
+				default:
+					putChar(key);	
+					*(buffer++) = key;
+					count++;
+					break;
+			}
+		}
+	}
+
+	return count;
 }
 
 

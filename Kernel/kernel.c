@@ -5,6 +5,7 @@
 #include <naiveConsole.h>
 #include <console.h>
 #include <idtLoader.h>
+#include <shell.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -101,12 +102,11 @@ int main()
 	ncPrint((char*)sampleDataModuleAddress);
 	ncNewline();
 
-	ncPrint("[Finished]");
-
 	load_idt();
 
-	puts("hola me llamo juan\ny esto es un kernel");
-	puts("Esta es la funcion puts");
-	runConsole();
+	ncPrint("[Finished]");
+
+	runShell();
+	
 	return 0;
 }
