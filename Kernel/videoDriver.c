@@ -68,7 +68,7 @@ void drawChar(char c, uint64_t x, uint64_t y, uint64_t text_color, uint64_t bg_c
 }
 
 int getScreenHeight(){
-	return VBE_mode_info->pitch;
+	return VBE_mode_info->height;
 }
 
 int getScreenWidth(){

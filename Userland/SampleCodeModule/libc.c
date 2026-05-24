@@ -48,3 +48,7 @@ int readLine(char * buffer, int maxSize) {
     
     return index;
 }
+
+void drawPixel(uint32_t color, uint64_t x, uint64_t y) {
+    sys_draw(color, x, y);
+}

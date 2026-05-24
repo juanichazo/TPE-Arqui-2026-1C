@@ -2,6 +2,7 @@
 #include <naiveConsole.h>
 #include <time.h>
 #include <keyboardDriver.h>
+#include <videoDriver.h>
 
 extern void _hlt();
 
@@ -52,6 +53,15 @@ uint64_t sys_time(uint64_t selector) {
     }
 }
 
+uint64_t sys_draw(uint32_t color, uint64_t x, uint64_t y){
+    if (x < getScreenWidth() && y < getScreenHeight()) {
+        putPixel(color, x, y);
+        return 0; 
+    }
+    
+    return -1;
+}
+
 uint64_t syscallDispatcher(uint64_t syscall, uint64_t p1, uint64_t p2, uint64_t p3) {
     switch (syscall) {
         case 0:
@@ -60,6 +70,8 @@ uint64_t syscallDispatcher(uint64_t syscall, uint64_t p1, uint64_t p2, uint64_t 
             return sys_write(p1, (char *)p2, p3);
         case 2:
             return sys_time(p1);
+        case 3:
+            return sys_draw(p1, p2, p3);
         default:
             ncPrint("[syscall unknown]\n");
             return -1;
