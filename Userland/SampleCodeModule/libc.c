@@ -11,3 +11,40 @@ void print(char* string) {
         string++;
     }
 }
+
+char getChar() {
+    char c = 0;
+    sys_read(STDIN, &c, 1);
+    return c;
+}
+
+int readLine(char * buffer, int maxSize) {
+    int index = 0;
+    char c;
+
+    while (index < maxSize - 1) {
+        c = getChar(); 
+
+        if (c == '\n') {
+            putChar('\n');
+            break;
+            
+        } else if (c == '\b') {
+            if (index > 0) {
+                index--;
+                putChar('\b');
+                putChar(' ');
+                putChar('\b');
+            }
+            
+        } else if (c != 0) { 
+            buffer[index] = c;
+            index++;
+            putChar(c);
+        }
+    }
+
+    buffer[index] = 0; 
+    
+    return index;
+}

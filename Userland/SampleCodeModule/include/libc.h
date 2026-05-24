@@ -5,5 +5,7 @@
 
 void putChar(char c);
 void print(char* string);
+char getChar();
+int readLine(char * buffer, int maxSize);
 
 #endif
