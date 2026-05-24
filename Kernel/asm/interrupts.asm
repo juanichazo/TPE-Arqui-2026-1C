@@ -107,6 +107,9 @@ SECTION .text
 
 	call syscallDispatcher
 
+    ; Pisa el RAX guardado en el stack con el valor de retorno de la syscall
+    mov [rsp], rax
+
 	popState
 	iretq
 %endmacro
@@ -167,7 +170,6 @@ _irq04Handler:
 _irq05Handler:
 	irqHandlerMaster 5
 
-
 ;Zero Division Exception
 _exception0Handler:
 	exceptionHandler 0
@@ -180,8 +182,6 @@ haltcpu:
 	cli
 	hlt
 	ret
-
-
 
 SECTION .bss
 	aux resq 1
