@@ -3,7 +3,7 @@
 
 #define BUFFER_SIZE 100
 
-char line_buffer[BUFFER_SIZE];
+char line_buffer[BUFFER_SIZE+1];
 
 char* shell_message = "@shell> ";
 
@@ -15,12 +15,16 @@ int runShell(){
         set_text_color(0xFFFFFF);
 
         readLine(line_buffer, BUFFER_SIZE);
+        strtok(line_buffer, BUFFER_SIZE, ' ');
+
         if(strncontains(line_buffer, BUFFER_SIZE, "time")){
             puts("Es hora de programar");
         } else if(strncontains(line_buffer, BUFFER_SIZE, "pacman")){
             puts("work in progress");
         } else if(strncontains(line_buffer, BUFFER_SIZE, "echo")){
             puts(line_buffer + 5);
+        } else if(strncontains(line_buffer, BUFFER_SIZE, "redraw")){
+            redraw();
         } else if(strncontains(line_buffer, BUFFER_SIZE, "exit")){
             return 0;
         } else if(strncontains(line_buffer, BUFFER_SIZE, "divzero")){
@@ -47,5 +51,14 @@ int strncontains(char* string, uint64_t size, char* expression){
             return 1;
         if(*(string++) != *(expression++))
             return 0;
+    }
+}
+
+void strtok(char* string, uint64_t size, char delim){
+    while(*string){
+        if(*string == delim){
+            *string = 0;
+        }
+        string++;
     }
 }

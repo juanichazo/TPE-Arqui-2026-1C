@@ -6,3 +6,4 @@ void putChar(char c);
 void print(char* string);
 void puts(char* string);
 int runConsole();
+void redraw();

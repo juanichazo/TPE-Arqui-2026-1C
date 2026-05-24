@@ -1,3 +1,5 @@
+#ifndef UBUNTU_MONO
+#define UBUNTU_MONO
 // Bitmap font info struct def.
 typedef struct {
 	int width;
@@ -5129,3 +5131,4 @@ const unsigned char ubuntuMono_bmp[][17] = {
 	0x0f	// ####----
 	}
 };		
+#endif

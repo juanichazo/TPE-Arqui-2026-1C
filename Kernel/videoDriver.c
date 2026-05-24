@@ -50,6 +50,23 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     framebuffer[offset+2]   =  (hexColor >> 16) & 0xFF;
 }
 
+#include <ubuntuMono.h>
+
+void drawChar(char c, uint64_t x, uint64_t y, uint64_t text_color, uint64_t bg_color){
+	int offset_x = x * 8 + 1;
+	int offset_y = y * 17 + 1;
+
+	for(int j = 0; j < ubuntuMono_inf.height; j++){
+		for(int i = 0; i < ubuntuMono_inf.width; i++){
+			if(ubuntuMono_bmp[c][j] & (1 << i)){
+				putPixel(text_color, i + offset_x, j + offset_y);
+			} else {
+				putPixel(bg_color, i + offset_x, j + offset_y);
+			}
+		}
+	}
+}
+
 int getScreenHeight(){
 	return VBE_mode_info->pitch;
 }
