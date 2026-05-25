@@ -12,6 +12,11 @@ void print(char* string) {
     }
 }
 
+void puts(char* string) {
+    print(string);
+    putChar('\n');
+}
+
 char getChar() {
     char c = 0;
     sys_read(STDIN, &c, 1);

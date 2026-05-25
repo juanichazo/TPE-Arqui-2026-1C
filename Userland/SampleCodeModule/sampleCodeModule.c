@@ -38,8 +38,8 @@ int main() {
             print("Es hora de programar\n");
             
         } else if(strncontains(line_buffer, BUFFER_SIZE, "pacman")){
-            print("work in progress\n");
-            
+            //print("work in progress\n");
+            startPacman();
         } else if(strncontains(line_buffer, BUFFER_SIZE, "echo")){
             print(line_buffer + 5);
             print("\n");
