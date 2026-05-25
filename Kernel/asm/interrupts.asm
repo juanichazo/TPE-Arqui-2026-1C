@@ -86,34 +86,27 @@ SECTION .text
 %macro syscallHandler 0
 	pushState
 
-	; C calling convention expects: rdi, rsi, rdx, rcx as first four args.
-	; The original registers were pushed by pushState in this order:
-	; [rsp]    = saved rax
-	; [rsp+8]  = saved rbx
-	; [rsp+16] = saved rcx
-	; [rsp+24] = saved rdx
-	; [rsp+32] = saved rbp
-	; [rsp+40] = saved rdi
-	; [rsp+48] = saved rsi
 
-	; Move syscall number (saved rax) -> rdi
-	mov rdi, [rsp]
-	; Move first param (saved rdi) -> rsi
-	mov rsi, [rsp + 40]
-	; Move second param (saved rsi) -> rdx
-	mov rdx, [rsp + 48]
-	; Move third param (saved rdx) -> rcx
-	mov rcx, [rsp + 24]
+	; Movemos el número de syscall (saved rax) a rdi
+	mov rdi, [rsp + 112]
+	
+	; Movemos el primer parámetro (saved rdi) a rsi
+	mov rsi, [rsp + 72]
+	
+	; Movemos el segundo parámetro (saved rsi) a rdx
+	mov rdx, [rsp + 64]
+	
+	; Movemos el tercer parámetro (saved rdx) a rcx
+	mov rcx, [rsp + 88]
 
 	call syscallDispatcher
 
-    ; Pisa el RAX guardado en el stack con el valor de retorno de la syscall
-    mov [rsp], rax
+	; Pisamos el RAX guardado en el stack con el valor de retorno de la syscall
+	mov [rsp + 112], rax
 
 	popState
 	iretq
 %endmacro
-
 
 _hlt:
 	sti

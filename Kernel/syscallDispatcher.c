@@ -10,6 +10,10 @@ extern void _hlt();
 #define STDOUT 1
 #define STDERR 2
 
+extern int getScreenWidth();
+extern int getScreenHeight();
+extern void drawChar(char c, uint64_t x, uint64_t y, uint64_t text_color, uint64_t bg_color);
+
 uint64_t sys_read(uint64_t fd, char * buffer, uint64_t count) {
     if (fd == STDIN) {
         uint64_t chars_read = 0;
@@ -31,16 +35,38 @@ uint64_t sys_read(uint64_t fd, char * buffer, uint64_t count) {
     return -1;
 }
 
-uint64_t sys_write(uint64_t fd, char * buffer, uint64_t count) {
-    if (fd == STDOUT || fd == STDERR) {
-            for (uint64_t i = 0; i < count; i++) {
-                putChar(buffer[i]);
-            }
-            // Retorna la cantidad de caracteres impresos
-            return count;
-        }
+static uint64_t cursor_x = 0;
+static uint64_t cursor_y = 0;
 
-    //Si se pasa un File Descriptor invalido retorna -1
+uint64_t sys_write(uint64_t fd, char * buffer, uint64_t count) {
+
+    // Verificamos que sea STDOUT (1) o STDERR (2)
+    if (fd == 1 || fd == 2) { 
+        
+        for (uint64_t i = 0; i < count; i++) {
+            char c = buffer[i];
+            
+            if (c == '\n') {
+                cursor_x = 0;
+                cursor_y++;
+            } else if (c == '\b') {
+                if (cursor_x > 0) {
+                    cursor_x--;
+                    drawChar(' ', cursor_x, cursor_y, 0x000000, 0x000000); 
+                }
+            } else {
+                drawChar(c, cursor_x, cursor_y, 0xFFFFFF, 0x000000);
+                cursor_x++;
+            }
+
+            if (cursor_x >= (getScreenWidth() / 8)) {
+                cursor_x = 0;
+                cursor_y++;
+            }
+        }
+        
+        return count;
+    }
     return -1;
 }
 
@@ -63,6 +89,7 @@ uint64_t sys_draw(uint32_t color, uint64_t x, uint64_t y){
 }
 
 uint64_t syscallDispatcher(uint64_t syscall, uint64_t p1, uint64_t p2, uint64_t p3) {
+    
     switch (syscall) {
         case 0:
             return sys_read(p1, (char *)p2, p3);
