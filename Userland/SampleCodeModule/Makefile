@@ -8,7 +8,7 @@ OBJECTS_ASM=$(SOURCES_ASM:.asm=.o)
 all: $(MODULE)
 
 $(MODULE): $(SOURCES) $(OBJECTS_ASM)
-	$(GCC) $(GCCFLAGS) -T sampleCodeModule.ld _loader.c $(SOURCES) $(OBJECTS_ASM) -o ../$(MODULE)
+	$(GCC) $(GCCFLAGS) -T sampleCodeModule.ld _loader.c -I./include $(SOURCES) $(OBJECTS_ASM) -o ../$(MODULE)
 
 %.o : %.asm
 	$(ASM) $(ASMFLAGS) $< -o $@

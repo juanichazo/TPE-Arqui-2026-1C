@@ -10,10 +10,6 @@ extern void _hlt();
 #define STDOUT 1
 #define STDERR 2
 
-extern int getScreenWidth();
-extern int getScreenHeight();
-extern void drawChar(char c, uint64_t x, uint64_t y, uint64_t text_color, uint64_t bg_color);
-
 uint64_t sys_read(uint64_t fd, char * buffer, uint64_t count) {
     if (fd == STDIN) {
         uint64_t chars_read = 0;
@@ -88,6 +84,20 @@ uint64_t sys_draw(uint32_t color, uint64_t x, uint64_t y){
     return -1;
 }
 
+uint64_t hashcode = 0x1234;
+
+uint64_t sys_sethash(uint64_t new_hash){
+    return hashcode = new_hash;
+}
+
+uint64_t sys_gethash(unsigned char *str) {
+    unsigned long hash = hashcode;
+    int c;
+    while ((c = *str++))
+        hash = ((hash << 5) + hash) + c; // hash * 33 + c
+    return hash;
+}
+
 uint64_t syscallDispatcher(uint64_t syscall, uint64_t p1, uint64_t p2, uint64_t p3) {
     
     switch (syscall) {
@@ -99,6 +109,10 @@ uint64_t syscallDispatcher(uint64_t syscall, uint64_t p1, uint64_t p2, uint64_t 
             return sys_time(p1);
         case 3:
             return sys_draw(p1, p2, p3);
+        case 4:
+            return sys_sethash(p1);
+        case 5:
+        return sys_gethash((unsigned char*) p1);
         default:
             ncPrint("[syscall unknown]\n");
             return -1;
