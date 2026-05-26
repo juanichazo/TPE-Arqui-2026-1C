@@ -77,3 +77,13 @@ void getTime() {
 
     putChar('\n');
 }
+
+char getCharNoWait() {
+    char c = 0;
+    sys_read(3, &c, 1); // le paso STDINRAW = 3
+    return c;
+}
+
+void sleep(uint64_t ticks) {
+    sys_sleep(ticks);
+}

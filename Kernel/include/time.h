@@ -11,4 +11,6 @@ uint8_t getSeconds();
 uint8_t getMinutes();
 uint8_t getHours();
 
+void sleep(uint64_t ticks_to_wait);
+
 #endif

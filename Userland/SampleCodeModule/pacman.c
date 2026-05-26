@@ -124,7 +124,7 @@ void initGame(int two_players_mode) {
 }
 
 void handleInput() {
-    char key = getChar();
+    char key = getCharNoWait();
     
     if (key == 0) return;
 
@@ -282,8 +282,7 @@ void gameLoop() {
             }
         }
 
-        // aca hay que usar syscall de tiempo para que haga una pausa
-        for(int d = 0; d < 10000000; d++);
+        sleep(2);
     }
 }
 

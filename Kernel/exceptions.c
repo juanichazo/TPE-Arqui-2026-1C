@@ -40,7 +40,7 @@ static void zero_division(uint64_t *registers) {
     }
 
     puts("\nRecuperando sistema... Volviendo a la Shell.\n");
-    for (volatile uint64_t i = 0; i < 1000000000; i++); // espero que el usuario lea
+    for (volatile uint64_t i = 0; i < 1000000000; i++); // TODO: ver si cambiar esto por polling
 }
 
 static void invalid_opcode(uint64_t *registers) {

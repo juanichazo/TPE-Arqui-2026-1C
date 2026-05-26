@@ -42,3 +42,10 @@ int ticks_elapsed() {
 int seconds_elapsed() {
 	return ticks / 18;
 }
+
+ void sleep(uint64_t ticks_to_wait) {
+    unsigned long start_ticks = ticks_elapsed();
+    while ((ticks_elapsed() - start_ticks) < ticks_to_wait) {
+        _hlt();
+    }
+ }

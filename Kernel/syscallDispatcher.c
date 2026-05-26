@@ -15,6 +15,11 @@ uint64_t sys_read(uint64_t fd, char * buffer, uint64_t count) {
     if (fd == STDIN) {
         readLine(buffer, count);        
     }    
+    if (fd == STDINRAW) { 
+        char c = keyboard_get_char(); 
+        buffer[0] = c;
+        return (c != 0) ? 1 : 0;
+    }
     return -1;
 }
 
@@ -78,8 +83,13 @@ uint64_t sys_setsize(uint64_t text_size){
     return 0;
 }
 
-uint64_t (*syscalls[8])(uint64_t, uint64_t, uint64_t) = {
-    sys_read, sys_write, sys_time, sys_draw, sys_sethash, sys_gethash, sys_setcolor, sys_setsize
+uint64_t sys_sleep(uint64_t ticks_to_wait, uint64_t p2, uint64_t p3) {
+    sleep(ticks_to_wait);
+    return 0;
+}
+
+uint64_t (*syscalls[9])(uint64_t, uint64_t, uint64_t) = {
+    sys_read, sys_write, sys_time, sys_draw, sys_sethash, sys_gethash, sys_setcolor, sys_setsize, sys_sleep
 };
 
 uint64_t syscallDispatcher(uint64_t syscall, uint64_t p1, uint64_t p2, uint64_t p3) {
