@@ -5,6 +5,7 @@ GLOBAL sys_draw
 GLOBAL sys_sethash
 GLOBAL sys_gethash
 GLOBAL sys_setcolor
+GLOBAL sys_settextsize
 GLOBAL reset_tsc
 
 section .text
@@ -46,6 +47,9 @@ sys_gethash:
 
 sys_setcolor:
     syscall 6
+
+sys_settextsize:
+    syscall 7
 
 reset_tsc: ; TODO esta función habría que moverla a otro lado probablemente
     xor rax, rax

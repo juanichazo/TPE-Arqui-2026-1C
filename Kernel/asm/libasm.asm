@@ -2,6 +2,7 @@ GLOBAL cpuVendor
 GLOBAL readKeyboard
 GLOBAL inb
 GLOBAL outb
+GLOBAL tsc
 
 section .text
 	
@@ -54,3 +55,11 @@ readKeyboard:
 	in al, 60h
 	movzx rax, al
 	ret
+
+tsc: ; TODO esta función habría que moverla a otro lado probablemente
+    xor rax, rax
+    xor rdx, rdx
+    rdtsc
+    shl rdx, 32
+    or rax, rdx
+    ret

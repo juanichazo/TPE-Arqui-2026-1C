@@ -70,8 +70,16 @@ uint64_t sys_setcolor(uint64_t text, uint64_t background){
     return 1;
 }
 
-uint64_t (*syscalls[7])(uint64_t, uint64_t, uint64_t) = {
-    sys_read, sys_write, sys_time, sys_draw, sys_sethash, sys_gethash, sys_setcolor
+uint64_t sys_setsize(uint64_t text_size){
+    float size = (float)text_size / 10;
+    if(size < 0.7 || size > 3.5) 
+        return 1;
+    set_text_size(size);
+    return 0;
+}
+
+uint64_t (*syscalls[8])(uint64_t, uint64_t, uint64_t) = {
+    sys_read, sys_write, sys_time, sys_draw, sys_sethash, sys_gethash, sys_setcolor, sys_setsize
 };
 
 uint64_t syscallDispatcher(uint64_t syscall, uint64_t p1, uint64_t p2, uint64_t p3) {

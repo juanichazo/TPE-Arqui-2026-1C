@@ -1,4 +1,7 @@
 #include <videoDriver.h>
+#include <lib.h>
+
+uint32_t* memset32(uint32_t*, uint32_t, uint64_t);
 
 struct vbe_mode_info_structure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
@@ -52,25 +55,50 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 
 #include <ubuntuMono.h>
 
-void drawChar(char c, uint64_t x, uint64_t y, uint64_t text_color, uint64_t bg_color){
-	int offset_x = x * ubuntuMono_inf.width + 1;
-	int offset_y = y * ubuntuMono_inf.height + 1;
+void drawRect(uint64_t x1, uint64_t y1, uint64_t x2, uint64_t y2, uint64_t color){
+	uint64_t bytesPerPixel = VBE_mode_info->bpp / 8;
 
-	for(int j = 0; j < ubuntuMono_inf.height; j++){
-		for(int i = 0; i < ubuntuMono_inf.width; i++){
-			if(ubuntuMono_bmp[c][j] & (1 << i)){
+	if (x2 >= VBE_mode_info->width)
+		x2 = VBE_mode_info->width - 1;
+	if (y2 >= VBE_mode_info->height)
+		y2 = VBE_mode_info->height - 1;
+
+	uint64_t width = (x2 - x1 + 1) * 3;
+	uint8_t blue = color & 0xFF;
+	uint8_t green = (color >> 8) & 0xFF;
+	uint8_t red = (color >> 16) & 0xFF;
+
+    uint8_t* row = ((uint8_t *) VBE_mode_info->framebuffer) + y1 * VBE_mode_info->pitch + x1 * bytesPerPixel;
+
+	for (uint64_t y = y1; y <= y2; y++) {
+		for(uint64_t x = 0; x < width; x += bytesPerPixel){
+			row[x] = blue;
+			row[x+1] = green;
+			row[x+2] = red;
+		}
+		row += VBE_mode_info->pitch;
+	}
+}
+
+void drawChar(char c, uint64_t x, uint64_t y, uint64_t text_color, uint64_t bg_color, float char_size){
+	int offset_x = x * ubuntuMono_inf.width * char_size + 1;
+	int offset_y = y * ubuntuMono_inf.height * char_size + 1;
+	uint64_t color;
+
+	for(int j = 0; j < ubuntuMono_inf.height * char_size; j++){
+		for(int i = 0; i < ubuntuMono_inf.width * char_size; i++){
+			if(ubuntuMono_bmp[c][(int)(j / char_size)] & (1 << (int)(i/char_size)))
 				putPixel(text_color, i + offset_x, j + offset_y);
-			} else {
+			else
 				putPixel(bg_color, i + offset_x, j + offset_y);
-			}
 		}
 	}
 }
 
-int getScreenHeight(){
-	return VBE_mode_info->height;
-}
-
 int getScreenWidth(){
 	return VBE_mode_info->width;
+}
+
+int getScreenHeight(){
+	return VBE_mode_info->height;
 }

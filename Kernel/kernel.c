@@ -3,6 +3,8 @@
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
+#include <console.h>
+#include <videoDriver.h>
 #include <idtLoader.h>
 
 extern uint8_t text;
@@ -18,7 +20,21 @@ static void * const userCodeModuleAddress = (void*)0x400000;
 static void * const userDataModuleAddress = (void*)0x500000;
 
 typedef int (*EntryPoint)();
+char* int_to_str(uint64_t num, char* string){
+    int i = 0;
+    while(num > 0){
+        string[i++] = (char)(num % 10) + '0';
+        num /= 10;
+    }
+    // Reverse the string to get the correct order
+    for (int j = 0, k = i - 1; j < k; j++, k--) {
+        char temp = string[j];
+        string[j] = string[k];
+        string[k] = temp;
+    }
 
+    return string;
+}
 void clearBSS(void * bssAddress, uint64_t bssSize)
 {
     memset(bssAddress, 0, bssSize);
@@ -92,7 +108,7 @@ int main()
     ncNewline();
     
     ncPrint("  [Saltando a Userland...]");
-    ncNewline();
+    ncNewline();    
 
     int userland_return = ((EntryPoint)userCodeModuleAddress)();
     

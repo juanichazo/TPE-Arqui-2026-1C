@@ -4,7 +4,8 @@
 #include <stdint.h>
 
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y);
-void drawChar(char c, uint64_t x, uint64_t y, uint64_t text_color, uint64_t bg_color);
+void drawChar(char c, uint64_t x, uint64_t y, uint64_t text_color, uint64_t bg_color, float char_size);
+void drawRect(uint64_t x1, uint64_t y1, uint64_t x2, uint64_t y2, uint64_t color);
 
 int getScreenWidth();
 int getScreenHeight();
