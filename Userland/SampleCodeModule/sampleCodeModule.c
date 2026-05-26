@@ -90,10 +90,8 @@ int main() {
         strtok(line_buffer, BUFFER_SIZE, ' ');
 
         if(strncontains(line_buffer, BUFFER_SIZE, "time")){
-            print("Es hora de programar\n");
-            
+            getTime();
         } else if(strncontains(line_buffer, BUFFER_SIZE, "pacman")){
-            //print("work in progress\n");
             startPacman();
         } else if(strncontains(line_buffer, BUFFER_SIZE, "echo")){
             print(line_buffer + 5);
