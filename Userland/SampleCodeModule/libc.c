@@ -55,3 +55,25 @@ int readLine(char * buffer, int maxSize) {
 void drawPixel(uint32_t color, uint64_t x, uint64_t y) {
     sys_draw(color, x, y);
 }
+
+void getTime() {
+    uint8_t hour = (uint8_t)sys_time(0);
+    uint8_t min  = (uint8_t)sys_time(1);
+    uint8_t sec  = (uint8_t)sys_time(2); 
+
+    hour = (hour + 24 - 3) % 24; // esta 3 horas adelantado
+
+    //imprimo en formato HH:MM:SS
+    putChar((hour / 10) + '0'); // sumo el ascii del cero para pasar a ascii
+    putChar((hour % 10) + '0');
+    putChar(':');
+
+    putChar((min / 10) + '0');
+    putChar((min % 10) + '0');
+    putChar(':');
+
+    putChar((sec / 10) + '0');
+    putChar((sec % 10) + '0');
+
+    putChar('\n');
+}
