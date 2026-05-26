@@ -21,7 +21,7 @@ typedef struct{
 
 Cell buffer[BUFFER_HEIGHT][BUFFER_WIDTH] = {0}; // TODO: Habría que adaptarlo al tamaño de la pantalla
 
-float char_size = 0.8;
+float char_size = 1;
 int currentX = 0;
 int currentY = 0;
 int buffer_start = 0;
