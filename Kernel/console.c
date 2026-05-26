@@ -3,9 +3,6 @@
 #include <keyboardDriver.h>
 #include <time.h>
 
-// Archivo con los mapas para cada char de la fuente usada
-//#include <ubuntuMono.h>
-
 int nextCharPos = 0;
 // color de texto
 uint32_t text_color = 0xFFFFFF;
@@ -38,27 +35,35 @@ void set_text_color(uint32_t new_text_color){
 }
 
 void putChar(char c){
-	buffer[currentY % SCREEN_LENGTH][currentX].c = c;
+	if(c == '\n'){
+		nextLine();
+		return;
+	}
+	if(c == '\b'){
+		drawChar(0, currentX, currentY, text_color, bg_color);
+		prevPos();
+		buffer[currentY % SCREEN_LENGTH][currentX].c = 0;
+	} else 
+		buffer[currentY % SCREEN_LENGTH][currentX].c = c;
+		
 	buffer[currentY % SCREEN_LENGTH][currentX].bg_col = bg_color;
 	buffer[currentY % SCREEN_LENGTH][currentX].text_col = text_color;
 
 	drawChar(c, currentX, currentY, text_color, bg_color);
-	nextPos();
+	if(c != '\b')
+		nextPos();
 }
 
-void print(char* string){
-	while(*string){
-        if(*string == '\n'){
-            nextLine();
-        } else { 
-		    putChar(*string);
-        }
-		string++;
+uint64_t print(char* string, uint64_t count){
+	uint64_t i = 0;
+	while(*string && (i++) <= count){
+		putChar(*(string++));
 	}
+	return i;
 }
 
 void puts(char* string){
-	print(string);
+	print(string, 0xFFFFFFFF);
 	nextLine();
 }
 
@@ -91,23 +96,34 @@ void nextLine(){
 	}
 }
 
-char active = 0;
-char prev_ticks = 0;
-
 void toggle_cursor(){
 	if(ticks_elapsed() % 20 < 10){
-		putChar('_');
+		drawChar('_', currentX, currentY, text_color, bg_color);
 	} else {
-		putChar(0);
+		drawChar(' ', currentX, currentY, bg_color, bg_color);
 	}
-	prevPos();
 }
 
-void readLine(char* buffer, uint64_t max){
-	uint64_t count = 0;
-	char key = 0;
+uint64_t readLine(char* buffer, uint64_t max){
+	uint64_t chars_read = 0;
+    char c;    
 
-	while(count < max){
+	while (chars_read < max) {
+		toggle_cursor();
+		if (c = keyboard_get_char()) {
+			buffer[chars_read] = c;
+			chars_read++;
+		} else {
+			// Si el buffer está vacío duermo la CPU hasta que el teclado dispare una nueva interrupción 
+			_hlt(); 
+		}
+	}
+	drawChar(' ', currentX, currentY, text_color, bg_color);
+	return chars_read;
+}
+
+// version que también escribe en pantalla lo que escribo
+	/*while(count < max){
 		toggle_cursor();
 
 		if(keyboard_read(&key, 1) && key){
@@ -115,29 +131,21 @@ void readLine(char* buffer, uint64_t max){
 				case '\b':
 					if(count == 0) 
 						break;
-					putChar(0);
-					prevPos(); prevPos();
-					putChar(0);
-					prevPos();
-					*(--buffer) = 0;	
+					drawChar(0, currentX, currentY, text_color, bg_color);
+					putChar('\b');
+					buffer[--count] = 0;	
 					break;
 				
 				case '\n':
-					putChar(0);
-					nextLine();
-					*buffer = 0;
+					drawChar(0, currentX, currentY, text_color, bg_color);
+					putChar('\n');
+					buffer[count] = 0;
 					return count;
 				default:
 					putChar(key);	
-					*(buffer++) = key;
-					count++;
-					break;
-			}
-		}
-	}
-	*buffer = 0;
-	return count;
-}
+					buffer[count++] = key;
+					break;*/
+
 
 void redraw(){
 	int max = currentY;
@@ -162,12 +170,4 @@ void redraw(){
 	currentX = 0;
 }
 
-int runConsole(){
-	char key;
-
-	while(1){
-		if(keyboard_read(&key, 1) && key)
-			putChar(key);
-	}
-}
 

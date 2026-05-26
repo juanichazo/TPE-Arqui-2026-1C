@@ -3,7 +3,7 @@
 void set_bg_color(uint32_t new_bg_color);
 void set_text_color(uint32_t new_text_color);
 void putChar(char c);
-void print(char* string);
+uint64_t print(char* string, uint64_t count);
+uint64_t readLine(char* buffer, uint64_t max);
 void puts(char* string);
-int runConsole();
 void redraw();

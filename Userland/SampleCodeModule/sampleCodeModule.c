@@ -1,10 +1,11 @@
-#include "include/libc.h"
+#include <libc.h>
 #include <user_syscalls.h>
+#include <pacman.h>
 
 #define BUFFER_SIZE 100
 
 char line_buffer[BUFFER_SIZE+1];
-uint64_t* params[BUFFER_SIZE+1];
+char* params[BUFFER_SIZE+1];
 char* shell_message = "@shell> ";
 
 int strncontains(char* string, uint64_t size, char* expression){
@@ -81,10 +82,10 @@ char* int_to_str(uint64_t num, char* string){
 int main() {
 
     while(1){
-        // set_text_color(0x30FF30); // Hay que hacer syscall de color
+        sys_setcolor(0x30FF30, 0x0);
         print(shell_message);
-        // set_text_color(0xFFFFFF); // lo mismo
-
+        sys_setcolor(0xFFFFFF, 0x0);
+        
         readLine(line_buffer, BUFFER_SIZE);
         strtok(line_buffer, BUFFER_SIZE, ' ');
 

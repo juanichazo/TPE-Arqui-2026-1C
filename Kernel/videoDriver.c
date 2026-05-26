@@ -53,8 +53,8 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 #include <ubuntuMono.h>
 
 void drawChar(char c, uint64_t x, uint64_t y, uint64_t text_color, uint64_t bg_color){
-	int offset_x = x * 8 + 1;
-	int offset_y = y * 17 + 1;
+	int offset_x = x * ubuntuMono_inf.width + 1;
+	int offset_y = y * ubuntuMono_inf.height + 1;
 
 	for(int j = 0; j < ubuntuMono_inf.height; j++){
 		for(int i = 0; i < ubuntuMono_inf.width; i++){

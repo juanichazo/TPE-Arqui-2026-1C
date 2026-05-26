@@ -14,8 +14,8 @@ extern uint8_t endOfKernel;
 
 static const uint64_t PageSize = 0x1000;
 
-static void * const sampleCodeModuleAddress = (void*)0x400000;
-static void * const sampleDataModuleAddress = (void*)0x500000;
+static void * const userCodeModuleAddress = (void*)0x400000;
+static void * const userDataModuleAddress = (void*)0x500000;
 
 typedef int (*EntryPoint)();
 
@@ -47,8 +47,8 @@ void * initializeKernelBinary()
     ncPrint("[Loading modules]");
     ncNewline();
     void * moduleAddresses[] = {
-        sampleCodeModuleAddress,
-        sampleDataModuleAddress
+        userCodeModuleAddress,
+        userDataModuleAddress
     };
 
     loadModules(&endOfKernelBinary, moduleAddresses);
@@ -88,13 +88,13 @@ int main()
     load_idt();
 
     ncPrint("  Sample code module at 0x");
-    ncPrintHex((uint64_t)sampleCodeModuleAddress);
+    ncPrintHex((uint64_t)userCodeModuleAddress);
     ncNewline();
     
     ncPrint("  [Saltando a Userland...]");
     ncNewline();
 
-    int userland_return = ((EntryPoint)sampleCodeModuleAddress)();
+    int userland_return = ((EntryPoint)userCodeModuleAddress)();
     
     ncPrint("  Userland retorno: ");
     ncPrintHex(userland_return);

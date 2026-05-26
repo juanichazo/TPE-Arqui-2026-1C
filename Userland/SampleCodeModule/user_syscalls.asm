@@ -2,9 +2,9 @@ GLOBAL sys_read
 GLOBAL sys_write
 GLOBAL sys_time
 GLOBAL sys_draw
-
 GLOBAL sys_sethash
 GLOBAL sys_gethash
+GLOBAL sys_setcolor
 GLOBAL reset_tsc
 
 section .text
@@ -44,7 +44,10 @@ sys_sethash:
 sys_gethash:
     syscall 5
 
-reset_tsc:
+sys_setcolor:
+    syscall 6
+
+reset_tsc: ; TODO esta función habría que moverla a otro lado probablemente
     xor rax, rax
     xor rdx, rdx
     rdtsc

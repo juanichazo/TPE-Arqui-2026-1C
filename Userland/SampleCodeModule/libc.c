@@ -38,8 +38,6 @@ int readLine(char * buffer, int maxSize) {
             if (index > 0) {
                 index--;
                 putChar('\b');
-                putChar(' ');
-                putChar('\b');
             }
             
         } else if (c != 0) { 

@@ -73,7 +73,6 @@ void saveKeyToBuffer(){
         if (c != 0) {
             keyboard_push(c);
             current = c;
-            //putChar(c, 1, 1, 0xFFFFFF, 0x0);
         } 
     }
 }
