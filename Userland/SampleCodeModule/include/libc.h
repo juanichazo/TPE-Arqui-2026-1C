@@ -12,5 +12,6 @@ void drawPixel(uint32_t color, uint64_t x, uint64_t y);
 void getTime();
 char getCharNoWait();
 void sleep(uint64_t ticks);
+void printRegisters();
 
 #endif

@@ -91,8 +91,10 @@ int main() {
 
         if(strncontains(line_buffer, BUFFER_SIZE, "time")){
             getTime();
+
         } else if(strncontains(line_buffer, BUFFER_SIZE, "pacman")){
             startPacman();
+
         } else if(strncontains(line_buffer, BUFFER_SIZE, "echo")){
             print(line_buffer + 5);
             print("\n");
@@ -118,23 +120,31 @@ int main() {
             uint64_t time = bruteforce_hashcode(params[0]);
             print(int_to_str(time, "               \0"));
             print(" cpu cycles\n");
+
         } else if(strncontains(line_buffer, BUFFER_SIZE, "sethash")){
             sys_sethash(string_to_int(params[0]));
+
         } else if(strncontains(line_buffer, BUFFER_SIZE, "clear")){
             char clear[2] = {14,0};
             print(clear);
+
         } else if(strncontains(line_buffer, BUFFER_SIZE, "smaller")){
             puts("Size changed: ");
             if(!sys_settextsize(--size))
                 print(int_to_str(size, "      \n"));
             else 
                 print("failed\n");
+
         } else if(strncontains(line_buffer, BUFFER_SIZE, "bigger")){
             puts("Size changed: ");
             if(!sys_settextsize(++size))
                 print(int_to_str(size, "       \n"));
             else 
                 print("failed\n");
+
+        } else if(strncontains(line_buffer, BUFFER_SIZE, "regs")){
+            printRegisters();
+            
         } else {
             print(line_buffer);
             print(" is not a command\n");

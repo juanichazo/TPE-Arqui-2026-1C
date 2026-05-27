@@ -61,7 +61,7 @@ static void invalid_opcode(uint64_t *registers) {
     for (volatile uint64_t i = 0; i < 1000000000; i++); // espero que el usuario lea
 }
 
-// Función auxiliar que convierte un uint64_t en string Hexadecimal
+// esto tiene que ir en otro lado
 static void uint64ToHexStr(uint64_t num, char *str) {
     str[0] = '0';
     str[1] = 'x';

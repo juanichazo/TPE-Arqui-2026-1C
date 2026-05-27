@@ -8,6 +8,7 @@ GLOBAL sys_setcolor
 GLOBAL sys_settextsize
 GLOBAL sys_sleep
 GLOBAL reset_tsc
+GLOBAL get_registers
 
 section .text
 
@@ -63,3 +64,35 @@ reset_tsc: ; TODO esta función habría que moverla a otro lado probablemente
     or rax, rdx
     ret
 
+
+get_registers:
+    ; rdi tiene la direc del arreglo
+    mov [rdi + 8], rbx 
+    mov [rdi + 8*2], rcx 
+    mov [rdi + 8*3], rdx 
+    mov [rdi + 8*4], rsi
+    mov [rdi + 8*5], rdi
+    mov [rdi + 8*6], rbp
+    mov [rdi + 8*7], r8
+    mov [rdi + 8*8], r9
+    mov [rdi + 8*9], r10
+    mov [rdi + 8*10], r11
+    mov [rdi + 8*11], r12
+    mov [rdi + 8*12], r13
+    mov [rdi + 8*13], r14
+    mov [rdi + 8*14], r15
+
+    ; extraemos registros del stack
+    mov rbx, [rsp]          ; RIP
+    mov [rdi + 8*15], rbx 
+    
+    mov rbx, [rsp + 8]      ; CS
+    mov [rdi + 8*16], rbx
+    
+    mov rbx, [rsp + 16]     ; RFLAGS
+    mov [rdi + 8*17], rbx 
+    
+    mov rbx, [rsp + 24]     ; rsp de userland 
+    mov [rdi + 8*18], rbx
+
+    ret
