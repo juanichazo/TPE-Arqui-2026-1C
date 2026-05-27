@@ -9,12 +9,17 @@ char* params[BUFFER_SIZE+1];
 char* shell_message = "@shell> ";
 
 void help(){
-    puts(" \
-         \
-         \
-         \
-         \
-        ");
+    puts("Comandos disponibles:");
+    puts(" help               : Muestra esta ayuda");
+    puts(" time               : Muestra la hora del sistema");
+    puts(" pacman             : Inicia el juego Pacman");
+    puts(" echo               : Muestra <texto> en pantalla");
+    puts(" divzero            : Provoca una division por cero (error)");
+    puts(" bruteforce         : Busca string cuyo hash coincide");
+    puts(" sethash            : Establece el valor de hash del sistema");
+    puts(" clear              : Limpia la pantalla");
+    puts(" size               : Cambia el tamano del texto");
+    puts(" regs               : Muestra registros de la CPU");
 }
 
 uint64_t bruteforce_hashcode(char* string[]){
@@ -24,13 +29,13 @@ uint64_t bruteforce_hashcode(char* string[]){
     solution[0] = 'a';
 
     uint64_t time1 = reset_tsc();
+    uint64_t time2 = reset_tsc();
+    print(int_to_str(time2 - time1, "               \0"));
+    print(" cpu cycles\n");
 
     while(solution[5] == 0){
         if(sys_gethash(solution) == hash){
             puts(solution);
-            uint64_t time2 = reset_tsc();
-            print(int_to_str(time2 - time1, "               \0"));
-            print(" cpu cycles\n");
             return time2 - time1;
         }
         for(int i = 0; i < 6; i++){

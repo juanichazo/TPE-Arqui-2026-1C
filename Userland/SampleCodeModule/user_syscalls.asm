@@ -60,8 +60,8 @@ reset_tsc: ; TODO esta función habría que moverla a otro lado probablemente
     xor rax, rax
     xor rdx, rdx
     rdtsc
-    shl rdx, 32
-    or rax, rdx
+    ;shl rdx, 32
+    ;or rax, rdx
     ret
 
 

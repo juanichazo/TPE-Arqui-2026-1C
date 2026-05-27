@@ -4,7 +4,6 @@
 #include <time.h>
 #include <console.h>
 
-int nextCharPos = 0;
 // color de texto
 uint32_t text_color = 0xFFFFFF;
 //color del fondo
@@ -46,6 +45,7 @@ void set_text_size(float size){
 
 void putChar(char c){
 	if(c == '\n'){
+		buffer[currentY % BUFFER_HEIGHT][currentX].c = 0;
 		nextLine();
 		return;
 	}
