@@ -18,3 +18,5 @@
 .idea
 .vscode
 *terminal_history*
+
+*.swp
