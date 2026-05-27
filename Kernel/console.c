@@ -20,7 +20,7 @@ typedef struct{
 
 Cell buffer[BUFFER_HEIGHT][BUFFER_WIDTH] = {0}; // TODO: Habría que adaptarlo al tamaño de la pantalla
 
-float char_size = 1;
+int char_size = 1;
 int currentX = 0;
 int currentY = 0;
 int buffer_start = 0;
@@ -37,10 +37,11 @@ void set_text_color(uint32_t new_text_color){
 	text_color = new_text_color;
 }
 
-void set_text_size(float size){
+void set_text_size(uint64_t size){
 	if(size == char_size) return;
 	char_size = size;
-	redraw();
+	currentY = 0;
+	drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
 }
 
 void putChar(char c){
@@ -51,8 +52,8 @@ void putChar(char c){
 	}
 	if(c == 14){ // 14 es el char correspondiente a borrar la pantalla
 		memset(buffer, 0, BUFFER_WIDTH);
+		drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
 		currentY=0;
-		redraw();
 		return;
 	}
 
@@ -81,7 +82,7 @@ uint64_t print(char* string, uint64_t count){
 }
 
 void puts(char* string){
-	print(string, 0xFFFFFFFF);
+	print(string, 0xFFFFFF);
 	nextLine();
 }
 
@@ -103,11 +104,12 @@ void prevPos(){
 
 void nextLine(){
 	currentX = 0;
-	if(currentY >= (getScreenHeight() / (17 * char_size)) - 2){
+	if(currentY >= (getScreenHeight() / (17 * char_size)) - 5){
+		/*
 		for(int i = 0; i < currentY; i++){
 			memcpy(buffer[i], buffer[i+1], BUFFER_WIDTH * sizeof(Cell));
 		}
-		memset(buffer[currentY], 0, BUFFER_WIDTH * sizeof(Cell));
+		memset(buffer[currentY], 0, BUFFER_WIDTH * sizeof(Cell)); */
 		redraw();
 	} else {
 		currentY++;
@@ -140,7 +142,7 @@ uint64_t readLine(char* buffer, uint64_t max){
 	return chars_read;
 }
 
-// version que también escribe en pantalla lo que escribo
+// version que también escribe en pantalla lo que escribo (echo)
 	/*while(count < max){
 		toggle_cursor();
 
@@ -166,8 +168,10 @@ uint64_t readLine(char* buffer, uint64_t max){
 
 
 void redraw(){
+	scrollScreenUp(17 * char_size);
+
+	/* VERSION ANTERIOR QUE GUARDA LOS COMANDOS VIEJOS
 	//set_text_size(char_size * 1.3);
-	drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
 	int max = currentY;
 	int min = currentY - (getScreenHeight() / (char_size * 17)) + 2;
 	min = min < 0 ? 0 : min;
@@ -189,7 +193,7 @@ void redraw(){
 	text_color = backup_text_col;
 	currentY = max - min;
 	
-	currentX = 0;
+	currentX = 0; */
 }
 
 

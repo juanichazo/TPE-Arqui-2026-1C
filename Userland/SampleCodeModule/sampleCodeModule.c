@@ -15,6 +15,7 @@ void help(){
     puts(" pacman             : Inicia el juego Pacman");
     puts(" echo               : Muestra <texto> en pantalla");
     puts(" divzero            : Provoca una division por cero (error)");
+    puts(" invalidop          : Provoca un error por opcode invalido");
     puts(" bruteforce         : Busca string cuyo hash coincide");
     puts(" sethash            : Establece el valor de hash del sistema");
     puts(" clear              : Limpia la pantalla");
@@ -29,13 +30,13 @@ uint64_t bruteforce_hashcode(char* string[]){
     solution[0] = 'a';
 
     uint64_t time1 = reset_tsc();
-    uint64_t time2 = reset_tsc();
-    print(int_to_str(time2 - time1, "               \0"));
-    print(" cpu cycles\n");
-
+    
     while(solution[5] == 0){
         if(sys_gethash(solution) == hash){
             puts(solution);
+            uint64_t time2 = reset_tsc();
+            print(int_to_str(time2 - time1, "               \0"));
+            print(" cpu cycles\n");
             return time2 - time1;
         }
         for(int i = 0; i < 6; i++){
@@ -94,6 +95,7 @@ Command commands[] = {
     {"pacman", startPacman},
     {"echo", echo},
     {"divzero", divzero},
+    {"invalidop", invalidop},
     {"bruteforce", bruteforce_hashcode},
     {"sethash", sethash},
     {"clear", clear},

@@ -76,10 +76,9 @@ uint64_t sys_setcolor(uint64_t text, uint64_t background){
 }
 
 uint64_t sys_setsize(uint64_t text_size){
-    float size = (float)text_size / 10;
-    if(size < 0.7 || size > 3.5) 
+    if(text_size < 1 || text_size > 3) 
         return 1;
-    set_text_size(size);
+    set_text_size(text_size);
     return 0;
 }
 
