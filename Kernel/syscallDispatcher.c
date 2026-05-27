@@ -18,7 +18,7 @@ uint64_t sys_read(uint64_t fd, char * buffer, uint64_t count) {
     if (fd == STDINRAW) { 
         char c = keyboard_get_char(); 
         buffer[0] = c;
-        return (c != 0) ? 1 : 0;
+        return c != 0;
     }
     return -1;
 }

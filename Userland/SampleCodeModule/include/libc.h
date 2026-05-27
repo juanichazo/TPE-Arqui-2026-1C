@@ -13,5 +13,9 @@ void getTime();
 char getCharNoWait();
 void sleep(uint64_t ticks);
 void printRegisters();
+int strncontains(char* string, uint64_t size, char* expression);
+void strtok(char* string, uint64_t size, char delim, char* tokens[]);
+uint64_t string_to_int(char* string);
+char* int_to_str(uint64_t num, char* string);
 
 #endif

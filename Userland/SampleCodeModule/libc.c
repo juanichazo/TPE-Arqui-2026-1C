@@ -119,3 +119,49 @@ void printRegisters() { // TODO optimizar (se repite codigo de exceptions.c)
         print("\n");
     }
 }
+
+int strncontains(char* string, uint64_t size, char* expression){
+    while(size--){
+        if(*expression == 0)
+            return 1;
+        if(*(string++) != *(expression++))
+            return 0;
+    }
+    return 0; 
+}
+
+void strtok(char* string, uint64_t size, char delim, char* tokens[]){
+    int current = 0;
+    while(*string){
+        if(*string == delim){
+            if(*(string+1) != 0 && current < size) tokens[current++] = string+1;
+            *string = 0;
+        }
+        string++;
+    }
+}
+
+uint64_t string_to_int(char* string){
+    uint64_t toRet = 0;
+    while(*string >= '0' && *string <= '9'){
+        toRet *= 10;
+        toRet += *(string++) - '0';
+    }
+    return toRet;
+}
+
+char* int_to_str(uint64_t num, char* string){
+    int i = 0;
+    while(num > 0){
+        string[i++] = (char)(num % 10) + '0';
+        num /= 10;
+    }
+    // Reverse the string to get the correct order
+    for (int j = 0, k = i - 1; j < k; j++, k--) {
+        char temp = string[j];
+        string[j] = string[k];
+        string[k] = temp;
+    }
+
+    return string;
+}
