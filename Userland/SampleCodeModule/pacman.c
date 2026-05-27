@@ -264,14 +264,7 @@ void drawMap()
 
 void clearGraphics()
 {
-    //  resolución estándar de 1024x768. 
-    for (int y = 0; y < Y_RESOLUTION; y++)
-    {
-        for (int x = 0; x < X_RESOLUTION; x++)
-        {
-            drawPixel(0x000000, x, y); 
-        }
-    }
+    drawRectangle(0, 0, X_RESOLUTION - 1, Y_RESOLUTION - 1, 0x000000);
 }
 
 void drawEntity(Entity *e)
@@ -400,22 +393,48 @@ void gameLoop()
 void startPacman()
 {
     while (currentState == MENU)
-    { // hacerlo lindo
-        puts("PACMAN");
-        puts("Ingrese la cantidad de jugadores");
-        puts("1. Un Jugador");
-        puts("2. Dos Jugadores");
+    { 
+        clearScreen();
+        
+        setTextSize(30);
+        setTextColor(COLOR_PACMAN, 0x000000); 
+        puts("\n   PAC-MAN   \n");
+
+        setTextSize(15);
+        setTextColor(0xFFFFFF, 0x000000);
+        puts(" Seleccione el modo de juego:\n");
+
+        setTextColor(0x00FFFF, 0x000000); 
+        puts("  1. Un Jugador (Humano vs IA)");
+        setTextColor(0xFF0000, 0x000000); 
+        puts("  2. Dos Jugadores (Humano vs Humano)\n");
+        setTextColor(0xFFFFFF, 0x000000); 
+        puts("  Q. Salir a la terminal");
 
         char key = getChar();
-        if (key == '1')
+        if (key == '1') currentState = PLAYING_1P;
+        else if (key == '2') currentState = PLAYING_2P;
+        else if (key == 'q' || key == 'Q')
         {
-            currentState = PLAYING_1P;
-        }
-        else if (key == '2')
-        {
-            currentState = PLAYING_2P;
+            clearScreen();
+            setTextSize(10); 
+            setTextColor(0xFFFFFF, 0x000000); 
+            return; // Abortamos antes de empezar
         }
     }
-    initGame(0); // despues agregar la otra opc
+
+    clearScreen();
+    clearGraphics(); 
+    setTextSize(10); 
+    setTextColor(0xFFFFFF, 0x000000);
+
+    initGame(currentState == PLAYING_2P ? 1 : 0);
     gameLoop();
+
+    clearGraphics(); 
+    clearScreen();   
+    setTextSize(10); 
+    setTextColor(0xFFFFFF, 0x000000);
+
+    currentState = MENU;
 }

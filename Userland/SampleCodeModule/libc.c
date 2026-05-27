@@ -91,6 +91,18 @@ void sleep(uint64_t ticks) {
     sys_sleep(ticks);
 }
 
+void setTextColor(uint32_t text_color, uint32_t bg_color) {
+    sys_setcolor(text_color, bg_color);
+}
+
+void setTextSize(uint64_t size) {
+    sys_settextsize(size);
+}
+
+void clearScreen() {
+    putChar(14); // Carácter especial para limpiar la consola de texto
+}
+
 static const char *regNames[] = {
     "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "R8 ", "R9 ", "R10", 
     "R11", "R12", "R13", "R14", "R15", "RIP", "CS ", "RFLAGS", "RSP"
