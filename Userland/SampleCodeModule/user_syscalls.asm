@@ -7,6 +7,7 @@ GLOBAL sys_gethash
 GLOBAL sys_setcolor
 GLOBAL sys_settextsize
 GLOBAL sys_sleep
+GLOBAL sys_draw_rect
 GLOBAL reset_tsc
 GLOBAL get_registers
 
@@ -55,6 +56,9 @@ sys_settextsize:
 
 sys_sleep:
     syscall 8
+
+sys_draw_rect
+    syscall 9
 
 reset_tsc: ; TODO esta función habría que moverla a otro lado probablemente
     xor rax, rax

@@ -11,6 +11,8 @@ extern void _hlt();
 #define STDERR 2
 #define STDINRAW 3
 
+typedef uint64_t (*SyscallHandler)(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t);
+
 uint64_t sys_read(uint64_t fd, char * buffer, uint64_t count) {
     if (fd == STDIN) {
         readLine(buffer, count);        
@@ -87,14 +89,28 @@ uint64_t sys_sleep(uint64_t ticks_to_wait, uint64_t p2, uint64_t p3) {
     return 0;
 }
 
-uint64_t (*syscalls[9])(uint64_t, uint64_t, uint64_t) = {
-    sys_read, sys_write, sys_time, sys_draw, sys_sethash, sys_gethash, sys_setcolor, sys_setsize, sys_sleep
+uint64_t sys_draw_rect(uint64_t x1, uint64_t y1, uint64_t x2, uint64_t y2, uint64_t color) {
+    drawRect(x1, y1, x2, y2, color);
+    return 0;
+}
+
+SyscallHandler syscalls[] = {
+    (SyscallHandler)sys_read,        
+    (SyscallHandler)sys_write,       
+    (SyscallHandler)sys_time,        
+    (SyscallHandler)sys_draw,        
+    (SyscallHandler)sys_sethash,     
+    (SyscallHandler)sys_gethash,     
+    (SyscallHandler)sys_setcolor,    
+    (SyscallHandler)sys_setsize,     
+    (SyscallHandler)sys_sleep,       
+    (SyscallHandler)sys_draw_rect    
 };
 
-uint64_t syscallDispatcher(uint64_t syscall, uint64_t p1, uint64_t p2, uint64_t p3) {
+uint64_t syscallDispatcher(uint64_t syscall, uint64_t p1, uint64_t p2, uint64_t p3, uint64_t p4, uint64_t p5) {
     
     if(syscall < sizeof(syscalls) / sizeof(syscalls[0])){
-        return syscalls[syscall](p1, p2, p3);
+        return syscalls[syscall](p1, p2, p3, p4, p5);
     } 
     
     puts("[syscall unknown]"); // TODO podríamos hacer que esto sea una excepción

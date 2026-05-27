@@ -56,6 +56,9 @@ void drawPixel(uint32_t color, uint64_t x, uint64_t y) {
     sys_draw(color, x, y);
 }
 
+void drawRectangle(uint64_t x1, uint64_t y1, uint64_t x2, uint64_t y2, uint32_t color) {
+    sys_draw_rect(x1, y1, x2, y2, (uint64_t)color);
+}
 void getTime() {
     uint8_t hour = (uint8_t)sys_time(0);
     uint8_t min  = (uint8_t)sys_time(1);

@@ -220,22 +220,15 @@ void handleCollision(Entity *ghost)
     initGame(0);
 }
 
-// para pintar cuadrados solidos
 void drawRect(int startX, int startY, int width, int height, uint32_t color)
 {
-    int scaledX = (startX * SCALE) + OFFSET_X;
-    int scaledY = (startY * SCALE) + OFFSET_Y;
+    int x1 = (startX * SCALE) + OFFSET_X;
+    int y1 = (startY * SCALE) + OFFSET_Y;
     
-    int scaledWidth = width * SCALE;
-    int scaledHeight = height * SCALE;
+    int x2 = x1 + (width * SCALE) - 1;
+    int y2 = y1 + (height * SCALE) - 1;
 
-    for (int y = 0; y < scaledHeight; y++)
-    {
-        for (int x = 0; x < scaledWidth; x++)
-        {
-            drawPixel(color, scaledX + x, scaledY + y);
-        }
-    }
+    drawRectangle(x1, y1, x2, y2, color);
 }
 
 void drawMap()

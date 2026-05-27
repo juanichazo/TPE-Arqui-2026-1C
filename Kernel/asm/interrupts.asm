@@ -86,7 +86,6 @@ SECTION .text
 %macro syscallHandler 0
 	pushState
 
-
 	; Movemos el número de syscall (saved rax) a rdi
 	mov rdi, [rsp + 112]
 	
@@ -98,6 +97,12 @@ SECTION .text
 	
 	; Movemos el tercer parámetro (saved rdx) a rcx
 	mov rcx, [rsp + 88]
+
+	; Movemos el cuarto parámetro (saved rcx) a r8 ---
+	mov r8, [rsp + 96]
+
+	; Movemos el quinto parámetro (saved r8) a r9 ---
+	mov r9, [rsp + 56]
 
 	call syscallDispatcher
 
