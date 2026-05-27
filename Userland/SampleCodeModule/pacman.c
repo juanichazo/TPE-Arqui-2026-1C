@@ -8,10 +8,17 @@
 #define COLOR_INKY 0x00FFFF
 #define COLOR_CLYDE 0xFFB852
 
+#define Y_RESOLUTION 768
+#define X_RESOLUTION 1024
+
 #define MAP_WIDTH 20
 #define MAP_HEIGHT 15
 
 #define BLOCK_SIZE 16
+
+#define SCALE 3      
+#define OFFSET_X 32  
+#define OFFSET_Y 24  
 
 // 0 es pasillo, 1 es pared, 2 es pastilla chica, 3 es pastilla grande
 int map[MAP_HEIGHT][MAP_WIDTH] = {
@@ -216,11 +223,17 @@ void handleCollision(Entity *ghost)
 // para pintar cuadrados solidos
 void drawRect(int startX, int startY, int width, int height, uint32_t color)
 {
-    for (int y = 0; y < height; y++)
+    int scaledX = (startX * SCALE) + OFFSET_X;
+    int scaledY = (startY * SCALE) + OFFSET_Y;
+    
+    int scaledWidth = width * SCALE;
+    int scaledHeight = height * SCALE;
+
+    for (int y = 0; y < scaledHeight; y++)
     {
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < scaledWidth; x++)
         {
-            drawPixel(color, startX + x, startY + y);
+            drawPixel(color, scaledX + x, scaledY + y);
         }
     }
 }
@@ -252,6 +265,18 @@ void drawMap()
             {
                 drawRect(pixel_x, pixel_y, BLOCK_SIZE, BLOCK_SIZE, 0x000000); // fondo negro
             }
+        }
+    }
+}
+
+void clearGraphics()
+{
+    //  resolución estándar de 1024x768. 
+    for (int y = 0; y < Y_RESOLUTION; y++)
+    {
+        for (int x = 0; x < X_RESOLUTION; x++)
+        {
+            drawPixel(0x000000, x, y); 
         }
     }
 }
@@ -327,6 +352,8 @@ void eraseEntity(Entity *e)
 
 void gameLoop()
 {
+    clearGraphics();
+
     // dibujar todo
     drawMap();
 
