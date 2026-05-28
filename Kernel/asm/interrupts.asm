@@ -4,6 +4,7 @@ GLOBAL picMasterMask
 GLOBAL picSlaveMask
 GLOBAL haltcpu
 GLOBAL _hlt
+GLOBAL getregs
 
 GLOBAL _irq00Handler
 GLOBAL _irq01Handler
@@ -61,9 +62,46 @@ SECTION .text
 	pop rax
 %endmacro
 
-%macro irqHandlerMaster 1
-	pushState
+%macro snapshot_regs 0
+; guardo los registros de proposito general
+	mov [regs], rax
+    mov [regs + 8], rbx 
+    mov [regs + 8*2], rcx 
+    mov [regs + 8*3], rdx 
+    mov [regs + 8*4], rsi
+    mov [regs + 8*5], rdi
+    mov [regs + 8*6], rbp
+    mov [regs + 8*7], r8
+    mov [regs + 8*8], r9
+    mov [regs + 8*9], r10
+    mov [regs + 8*10], r11
+    mov [regs + 8*11], r12
+    mov [regs + 8*12], r13
+    mov [regs + 8*13], r14
+    mov [regs + 8*14], r15
 
+    ; extraemos registros del stack
+    mov rbx, [rsp]          ; RIP
+    mov [regs + 8*15], rbx 
+    
+    mov rbx, [rsp + 8]      ; CS
+    mov [regs + 8*16], rbx
+    
+    mov rbx, [rsp + 16]     ; RFLAGS
+    mov [regs + 8*17], rbx 
+    
+    mov rbx, [rsp + 24]     ; rsp de userland 
+    mov [regs + 8*18], rbx
+
+	mov rbx, [rsp + 32]		; SS
+	mov [regs + 8*19], rbx
+
+	mov rax, regs
+%endmacro
+
+%macro irqHandlerMaster 1
+	snapshot_regs
+	pushState
 	mov rdi, %1 ; pasaje de parametro
 	call irqDispatcher
 
@@ -117,37 +155,6 @@ SECTION .text
 	iretq
 %endmacro
 
-snapshot_regs:
-; guardo los registros de proposito general
-    mov [regs + 8], rbx 
-    mov [regs + 8*2], rcx 
-    mov [regs + 8*3], rdx 
-    mov [regs + 8*4], rsi
-    mov [regs + 8*5], rdi
-    mov [regs + 8*6], rbp
-    mov [regs + 8*7], r8
-    mov [regs + 8*8], r9
-    mov [regs + 8*9], r10
-    mov [regs + 8*10], r11
-    mov [regs + 8*11], r12
-    mov [regs + 8*12], r13
-    mov [regs + 8*13], r14
-    mov [regs + 8*14], r15
-
-    ; extraemos registros del stack
-    mov rbx, [rsp]          ; RIP
-    mov [regs + 8*15], rbx 
-    
-    mov rbx, [rsp + 8]      ; CS
-    mov [regs + 8*16], rbx
-    
-    mov rbx, [rsp + 16]     ; RFLAGS
-    mov [regs + 8*17], rbx 
-    
-    mov rbx, [rsp + 24]     ; rsp de userland 
-    mov [regs + 8*18], rbx
-	mov rax, regs
-	ret
 
 _hlt:
 	sti
@@ -209,13 +216,13 @@ _irq05Handler:
 _syscall80Handler:
 	syscallHandler
 
-_exception00Handler:
-    mov [regs], rax         ; rax en la posición 0 del arreglo
+_exception00Handler: ; estos dos pueden hacerse con una macro
+	snapshot_regs
     mov rax, 0              ; id de la excepción (0 = División por cero) 
     jmp exceptionMasterHandler
 
 _exception06Handler:
-    mov [regs], rax         ; rax en la posición 0 
+	snapshot_regs
     mov rax, 6              ; id de la excepción (6 = Invalid Opcode) 
     jmp exceptionMasterHandler
 
@@ -227,14 +234,16 @@ exceptionMasterHandler:
     call exceptionDispatcher
 
     ; recuperación
-    mov rcx, [rsp + 8]        ; CS
-    mov rdx, [rsp + 16]       ; RFLAGS
+    mov rcx, [regs + 8*16]    ; CS
+    mov rdx, [regs + 8*17]    ; RFLAGS
+	mov rbx, [regs + 8*19]	  ; SS
     call getStackBase         ; lo guarda en rax
     mov rsp, rax
+	push rbx				  ; 5to que sale: SS
+	push rax				  ; 4to que sale: RSP
     push rdx                  ; 3ro que va a salir: RFLAGS
     push rcx                  ; 2do que va a salir: CS
     push 0x400000             ; 1ro que va a salir: RIP (Inicio de Userland/Shell)
-    call getStackBase         ; queda en rax 
     iretq                     ; popea todo de la pila
 
 haltcpu:
@@ -242,8 +251,12 @@ haltcpu:
 	hlt
 	ret
 
+getregs:
+	mov eax, regs
+	ret
+
 SECTION .data
-REGS_AMOUNT equ 19
+REGS_AMOUNT equ 20
 
 SECTION .bss
 aux resq 1

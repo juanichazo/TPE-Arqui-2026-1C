@@ -26,6 +26,6 @@ void picSlaveMask(uint8_t mask);
 //Termina la ejecución de la cpu.
 void haltcpu(void);
 
-uint64_t * snapshot_regs();
+uint64_t* getregs(); // te devuelve el arreglo con los registros guardados
 
 #endif /* INTERRUPS_H_ */

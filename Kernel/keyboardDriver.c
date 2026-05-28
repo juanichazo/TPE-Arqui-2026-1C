@@ -65,13 +65,13 @@ uint64_t keyboard_read(char *buffer, uint64_t maxLen) {
     return count;
 }
 
-
+// !!!!!!!!!!!!
 void saveKeyToBuffer(){
 	uint8_t scancode = readKeyboard();
     if (scancode < 0x80) {
         char c = scancodeToAscii[scancode];
         if (c == '\t') {
-            saveRegisters();
+            savedRegs();
         }
         if (c != 0) {
             keyboard_push(c);

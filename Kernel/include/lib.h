@@ -13,8 +13,7 @@ void outb(uint16_t port, uint8_t value);
 uint32_t tsc();
 
 void uint64ToHexStr(uint64_t num, char *str);
-void printRegisters(uint64_t *registers);
-
-extern uint64_t savedRegs[20];
+void printRegisters();
+void savedRegs();
 
 #endif

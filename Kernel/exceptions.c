@@ -8,11 +8,11 @@ extern void puts(char* string);
 void exceptionDispatcher(int exception, uint64_t *registers) {
     if (exception == ZERO_EXCEPTION_ID){
         puts("\nEXCEPCION: DIVISION POR CERO\n");
-        printRegisters(snapshot_regs());
+        printRegisters(registers);
     }
     else if (exception == INVALID_OPCODE_EXCEPTION_ID) {
         puts("\nEXCEPCION: CODIGO DE OPERACION INVALIDO\n");
-        printRegisters(snapshot_regs());
+        printRegisters(registers);
     }
 
     puts("\nRecuperando sistema... Volviendo a la Shell.\n");
