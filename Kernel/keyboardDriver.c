@@ -82,11 +82,7 @@ void saveKeyToBuffer(){
 
 
 char keyboard_get_char() {
-    if (keyboard_buffer_available() == 0) {
-        return 0; 
-    }
-
-    char c = keyboardBuffer[keyboardReadIndex];
-    keyboardReadIndex = keyboard_next(keyboardReadIndex);
+    char c = current;
+    current = 0;
     return c;
 }
