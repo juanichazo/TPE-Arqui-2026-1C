@@ -2,7 +2,6 @@
 #include <string.h>
 #include <lib.h>
 #include <moduleLoader.h>
-#include <naiveConsole.h>
 #include <console.h>
 #include <videoDriver.h>
 #include <idtLoader.h>
@@ -38,71 +37,21 @@ void * getStackBase()
 void * initializeKernelBinary()
 {
     char buffer[10];
-
-    ncPrint("[x64BareBones]");
-    ncNewline();
-
-    ncPrint("CPU Vendor:");
-    ncPrint(cpuVendor(buffer));
-    ncNewline();
-
-    ncPrint("[Loading modules]");
-    ncNewline();
+    cpuVendor(buffer);
     void * moduleAddresses[] = {
         userCodeModuleAddress,
         userDataModuleAddress
     };
 
     loadModules(&endOfKernelBinary, moduleAddresses);
-    ncPrint("[Done]");
-    ncNewline();
-    ncNewline();
-
-    ncPrint("[Initializing kernel's binary]");
-    ncNewline();
-
-    clearBSS(&bss, &endOfKernel - &bss);
-
-    ncPrint("  text: 0x");
-    ncPrintHex((uint64_t)&text);
-    ncNewline();
-    ncPrint("  rodata: 0x");
-    ncPrintHex((uint64_t)&rodata);
-    ncNewline();
-    ncPrint("  data: 0x");
-    ncPrintHex((uint64_t)&data);
-    ncNewline();
-    ncPrint("  bss: 0x");
-    ncPrintHex((uint64_t)&bss);
-    ncNewline();
-
-    ncPrint("[Done]");
-    ncNewline();
-    ncNewline();
     return getStackBase();
 }
 
 int main()
 {   
-    ncPrint("[Kernel Main]");
-    ncNewline();
-
     load_idt();
 
-    ncPrint("  Sample code module at 0x");
-    ncPrintHex((uint64_t)userCodeModuleAddress);
-    ncNewline();
-    
-    ncPrint("  [Saltando a Userland...]");
-    ncNewline();    
-
     int userland_return = ((EntryPoint)userCodeModuleAddress)();
-    
-    ncPrint("  Userland retorno: ");
-    ncPrintHex(userland_return);
-    ncNewline();
-
-    ncPrint("[Finished]");
     
     return 0;
 }
