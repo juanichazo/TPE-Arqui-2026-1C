@@ -11,6 +11,7 @@ static uint64_t keyboardReadIndex = 0;
 static uint64_t keyboardWriteIndex = 0;
 
 char current = 0;
+int shifted = 0;
 
 static const char scancodeToAscii[128] = {
     0,  27, '1','2','3','4','5','6','7','8','9','0','-','=', '\b',
@@ -65,7 +66,6 @@ uint64_t keyboard_read(char *buffer, uint64_t maxLen) {
     return count;
 }
 
-// !!!!!!!!!!!!
 void saveKeyToBuffer(){
 	uint8_t scancode = readKeyboard();
     if (scancode < 0x80) {
@@ -78,11 +78,18 @@ void saveKeyToBuffer(){
             current = c;
         } 
     }
+    if(scancode == 0x2A || scancode == 0x36)
+        shifted = 1;
+    else if (scancode == 0xAA || scancode == 0xB6)
+        shifted = 0;
 }
 
 
 char keyboard_get_char() {
     char c = current;
     current = 0;
+    if(shifted && c <= 'z' && c >= 'a'){
+        c = c - 'a' + 'A';
+    }
     return c;
 }

@@ -124,15 +124,15 @@ void toggle_cursor(){
 	}
 }
 
+char readBuffer[10];
+
 uint64_t readLine(char* buffer, uint64_t max){
 	uint64_t chars_read = 0;
     char c;    
-
 	while (chars_read < max) {
 		toggle_cursor();
 		if (c = keyboard_get_char()) {
-			buffer[chars_read] = c;
-			chars_read++;
+			buffer[chars_read++] = c;
 		} else {
 			// Si el buffer está vacío duermo la CPU hasta que el teclado dispare una nueva interrupción 
 			_hlt(); 
