@@ -104,7 +104,6 @@ Command commands[] = {
 };
 
 int main() {
-    int size = 10;
     int is_command;
     while(1){
         sys_setcolor(0x30FF30, 0x0);
