@@ -1,4 +1,6 @@
 #include <stdint.h>
+#include <console.h>
+#include <lib.h>
 
 #define KEYBOARD_BUFFER_SIZE 128
 
@@ -63,19 +65,21 @@ uint64_t keyboard_read(char *buffer, uint64_t maxLen) {
     return count;
 }
 
-#include <console.h>
 
 void saveKeyToBuffer(){
 	uint8_t scancode = readKeyboard();
-
     if (scancode < 0x80) {
         char c = scancodeToAscii[scancode];
+        if (c == '\t') {
+            saveRegisters();
+        }
         if (c != 0) {
             keyboard_push(c);
             current = c;
         } 
     }
 }
+
 
 char keyboard_get_char() {
     if (keyboard_buffer_available() == 0) {

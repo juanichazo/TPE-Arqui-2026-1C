@@ -103,36 +103,8 @@ void clearScreen() {
     putChar(14); // Carácter especial para limpiar la consola de texto
 }
 
-static const char *regNames[] = {
-    "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "R8 ", "R9 ", "R10", 
-    "R11", "R12", "R13", "R14", "R15", "RIP", "CS ", "RFLAGS", "RSP"
-};
-
-static void uint64ToHexStr(uint64_t num, char *str) {
-    str[0] = '0';
-    str[1] = 'x';
-    for (int i = 15; i >= 0; i--) {
-        int digit = num & 0xF;
-        str[i + 2] = (digit < 10) ? (digit + '0') : (digit - 10 + 'A');
-        num >>= 4;
-    }
-    str[18] = '\0'; 
-}
-
-void printRegisters() { // TODO optimizar (se repite codigo de exceptions.c)
-    uint64_t * registerArr;
-    char hexBuffer;
-
-    get_registers(registerArr);
-
-    puts("\nEstado actual de los registros en Userland:\n");
-    for (int i = 0; i < 19; i++) {
-        print((char*)regNames[i]);
-        print(": ");
-        uint64ToHexStr(registerArr[i], hexBuffer); 
-        print(hexBuffer);
-        print("\n");
-    }
+void printRegisters(){
+    sys_regs();
 }
 
 int strncontains(char* string, uint64_t size, char* expression){

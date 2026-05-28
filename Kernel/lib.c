@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <lib.h>
 
 void * memset(void * destination, int32_t c, uint64_t length)
 {
@@ -47,4 +48,40 @@ void * memcpy(void * destination, const void * source, uint64_t length)
 	}
 
 	return destination;
+}
+
+static const char *regNames[] = {
+    "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "R8 ", "R9 ", "R10", 
+    "R11", "R12", "R13", "R14", "R15", "RIP", "CS ", "RFLAGS", "RSP"
+};
+
+uint64_t savedRegs[20];
+
+void uint64ToHexStr(uint64_t num, char *str) {
+    str[0] = '0';
+    str[1] = 'x';
+    for (int i = 15; i >= 0; i--) {
+        int digit = num & 0xF;
+        str[i + 2] = (digit < 10) ? (digit + '0') : (digit - 10 + 'A');
+        num >>= 4;
+    }
+    str[18] = '\0'; 
+}
+
+void saveRegisters(){
+	uint64_t* regs = snapshot_regs();
+	for(int i = 0; i < 20; i++){
+		savedRegs[i] = regs[i];
+	}
+}
+
+void printRegisters(uint64_t *registers) {
+    char hexBuffer[25];
+    for (int i = 0; i < 19; i++) {
+        print((char*)regNames[i]);
+        print(": ");
+        uint64ToHexStr(registers[i], hexBuffer); 
+        print(hexBuffer);
+        print("\n");
+    }
 }

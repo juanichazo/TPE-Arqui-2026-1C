@@ -3,6 +3,8 @@
 #include <time.h>
 #include <keyboardDriver.h>
 #include <videoDriver.h>
+#include <lib.h>
+#include <interrupts.h>
 
 extern void _hlt();
 
@@ -94,6 +96,10 @@ uint64_t sys_draw_rect(uint64_t x1, uint64_t y1, uint64_t x2, uint64_t y2, uint6
     return 0;
 }
 
+uint64_t sys_regs(){
+    printRegisters(savedRegs);
+}
+
 SyscallHandler syscalls[] = {
     (SyscallHandler)sys_read,        
     (SyscallHandler)sys_write,       
@@ -104,7 +110,8 @@ SyscallHandler syscalls[] = {
     (SyscallHandler)sys_setcolor,    
     (SyscallHandler)sys_setsize,     
     (SyscallHandler)sys_sleep,       
-    (SyscallHandler)sys_draw_rect    
+    (SyscallHandler)sys_draw_rect,
+    (SyscallHandler)sys_regs  
 };
 
 uint64_t syscallDispatcher(uint64_t syscall, uint64_t p1, uint64_t p2, uint64_t p3, uint64_t p4, uint64_t p5) {
