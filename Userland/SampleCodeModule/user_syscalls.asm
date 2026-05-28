@@ -9,6 +9,7 @@ GLOBAL sys_settextsize
 GLOBAL sys_sleep
 GLOBAL sys_draw_rect
 GLOBAL sys_regs
+GLOBAL sys_draw_buffer
 GLOBAL reset_tsc
 
 section .text
@@ -62,6 +63,9 @@ sys_draw_rect
 
 sys_regs
     syscall 10
+
+sys_draw_buffer
+    syscall 11
 
 reset_tsc: ; TODO esta función habría que moverla a otro lado probablemente
     xor rax, rax

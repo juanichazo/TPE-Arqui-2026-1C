@@ -53,6 +53,19 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     framebuffer[offset+2]   =  (hexColor >> 16) & 0xFF;
 }
 
+void drawFromArray(uint64_t* bmp, uint64_t x, uint64_t y, uint64_t width, uint64_t height) {
+    uint8_t * rowBuffer = (uint8_t *) VBE_mode_info->framebuffer + (y * VBE_mode_info->pitch);
+    uint64_t offset;
+
+	for(int j = y; j < y + width; j++){
+		
+        for(int i = x; i < x + width; i++){
+			putPixel(*(bmp++), i, j);
+        }
+    }
+    
+}
+
 #include <ubuntuMono.h>
 
 void drawRect(uint64_t x1, uint64_t y1, uint64_t x2, uint64_t y2, uint64_t color){

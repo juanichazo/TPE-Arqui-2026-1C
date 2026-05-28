@@ -100,6 +100,10 @@ uint64_t sys_regs(){
     printRegisters(savedRegs);
 }
 
+uint64_t sys_draw_buffer(uint64_t* bmp, uint64_t x, uint64_t y, uint64_t width, uint64_t height){
+    drawFromArray(bmp, x, y, width, height);    
+}
+
 SyscallHandler syscalls[] = {
     (SyscallHandler)sys_read,        
     (SyscallHandler)sys_write,       
@@ -111,7 +115,8 @@ SyscallHandler syscalls[] = {
     (SyscallHandler)sys_setsize,     
     (SyscallHandler)sys_sleep,       
     (SyscallHandler)sys_draw_rect,
-    (SyscallHandler)sys_regs  
+    (SyscallHandler)sys_regs,
+    (SyscallHandler)sys_draw_buffer
 };
 
 uint64_t syscallDispatcher(uint64_t syscall, uint64_t p1, uint64_t p2, uint64_t p3, uint64_t p4, uint64_t p5) {
