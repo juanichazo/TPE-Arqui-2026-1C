@@ -118,6 +118,7 @@ typedef enum
 typedef struct
 {
     int x, y;
+    int prev_x, prev_y;
     Direction current_dir;
     uint32_t color;
     int is_player_2;
@@ -396,7 +397,12 @@ static void respawnEntities(int two_players_mode)
     {
         ghosts[i].current_dir = NONE;
         ghosts[i].is_player_2 = (i == 0) ? two_players_mode : 0;
+        ghosts[i].prev_x = ghosts[i].x;
+        ghosts[i].prev_y = ghosts[i].y;
     }
+
+    pacman.prev_x = pacman.x;
+    pacman.prev_y = pacman.y;
 }
 
 void initGame(int two_players_mode)
@@ -427,6 +433,9 @@ void moveEntity(Entity *e)
     {
         return;
     }
+
+    e->prev_x = e->x;
+    e->prev_y = e->y;
 
     int nx = e->x, ny = e->y;
 
@@ -722,19 +731,34 @@ void gameLoop(void)
 
         for (int i = 0; i < NUM_GHOSTS; i++)
         {
-            if (pacman.x == ghosts[i].x && pacman.y == ghosts[i].y)
+            int same_tile =
+                (pacman.x == ghosts[i].x &&
+                 pacman.y == ghosts[i].y);
+
+            int crossed =
+                (pacman.x == ghosts[i].prev_x &&
+                 pacman.y == ghosts[i].prev_y &&
+                 pacman.prev_x == ghosts[i].x &&
+                 pacman.prev_y == ghosts[i].y);
+
+            if (same_tile || crossed)
             {
                 handleCollision();
+
                 if (currentState == GAME_OVER)
                 {
                     break;
                 }
+
                 drawMap();
+
                 drawEntity(&pacman);
+
                 for (int j = 0; j < NUM_GHOSTS; j++)
                 {
                     drawEntity(&ghosts[j]);
                 }
+
                 break;
             }
         }
@@ -759,14 +783,15 @@ static void printInt(int num)
 
     char buf[12];
     int i = 0;
-    
+
     while (num > 0)
     {
         buf[i++] = (char)('0' + num % 10);
         num /= 10;
     }
-    
-    for (int j = i - 1; j >= 0; j--){
+
+    for (int j = i - 1; j >= 0; j--)
+    {
         putChar(buf[j]);
     }
 }
@@ -796,10 +821,12 @@ void startPacman(void)
             puts("  Q. Salir a la terminal");
 
             char key = getChar();
-            if (key == '1'){
+            if (key == '1')
+            {
                 currentState = PLAYING_1P;
             }
-            else if (key == '2'){
+            else if (key == '2')
+            {
                 currentState = PLAYING_2P;
             }
             else if (key == 'q' || key == 'Q')
