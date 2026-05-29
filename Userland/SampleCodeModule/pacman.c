@@ -1,5 +1,7 @@
 #include <stdint.h>
-#include "include/libc.h"
+#include <libc.h>
+#include <user_syscalls.h>
+#include <pacman_audio.h>
 
 #define NUM_GHOSTS 4
 
@@ -668,6 +670,11 @@ void gameLoop(void)
 
 void startPacman(void)
 {
+    for(int i = 0; i < MELODY_NOTE_COUNT; i++){
+        sys_play_sound(melodyFrequencies[i], melodyDurations[i]);
+    }
+
+
     while (1)
     {
         currentState = MENU;
