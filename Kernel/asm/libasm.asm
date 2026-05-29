@@ -32,12 +32,13 @@ cpuVendor:
 
 inb:
     mov rdx, rdi
+	xor rax, rax
     in al, dx
     ret
 
 outb:
-    mov rdx, rdi
-    mov rax, rsi
+    mov dx, di
+    mov al, sil
     out dx, al
     ret
 
