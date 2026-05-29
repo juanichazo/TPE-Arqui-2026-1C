@@ -23,16 +23,14 @@ void help(){
     puts(" regs               : Muestra registros de la CPU");
 }
 
-uint64_t bruteforce_hashcode(char* string[]){
-    uint64_t hash = sys_gethash(string[0]);
-
+uint64_t bruteforce_hashcode(){
     char solution[6] = {0};
     solution[0] = 'a';
 
     uint64_t time1 = reset_tsc();
     
     while(solution[5] == 0){
-        if(sys_gethash(solution) == hash){
+        if(sys_gethash() == hash(solution)){
             puts(solution);
             uint64_t time2 = reset_tsc();
             print(int_to_str(time2 - time1, "               \0"));
@@ -50,6 +48,14 @@ uint64_t bruteforce_hashcode(char* string[]){
     puts("couldnt find solution");
     
     return reset_tsc() - time1; 
+}
+
+uint64_t hash(unsigned char *str){
+    uint64_t hash = 0x1234;
+    int c;
+    while ((c = *str++))
+        hash = ((hash << 5) + hash) + c; // hash * 33 + c
+    return hash;
 }
 
 void sethash(char* params[]){

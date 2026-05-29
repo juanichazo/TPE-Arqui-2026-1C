@@ -31,23 +31,14 @@ cpuVendor:
 	ret
 
 inb:
-    push rbp
-    mov rbp, rsp
-    mov dx, di
+    mov rdx, rdi
     in al, dx
-    movzx rax, al
-    mov rsp, rbp
-    pop rbp
     ret
 
 outb:
-    push rbp
-    mov rbp, rsp
-    mov dx, di
-    mov al, sil
+    mov rdx, rdi
+    mov rax, rsi
     out dx, al
-    mov rsp, rbp
-    pop rbp
     ret
 
 readKeyboard:

@@ -65,12 +65,8 @@ uint64_t sys_sethash(uint64_t new_hash){
     return hashcode = new_hash;
 }
 
-uint64_t sys_gethash(unsigned char *str) {
-    unsigned long hash = hashcode;
-    int c;
-    while ((c = *str++))
-        hash = ((hash << 5) + hash) + c; // hash * 33 + c
-    return hash;
+uint64_t sys_gethash() {
+    return hashcode;
 }
 
 uint64_t sys_setcolor(uint64_t text, uint64_t background){
