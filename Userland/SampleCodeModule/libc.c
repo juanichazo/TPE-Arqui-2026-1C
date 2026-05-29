@@ -1,15 +1,26 @@
-#include "include/user_syscalls.h"
-#include "include/libc.h"
+#include <user_syscalls.h>
+#include <libc.h>   
 
+uint64_t printInt(uint64_t n);
+uint64_t printHex(uint64_t n);
+uint64_t print(char* string);
+
+uint64_t readString(char* string);
+uint64_t readHex();
+uint64_t readInt();
+    
 void putChar(char c) {
     sys_write(STDOUT, &c, 1);
 }
 
-void print(char* string) {
+uint64_t print(char* string) {
+    uint64_t count = 0;
     while (*string != 0) {
         putChar(*string);
         string++;
+        count++;
     }
+    return count;
 }
 
 void puts(char* string) {
@@ -27,28 +38,18 @@ int readLine(char * buffer, int maxSize) {
     int index = 0;
     char c;
 
-    while (index < maxSize - 1) {
-        c = getChar(); 
-
-        if (c == '\n') {
-            putChar('\n');
+    while (index < maxSize - 1 && (c = getChar())) {
+        putChar(c);
+        if (c == '\n') {            
             break;
-            
-        } else if (c == '\b') {
-            if (index > 0) {
-                index--;
-                putChar('\b');
-            }
-            
-        } else if (c != 0) { 
-            buffer[index] = c;
-            index++;
-            putChar(c);
-        }
+        } else if (c == '\b' && index > 0) {
+            index--;
+        } else { 
+            buffer[index++] = c;
+        }        
     }
 
-    buffer[index] = 0; 
-    
+    buffer[index] = 0;     
     return index;
 }
 
@@ -59,6 +60,7 @@ void drawPixel(uint32_t color, uint64_t x, uint64_t y) {
 void drawRectangle(uint64_t x1, uint64_t y1, uint64_t x2, uint64_t y2, uint32_t color) {
     sys_draw_rect(x1, y1, x2, y2, (uint64_t)color);
 }
+
 void getTime() {
     uint8_t hour = (uint8_t)sys_time(0);
     uint8_t min  = (uint8_t)sys_time(1);
@@ -151,4 +153,183 @@ char* int_to_str(uint64_t num, char* string){
     }
 
     return string;
+}
+
+uint64_t printf(char* format, ...){
+    va_list arg;
+    uint64_t count = 0;
+    va_start(arg, format);
+
+    while(*format){ 
+        if(*format == '%'){
+            switch(*(format+1)){
+                case 'd':
+                case 'l':
+                    count += printInt(va_arg(arg, uint64_t)); break;
+                case 'X':
+                    count += printHex(va_arg(arg, uint64_t)); break;
+                case 's':
+                    count += print(va_arg(arg, char*)); break;
+                default:
+                    puts("Format not recognized");
+                    return -1;
+            }
+            format += 3;
+        } else {
+            putChar(*(format++));
+            count++;
+        }
+    }
+
+    return count;
+}
+
+uint64_t printInt(uint64_t n){
+    char buffer[20]; // uint64_t max = 18446744073709551615 (20 dígitos)
+    int i = 0;
+
+    // caso especial
+    if (n == 0) {
+        putChar('0');
+        return 1;
+    }
+
+    // generar dígitos en orden inverso
+    while (n > 0) {
+        buffer[i++] = '0' + (n % 10);
+        n /= 10;
+    }
+
+    uint64_t count = i;
+
+    // imprimir en orden correcto
+    while (i > 0) {
+        putChar(buffer[--i]);
+    }
+
+    return count;
+}
+
+uint64_t printHex(uint64_t n){
+    char buffer[16]; // como máximo 16 dígitos
+    int i = 0;
+
+    // caso especial
+    if (n == 0) {
+        putChar('0');
+        return;
+    }
+
+    // generar dígitos en orden inverso
+    while (n > 0) {
+        if(n % 16 < 10)
+            buffer[i++] = '0' + (n % 16);
+        else
+            buffer[i++] = 'A' + (n % 16) - 10;
+        n /= 16;
+    }
+
+    uint64_t count = i;
+
+    // imprimir en orden correcto
+    while (i > 0) {
+        putChar(buffer[--i]);
+    }
+    return count;
+}
+
+char last;
+
+uint64_t scanf(char* format, ...){
+    va_list arg;
+    uint64_t count = 0;
+    va_start(arg, format);
+
+    while(*format){ 
+        if(*format == '%'){
+            switch(*(format+1)){
+                case 'd':
+                case 'l':
+                    *(va_arg(arg, uint64_t*)) = readInt(); break;
+                case 'X':
+                    *(va_arg(arg, uint64_t*)) = readHex(); break;
+                case 's':
+                    readString(va_arg(arg, char*)); break;
+                default:
+                    puts("Format not recognized");
+                    return -1;
+            }
+            if(last == ' ')
+                format++;
+            format += 2;
+            count++;
+        } else if(*(format++) != getChar()){
+            return count;
+        }
+    }
+
+    return count;
+}
+
+uint64_t readInt(){
+    uint64_t result = 0;
+    char c;
+
+    while(c = getChar()) {
+        if (c >= '0' && c <= '9') {
+            result = result * 10 + (uint64_t)(c - '0');
+        } else {
+            return result;
+        }
+    }
+    return result;
+
+}
+
+uint64_t readHex(){
+    uint64_t result = 0;
+    char c;
+    int started = 0;
+
+    while (c = getChar()) {
+        if (!started && c == '0') {
+            putChar(c);
+            char n = getChar();
+            if (n == 'x' || n == 'X') {
+                putChar(n);
+                continue;
+            } else {
+                c = n;
+                started = 1;
+            }
+        }
+
+        if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')) {
+            putChar(c);
+            if (c >= '0' && c <= '9') result = (result << 4) + (uint64_t)(c - '0');
+            else if (c >= 'a' && c <= 'f') result = (result << 4) + (uint64_t)(10 + c - 'a');
+            else result = (result << 4) + (uint64_t)(10 + c - 'A');
+        } else {
+            return result;
+        }
+    }
+
+    return result;
+
+}
+
+uint64_t readString(char* string){
+    int index = 0;
+    char c;
+
+    while (c = getChar()) {
+        if (c == '\n' || c == ' ') {
+            break;
+        } else {
+            string[index++] = c;
+            putChar(c);
+        }
+    }
+    string[index] = 0;
+    return index;
 }

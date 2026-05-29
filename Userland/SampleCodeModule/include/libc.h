@@ -2,11 +2,14 @@
 #define _LIBC_H_
 
 #include <stdint.h>
+#include <stdarg.h>
 
 void putChar(char c);
-void print(char* string);
+uint64_t print(char* string);
+uint64_t printf(char* format, ...);
 void puts(char* string);
 char getChar();
+uint64_t scanf(char* format, ...);
 int readLine(char * buffer, int maxSize);
 void drawPixel(uint32_t color, uint64_t x, uint64_t y);
 void getTime();
