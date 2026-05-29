@@ -5,6 +5,7 @@
 #include <videoDriver.h>
 #include <lib.h>
 #include <interrupts.h>
+#include <soundDriver.h>
 
 extern void _hlt();
 
@@ -93,11 +94,15 @@ uint64_t sys_draw_rect(uint64_t x1, uint64_t y1, uint64_t x2, uint64_t y2, uint6
 }
 
 uint64_t sys_regs(){
-    printRegisters(savedRegs);
+    printRegisters();
 }
 
 uint64_t sys_draw_buffer(uint64_t* bmp, uint64_t x, uint64_t y, uint64_t width, uint64_t height){
     drawFromArray(bmp, x, y, width, height);    
+}
+
+uint64_t sys_play_sound(uint64_t freq, uint64_t time_in_ticks){
+    sd_beep((uint32_t)freq, time_in_ticks);
 }
 
 SyscallHandler syscalls[] = {
@@ -112,7 +117,8 @@ SyscallHandler syscalls[] = {
     (SyscallHandler)sys_sleep,       
     (SyscallHandler)sys_draw_rect,
     (SyscallHandler)sys_regs,
-    (SyscallHandler)sys_draw_buffer
+    (SyscallHandler)sys_draw_buffer,
+    (SyscallHandler)sys_play_sound
 };
 
 uint64_t syscallDispatcher(uint64_t syscall, uint64_t p1, uint64_t p2, uint64_t p3, uint64_t p4, uint64_t p5) {
