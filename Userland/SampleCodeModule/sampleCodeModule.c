@@ -23,33 +23,6 @@ void help(){
     puts(" regs               : Muestra registros de la CPU");
 }
 
-uint64_t bruteforce_hashcode(){
-    char solution[6] = {0};
-    solution[0] = 'a';
-
-    uint64_t time1 = reset_tsc();
-    
-    while(solution[5] == 0){
-        if(sys_gethash() == hash(solution)){
-            puts(solution);
-            uint64_t time2 = reset_tsc();
-            print(int_to_str(time2 - time1, "               \0"));
-            print(" cpu cycles\n");
-            return time2 - time1;
-        }
-        for(int i = 0; i < 6; i++){
-            if(solution[i] == 0) solution[i] = 'a';
-            else solution[i]++;
-            if (solution[i] <= 'z') break;
-            solution[i] = 'a';
-        }
-    }
-
-    puts("couldnt find solution");
-    
-    return reset_tsc() - time1; 
-}
-
 uint64_t hash(unsigned char *str){
     uint64_t hash = 0x1234;
     int c;
@@ -57,6 +30,40 @@ uint64_t hash(unsigned char *str){
         hash = ((hash << 5) + hash) + c; // hash * 33 + c
     return hash;
 }
+
+#define MAX_HASH_LENGTH 5
+
+uint64_t bruteforce_hashcode(){
+    char solution[MAX_HASH_LENGTH + 1] = {0};
+    solution[0] = 'a';
+    uint64_t time1 = reset_tsc();
+    int found = 0;
+    
+    while(solution[MAX_HASH_LENGTH] == 0){
+        if(sys_gethash() == hash(solution)){
+            found = 1;
+            break;
+        }
+        for(int i = 0; i <= MAX_HASH_LENGTH; i++){
+            if(solution[i] == 0) solution[i] = 'a';
+            else solution[i]++;
+            if (solution[i] <= 'z') break;
+            solution[i] = 'a';
+        }
+    }
+
+    if(found)
+        puts(solution);
+    else
+        puts("couldnt find solution");
+    
+        uint64_t time2 = reset_tsc();
+    print(int_to_str(time2 - time1, "                   \0"));
+    print(" cpu cycles\n");
+    
+    return time2 - time1; 
+}
+
 
 void sethash(char* params[]){
     sys_sethash(string_to_int(params[0]));
