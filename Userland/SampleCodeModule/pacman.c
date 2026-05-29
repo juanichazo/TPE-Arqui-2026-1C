@@ -23,9 +23,9 @@
 #define SCORE_BIG_DOT      50
 #define STARTING_LIVES     3
 
-/* ── ghost speed: 1 move every N game-loop frames ─────── */
 #define GHOST_MOVE_INTERVAL 2
 
+// mapa que se actualiza
 int map[MAP_HEIGHT][MAP_WIDTH] = {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
     {1,2,2,2,2,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,1},
@@ -129,10 +129,6 @@ int ghost_bmp[8][8] = {
     {1,0,0,0,0,0,0,1}
 };
 
-/* ═══════════════════════════════════════════════════════
-   TYPES
-═══════════════════════════════════════════════════════ */
-
 typedef enum { UP, DOWN, LEFT, RIGHT, NONE } Direction;
 
 typedef struct {
@@ -144,24 +140,15 @@ typedef struct {
 
 typedef enum { MENU, PLAYING_1P, PLAYING_2P, GAME_OVER, WIN } GameState;
 
-/* ═══════════════════════════════════════════════════════
-   GLOBALS
-═══════════════════════════════════════════════════════ */
-
 GameState currentState = MENU;
 Entity pacman;
 Entity ghosts[NUM_GHOSTS];
 
 int score      = 0;
 int lives      = STARTING_LIVES;
-int ghost_tick = 0;   /* frame counter used to throttle ghost speed */
+int ghost_tick = 0;  
 
-/* ═══════════════════════════════════════════════════════
-   HUD – 3×5 pixel font rendered with drawRectangle()
-   Bit layout of each row byte: bit2=col0, bit1=col1, bit0=col2
-═══════════════════════════════════════════════════════ */
-
-static const uint8_t digit_font[10][5] = {
+static const uint8_t digit_bmp[10][5] = {
     {7,5,5,5,7},  /* 0 */
     {2,6,2,2,7},  /* 1 */
     {7,1,7,4,7},  /* 2 */
@@ -186,7 +173,7 @@ static const uint8_t digit_font[10][5] = {
 static void drawDigit(int digit, int px, int py, uint32_t color)
 {
     for (int row = 0; row < 5; row++) {
-        uint8_t bits = digit_font[digit][row];
+        uint8_t bits = digit_bmp[digit][row];
         for (int col = 0; col < 3; col++) {
             uint32_t c = ((bits >> (2 - col)) & 1) ? color : 0x000000;
             int x1 = px + col * DPIX;
