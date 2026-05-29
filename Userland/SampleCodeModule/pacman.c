@@ -873,6 +873,11 @@ void startPacman(void)
         printInt(score);
         putChar('\n');
 
-        sleep(300);
+        sleep(50);
+        clearScreen();
+        setTextSize(10);
+        setTextColor(0xFFFFFF, 0x000000);
+
+        return;
     }
 }

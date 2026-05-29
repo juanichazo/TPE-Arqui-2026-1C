@@ -1,11 +1,6 @@
-/**
- * Pac-Man Comprehensive Game Assets File (20x20 Tiles)
- * Screen Height: 760px (38 rows * 20px)
- * Screen Width: 560px (28 columns * 20px)
- */
-
-#ifndef PACMAN_ASSETS_H
-#define PACMAN_ASSETS_H
+#include <stdint.h>
+#ifndef PACMAN_MAP_H
+#define PACMAN_MAP_H
 
 #define MAP_ROWS 38
 #define MAP_COLS 28
