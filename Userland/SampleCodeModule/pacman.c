@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "include/libc.h"
+#include "pacman_map.h"
 
 #define NUM_GHOSTS 4
 
@@ -18,6 +19,7 @@
 #define SCALE 2
 #define OFFSET_X 176
 #define OFFSET_Y 12
+#define TILEMAP_ROW_OFFSET 3
 
 #define SCORE_SMALL_DOT 10
 #define SCORE_BIG_DOT 50
@@ -27,38 +29,26 @@
 
 static const int GHOST_RELEASE[4] = {0, 20, 40, 60};
 
-static const int ORIGINAL_MAP[MAP_HEIGHT][MAP_WIDTH] = {
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1},
-    {1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1},
-    {1, 3, 1, 0, 0, 1, 2, 1, 0, 0, 0, 1, 2, 1, 1, 2, 1, 0, 0, 0, 1, 2, 1, 0, 0, 1, 3, 1},
-    {1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1},
-    {1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1},
-    {1, 2, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 2, 1},
-    {1, 2, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 2, 1},
-    {1, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 1},
-    {1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1},
-    {0, 0, 0, 0, 0, 1, 2, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 2, 1, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 1, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 1, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 1, 2, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 2, 1, 0, 0, 0, 0, 0},
-    {1, 1, 1, 1, 1, 1, 2, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1},
-    {0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0},
-    {1, 1, 1, 1, 1, 1, 2, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1},
-    {0, 0, 0, 0, 0, 1, 2, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 1, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 1, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 1, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 1, 2, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 1, 0, 0, 0, 0, 0},
-    {1, 1, 1, 1, 1, 1, 2, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1},
-    {1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1},
-    {1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1},
-    {1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 2, 1},
-    {1, 3, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 3, 1},
-    {1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1},
-    {1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1},
-    {1, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 1},
-    {1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1},
-    {1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1},
-    {1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
+static int tileToLogicValue(int tile)
+{
+    switch (tile)
+    {
+    case TILE_PELLET:       return 2;
+    case TILE_POWER_PELLET: return 3;
+    case TILE_WALL_H:
+    case TILE_WALL_V:
+    case TILE_CORNER_TL:
+    case TILE_CORNER_TR:
+    case TILE_CORNER_BL:
+    case TILE_CORNER_BR:
+    case TILE_T_UP:
+    case TILE_T_DOWN:       return 1;
+    case TILE_EMPTY:
+    case TILE_GHOST_GATE:
+    case TILE_OUT_OF_BOUND:
+    default:                return 0;
+    }
+}
 
 int map[MAP_HEIGHT][MAP_WIDTH];
 
@@ -226,19 +216,63 @@ static void drawHUD(void)
     }
 }
 
-void drawWallCell(int pixel_x, int pixel_y)
+void drawWallTile(int px, int py, int tile_type)
 {
-    uint32_t wallColor = 0x0000FF;
-    drawRect(pixel_x, pixel_y, BLOCK_SIZE, BLOCK_SIZE, 0x000000);
+    uint32_t wallColor = 0x0000FF; 
+    
+    drawRect(px, py, BLOCK_SIZE, BLOCK_SIZE, 0x000000);
 
-    if (pixel_y > 0)
+    int mid = BLOCK_SIZE / 2; 
+    int thick = 2; // Grosor de la pared
+
+    // Dibujamos según el tipo específico de pared
+    switch (tile_type)
     {
-        drawRect(pixel_x, pixel_y, BLOCK_SIZE, 1, wallColor);
-    }
+    case TILE_WALL_H:
+        // Línea horizontal de lado a lado
+        drawRect(px, py + mid - 1, BLOCK_SIZE, thick, wallColor);
+        break;
 
-    drawRect(pixel_x, pixel_y + BLOCK_SIZE - 1, BLOCK_SIZE, 1, wallColor);
-    drawRect(pixel_x, pixel_y, 1, BLOCK_SIZE, wallColor);
-    drawRect(pixel_x + BLOCK_SIZE - 1, pixel_y, 1, BLOCK_SIZE, wallColor);
+    case TILE_WALL_V:
+        // Línea vertical de arriba a abajo
+        drawRect(px + mid - 1, py, thick, BLOCK_SIZE, wallColor);
+        break;
+
+    case TILE_CORNER_TL: // Esquina Superior Izquierda (dobla hacia abajo y derecha)
+        drawRect(px + mid - 1, py + mid - 1, mid + 1, thick, wallColor); // Derecha
+        drawRect(px + mid - 1, py + mid - 1, thick, mid + 1, wallColor); // Abajo
+        break;
+
+    case TILE_CORNER_TR: // Esquina Superior Derecha (dobla hacia abajo e izquierda)
+        drawRect(px, py + mid - 1, mid + 1, thick, wallColor);           // Izquierda
+        drawRect(px + mid - 1, py + mid - 1, thick, mid + 1, wallColor); // Abajo
+        break;
+
+    case TILE_CORNER_BL: // Esquina Inferior Izquierda (dobla hacia arriba y derecha)
+        drawRect(px + mid - 1, py + mid - 1, mid + 1, thick, wallColor); // Derecha
+        drawRect(px + mid - 1, py, thick, mid, wallColor);               // Arriba
+        break;
+
+    case TILE_CORNER_BR: // Esquina Inferior Derecha (dobla hacia arriba e izquierda)
+        drawRect(px, py + mid - 1, mid + 1, thick, wallColor);           // Izquierda
+        drawRect(px + mid - 1, py, thick, mid, wallColor);               // Arriba
+        break;
+
+    case TILE_T_UP: // Forma de T hacia arriba
+        drawRect(px, py + mid - 1, BLOCK_SIZE, thick, wallColor);        // Horizontal completa
+        drawRect(px + mid - 1, py, thick, mid, wallColor);               // Palito hacia arriba
+        break;
+
+    case TILE_T_DOWN: // Forma de T hacia abajo
+        drawRect(px, py + mid - 1, BLOCK_SIZE, thick, wallColor);        // Horizontal completa
+        drawRect(px + mid - 1, py + mid, thick, mid, wallColor);         // Palito hacia abajo
+        break;
+
+    default:
+        // Si es otro tipo de pared no especificado, dibujamos un puntito para debuggear
+        drawRect(px + mid - 1, py + mid - 1, thick, thick, wallColor);
+        break;
+    }
 }
 
 void drawMap(void)
@@ -249,21 +283,23 @@ void drawMap(void)
         {
             int px = x * BLOCK_SIZE;
             int py = y * BLOCK_SIZE;
+            
+            int tile = pacman_tilemap[y + TILEMAP_ROW_OFFSET][x];
 
             if (map[y][x] == 1)
             {
-                drawWallCell(px, py);
+                drawWallTile(px, py, tile); 
             }
             else
             {
                 drawRect(px, py, BLOCK_SIZE, BLOCK_SIZE, 0x000000);
                 if (map[y][x] == 2)
                 {
-                    drawRect(px + 3, py + 3, 2, 2, 0xFFFFFF);
+                    drawRect(px + 5, py + 5, 2, 2, 0xFFFFFF); 
                 }
                 else if (map[y][x] == 3)
                 {
-                    drawRect(px + 2, py + 2, 4, 4, 0xFFFFFF);
+                    drawRect(px + 4, py + 4, 4, 4, 0xFFFFFF);
                 }
             }
         }
@@ -332,7 +368,7 @@ void eraseEntity(Entity *e)
     int px = e->x * BLOCK_SIZE;
     int py = e->y * BLOCK_SIZE;
     drawRect(px, py, BLOCK_SIZE, BLOCK_SIZE, 0x000000);
-
+ 
     if (map[e->y][e->x] == 2)
     {
         drawRect(px + 3, py + 3, 2, 2, 0xFFFFFF);
@@ -412,18 +448,19 @@ void initGame(int two_players_mode)
     game_tick = 0;
     dots_eaten = 0;
     total_dots = 0;
-
+ 
     for (int y = 0; y < MAP_HEIGHT; y++)
     {
         for (int x = 0; x < MAP_WIDTH; x++)
         {
-            map[y][x] = ORIGINAL_MAP[y][x];
+            map[y][x] = tileToLogicValue(pacman_tilemap[y + TILEMAP_ROW_OFFSET][x]);
             if (map[y][x] == 2 || map[y][x] == 3)
             {
                 total_dots++;
             }
         }
     }
+    
     respawnEntities(two_players_mode);
 }
 
@@ -520,41 +557,26 @@ void moveGhostAI(Entity *ghost, int ghost_id)
     {
         tx = pacman.x;
         ty = pacman.y;
-        if (ghost_id == 1)
+        
+        if (ghost_id == 1) // Pinky (emboscada)
         {
-
             switch (pacman.current_dir)
             {
-            case UP:
-                ty -= 4;
-                break;
-
-            case DOWN:
-                ty += 4;
-                break;
-
-            case LEFT:
-                tx -= 4;
-                break;
-
-            case RIGHT:
-                tx += 4;
-                break;
-
-            default:
-                break;
+            case UP:    ty -= 4; break;
+            case DOWN:  ty += 4; break;
+            case LEFT:  tx -= 4; break;
+            case RIGHT: tx += 4; break;
+            default: break;
             }
         }
-        else if (ghost_id == 2)
+        else if (ghost_id == 2) // Inky (flanqueo)
         {
-            int mid_x = pacman.x + (pacman.current_dir == RIGHT ? 2 : pacman.current_dir == LEFT ? -2
-                                                                                                 : 0);
-            int mid_y = pacman.y + (pacman.current_dir == DOWN ? 2 : pacman.current_dir == UP ? -2
-                                                                                              : 0);
+            int mid_x = pacman.x + (pacman.current_dir == RIGHT ? 2 : pacman.current_dir == LEFT ? -2 : 0);
+            int mid_y = pacman.y + (pacman.current_dir == DOWN ? 2 : pacman.current_dir == UP ? -2 : 0);
             tx = 2 * mid_x - ghosts[0].x;
             ty = 2 * mid_y - ghosts[0].y;
         }
-        else if (ghost_id == 3)
+        else if (ghost_id == 3) // Clyde (dispersión)
         {
             if (absi(ghost->x - pacman.x) + absi(ghost->y - pacman.y) < 8)
             {
@@ -570,7 +592,7 @@ void moveGhostAI(Entity *ghost, int ghost_id)
 
     for (int i = 0; i < 4; i++)
     {
-        if (dirs[i] == opp)
+        if (dirs[i] == opp && ghost->current_dir != NONE)
         {
             continue;
         }
@@ -586,11 +608,29 @@ void moveGhostAI(Entity *ghost, int ghost_id)
         {
             nx = 0;
         }
-        if (ny < 0 || ny >= MAP_HEIGHT || map[ny][nx] == 1)
+        
+        if (ny < 0 || ny >= MAP_HEIGHT)
+        {
             continue;
+        }
+
+        int is_wall = (map[ny][nx] == 1);
+        
+        if (pacman_tilemap[ny + TILEMAP_ROW_OFFSET][nx] == TILE_GHOST_GATE) {
+            if (ghost->in_house) {
+                is_wall = 0; 
+            } else {
+                is_wall = 1; // para que el rojo no entre al rectángulo
+            }
+        }
+
+        if (is_wall) {
+            continue;
+        }
 
         int dist = absi(nx - tx) + absi(ny - ty);
-        if (dist < best_dist)
+        
+        if (dist < best_dist || (dist == best_dist && dirs[i] == ghost->current_dir))
         {
             best_dist = dist;
             best = dirs[i];
@@ -601,28 +641,29 @@ void moveGhostAI(Entity *ghost, int ghost_id)
     {
         for (int i = 0; i < 4; i++)
         {
-            int nx = ghost->x + dx[i];
-            int ny = ghost->y + dy[i];
-
-            if (nx < 0)
-            {
-                nx = MAP_WIDTH - 1;
-            }
-            else if (nx >= MAP_WIDTH)
-            {
-                nx = 0;
-            }
-
-            if (ny < 0 || ny >= MAP_HEIGHT)
+            if (dirs[i] == opp && ghost->current_dir != NONE) 
             {
                 continue;
             }
+            
+            int nx = ghost->x + dx[i];
+            int ny = ghost->y + dy[i];
+
+            if (nx < 0) nx = MAP_WIDTH - 1;
+            else if (nx >= MAP_WIDTH) nx = 0;
+
+            if (ny < 0 || ny >= MAP_HEIGHT) continue;
 
             if (map[ny][nx] != 1)
             {
                 best = dirs[i];
                 break;
             }
+        }
+
+        if (best == NONE) 
+        {
+            best = opp;
         }
     }
 
@@ -843,6 +884,7 @@ void startPacman(void)
         setTextColor(0xFFFFFF, 0x000000);
 
         initGame(currentState == PLAYING_2P ? 1 : 0);
+        
         gameLoop();
 
         drawRectangle(0, 0, X_RESOLUTION - 1, Y_RESOLUTION - 1, 0x000000);
