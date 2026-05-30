@@ -39,12 +39,14 @@ int readLine(char * buffer, int maxSize) {
     char c;
 
     while (index < maxSize - 1 && (c = getChar())) {
-        putChar(c);
         if (c == '\n') {            
+            putChar(c);
             break;
         } else if (c == '\b' && index > 0) {
+            putChar(c);
             index--;
         } else { 
+            putChar(c);
             buffer[index++] = c;
         }        
     }
@@ -139,22 +141,6 @@ uint64_t string_to_int(char* string){
     return toRet;
 }
 
-char* int_to_str(uint64_t num, char* string){
-    int i = 0;
-    while(num > 0){
-        string[i++] = (char)(num % 10) + '0';
-        num /= 10;
-    }
-    // Reverse the string to get the correct order
-    for (int j = 0, k = i - 1; j < k; j++, k--) {
-        char temp = string[j];
-        string[j] = string[k];
-        string[k] = temp;
-    }
-
-    return string;
-}
-
 uint64_t printf(char* format, ...){
     va_list arg;
     uint64_t count = 0;
@@ -167,6 +153,7 @@ uint64_t printf(char* format, ...){
                 case 'l':
                     count += printInt(va_arg(arg, uint64_t)); break;
                 case 'X':
+                case 'x':
                     count += printHex(va_arg(arg, uint64_t)); break;
                 case 's':
                     count += print(va_arg(arg, char*)); break;
@@ -174,7 +161,7 @@ uint64_t printf(char* format, ...){
                     puts("Format not recognized");
                     return -1;
             }
-            format += 3;
+            format += 2;
         } else {
             putChar(*(format++));
             count++;
@@ -238,12 +225,15 @@ uint64_t printHex(uint64_t n){
     return count;
 }
 
-char last;
+char lineBuffer[100];
+uint64_t bufferIdx;
 
 uint64_t scanf(char* format, ...){
     va_list arg;
     uint64_t count = 0;
+    bufferIdx = 0;
     va_start(arg, format);
+    readLine(lineBuffer, 100);
 
     while(*format){ 
         if(*format == '%'){
@@ -252,6 +242,7 @@ uint64_t scanf(char* format, ...){
                 case 'l':
                     *(va_arg(arg, uint64_t*)) = readInt(); break;
                 case 'X':
+                case 'x':
                     *(va_arg(arg, uint64_t*)) = readHex(); break;
                 case 's':
                     readString(va_arg(arg, char*)); break;
@@ -259,13 +250,13 @@ uint64_t scanf(char* format, ...){
                     puts("Format not recognized");
                     return -1;
             }
-            if(last == ' ')
-                format++;
             format += 2;
             count++;
-        } else if(*(format++) != getChar()){
-            return count;
-        }
+            if(lineBuffer[--bufferIdx] == '\n' || lineBuffer[bufferIdx] == 0)
+                break;
+        } else if(*(format++) != lineBuffer[bufferIdx++]){
+            break;
+        } 
     }
 
     return count;
@@ -275,11 +266,11 @@ uint64_t readInt(){
     uint64_t result = 0;
     char c;
 
-    while(c = getChar()) {
+    while(c = lineBuffer[bufferIdx++]) {
         if (c >= '0' && c <= '9') {
             result = result * 10 + (uint64_t)(c - '0');
         } else {
-            return result;
+            break;
         }
     }
     return result;
@@ -291,29 +282,27 @@ uint64_t readHex(){
     char c;
     int started = 0;
 
-    while (c = getChar()) {
+    while (c = lineBuffer[bufferIdx++]) {
         if (!started && c == '0') {
-            putChar(c);
-            char n = getChar();
+            char n = lineBuffer[bufferIdx++];
             if (n == 'x' || n == 'X') {
-                putChar(n);
+                started = 1;
                 continue;
             } else {
-                c = n;
-                started = 1;
+                bufferIdx -= 1;
+                break;
             }
         }
 
         if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')) {
-            putChar(c);
             if (c >= '0' && c <= '9') result = (result << 4) + (uint64_t)(c - '0');
             else if (c >= 'a' && c <= 'f') result = (result << 4) + (uint64_t)(10 + c - 'a');
             else result = (result << 4) + (uint64_t)(10 + c - 'A');
         } else {
-            return result;
+            break;
         }
     }
-
+    
     return result;
 
 }
@@ -322,12 +311,11 @@ uint64_t readString(char* string){
     int index = 0;
     char c;
 
-    while (c = getChar()) {
+    while (c = lineBuffer[bufferIdx++]) {
         if (c == '\n' || c == ' ') {
             break;
         } else {
             string[index++] = c;
-            putChar(c);
         }
     }
     string[index] = 0;

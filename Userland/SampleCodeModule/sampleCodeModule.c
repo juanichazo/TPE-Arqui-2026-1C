@@ -78,8 +78,9 @@ void clear(){
 }
 
 void setsize(char* params[]){
-    if(sys_settextsize(string_to_int(params[0]))){
-        printf("%d is not a valid size\n", params[0]);
+    uint64_t size = string_to_int(params[0]);
+    if(!sys_settextsize(size)){
+        printf("%d is not a valid size\n", size);
     }
 }
 
@@ -116,10 +117,7 @@ Command commands[] = {
 
 int main() {
     int is_command;
-    // puts("Prueba scanf");
-    // uint64_t int1, int2;
-    // scanf("%d %X %s", int1, int2, line_buffer);
-    // printf("leído: %d %X %s", int1, int2, line_buffer);
+    
     while(1){
         sys_setcolor(0x30FF30, 0x0);
         print(shell_message);
