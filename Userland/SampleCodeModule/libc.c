@@ -5,6 +5,7 @@ uint64_t printInt(uint64_t n);
 uint64_t printHex(uint64_t n);
 uint64_t print(char* string);
 
+int readLine(char * buffer, int maxSize);
 uint64_t readString(char* string);
 uint64_t readHex();
 uint64_t readInt();

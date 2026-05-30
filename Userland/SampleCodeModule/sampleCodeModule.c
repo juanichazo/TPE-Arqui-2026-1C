@@ -31,6 +31,10 @@ uint64_t hash(unsigned char *str){
     return hash;
 }
 
+uint64_t printHash(char* params[]){
+    printf("hash for %s: %d\n", params[0], hash(params[0]));
+}
+
 #define MAX_HASH_LENGTH 5
 
 uint64_t bruteforce_hashcode(){
@@ -85,7 +89,7 @@ void setsize(char* params[]){
 }
 
 void divzero(){
-    printf("Provocando division por cero...'\n'");
+    printf("Provocando division por cero...\n");
     volatile int a = 10;
     volatile int b = 0;
     volatile int c = a / b; 
@@ -96,28 +100,31 @@ void invalidop(){
     __asm__("ud2");
 }
 
+typedef int (*CommandFunction)(char* params[]);
+
 typedef struct{
     char* name;
-    int (*function)(char* params[]);
+    CommandFunction function;
 } Command;
 
 Command commands[] = {
-    {"help", help},
-    {"time", getTime}, 
-    {"pacman", startPacman},
-    {"echo", echo},
-    {"divzero", divzero},
-    {"invalidop", invalidop},
-    {"bruteforce", bruteforce_hashcode},
-    {"sethash", sethash},
-    {"clear", clear},
-    {"size", setsize},
-    {"regs", printRegisters}
+    {"help",    (CommandFunction) help},
+    {"time",    (CommandFunction) getTime}, 
+    {"pacman",  (CommandFunction) startPacman},
+    {"echo",    (CommandFunction) echo},
+    {"divzero", (CommandFunction) divzero},
+    {"invalidop", (CommandFunction) invalidop},
+    {"bruteforce", (CommandFunction) bruteforce_hashcode},
+    {"sethash", (CommandFunction) sethash},
+    {"hash",    (CommandFunction) printHash},
+    {"clear",   (CommandFunction) clear},
+    {"size",    (CommandFunction) setsize},
+    {"regs",    (CommandFunction) printRegisters}
 };
 
 int main() {
     int is_command;
-    
+
     while(1){
         sys_setcolor(0x30FF30, 0x0);
         print(shell_message);
@@ -140,6 +147,5 @@ int main() {
             printf("%s is not a command\n", line_buffer);
         }
     }
-
     return 0;
 }

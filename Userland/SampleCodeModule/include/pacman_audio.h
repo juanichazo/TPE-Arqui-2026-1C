@@ -1,3 +1,6 @@
+#ifndef PACMAN_AUDIO_H
+#define PACMAN_AUDIO_H
+
 #include <stdint.h>
 
 #define NOTE_B4  494
@@ -74,3 +77,5 @@ const uint32_t melodyDurations[] = {
 };
 
 #define MELODY_NOTE_COUNT sizeof(melodyFrequencies) / sizeof(melodyFrequencies[0])
+
+#endif
