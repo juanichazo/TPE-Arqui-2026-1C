@@ -896,21 +896,7 @@ void startPacman(void)
 
         while (currentState == MENU)
         {
-            clearScreen();
-            setTextSize(30);
-            setTextColor(COLOR_PACMAN, 0x000000);
-            puts("\n   PAC-MAN   \n");
-
-            setTextSize(15);
-            setTextColor(0xFFFFFF, 0x000000);
-            puts(" Seleccione el modo de juego:\n");
-
-            setTextColor(0x00FFFF, 0x000000);
-            puts("  1. Un Jugador  (Humano vs IA)");
-            setTextColor(0xFF0000, 0x000000);
-            puts("  2. Dos Jugadores (Humano vs Humano)\n");
-            setTextColor(0xFFFFFF, 0x000000);
-            puts("  Q. Salir a la terminal");
+            drawMenuScreen();
 
             char key = getChar();
             if (key == '1')
@@ -942,22 +928,10 @@ void startPacman(void)
         clearScreen();
         setTextSize(28);
 
-        if (currentState == WIN)
-        {
-            setTextColor(COLOR_PACMAN, 0x000000);
-            puts("\n\n   YOU WIN!   \n");
-        }
-        else
-        {
-            setTextColor(0xFF0000, 0x000000);
-            puts("\n\n  GAME OVER  \n");
-        }
-
-        setTextSize(16);
-        setTextColor(0xFFFFFF, 0x000000);
-        puts("  Score: ");
-        printInt(score);
-        putChar('\n');
+        if(currentState == WIN) 
+            drawWinScreen(score);
+        else                    
+            drawGameOverScreen(score);
 
         sleep(50);
         clearScreen();
