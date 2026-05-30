@@ -9,10 +9,8 @@
 
 extern void _hlt();
 
-#define STDIN 0
-#define STDOUT 1
-#define STDERR 2
-#define STDINRAW 3
+enum SYSCALL_RESULTS {ENOSYS = -1, SUCCESS, FAILURE};
+enum STREAMS {STDIN, STDOUT, STDERR, STDINRAW};
 
 typedef uint64_t (*SyscallHandler)(uint64_t, uint64_t, uint64_t, uint64_t, uint64_t);
 
@@ -25,7 +23,7 @@ uint64_t sys_read(uint64_t fd, char * buffer, uint64_t count) {
         buffer[0] = c;
         return c != 0;
     }
-    return -1;
+    return FAILURE;
 }
 
 uint64_t sys_write(uint64_t fd, char * buffer, uint64_t count) {
@@ -39,7 +37,7 @@ uint64_t sys_write(uint64_t fd, char * buffer, uint64_t count) {
         set_text_color(0xFFFFFF);
         return ret;
     }
-    return -1;
+    return FAILURE;
 }
 
 uint64_t sys_time(uint64_t selector) {
@@ -47,17 +45,16 @@ uint64_t sys_time(uint64_t selector) {
         case 0: return getHours();
         case 1: return getMinutes();
         case 2: return getSeconds();
-        default: return -1;
+        default: return FAILURE;
     }
 }
 
 uint64_t sys_draw(uint32_t color, uint64_t x, uint64_t y){
     if (x < getScreenWidth() && y < getScreenHeight()) {
         putPixel(color, x, y);
-        return 0; 
+        return SUCCESS; 
     }
-    
-    return -1;
+    return FAILURE;
 }
 
 uint64_t hashcode = 0x1234;
@@ -73,36 +70,44 @@ uint64_t sys_gethash() {
 uint64_t sys_setcolor(uint64_t text, uint64_t background){
     set_text_color(text & 0xFFFFFF);
     set_bg_color(background & 0xFFFFFF);
-    return 1;
+    return SUCCESS;
 }
 
 uint64_t sys_setsize(uint64_t text_size){
     if(text_size < 1 || text_size > 3) 
-        return 1;
+        return FAILURE;
     set_text_size(text_size);
-    return 0;
+    return SUCCESS;
 }
 
 uint64_t sys_sleep(uint64_t ticks_to_wait, uint64_t p2, uint64_t p3) {
     sleep(ticks_to_wait);
-    return 0;
+    return SUCCESS;
 }
 
 uint64_t sys_draw_rect(uint64_t x1, uint64_t y1, uint64_t x2, uint64_t y2, uint64_t color) {
     drawRect(x1, y1, x2, y2, color);
-    return 0;
+    return SUCCESS;
 }
 
 uint64_t sys_regs(){
     printRegisters();
+    return SUCCESS;
 }
 
 uint64_t sys_draw_buffer(uint64_t* bmp, uint64_t x, uint64_t y, uint64_t width, uint64_t height){
     drawFromArray(bmp, x, y, width, height);    
+    return SUCCESS; 
 }
 
 uint64_t sys_play_sound(uint64_t freq, uint64_t time_in_ticks){
     sd_beep((uint32_t)freq, time_in_ticks);
+    return SUCCESS;
+}
+
+void sys_play_music(uint32_t* freqs, uint64_t* durations, uint64_t count){
+    sd_play_music(freqs, durations, count);
+    return SUCCESS;
 }
 
 SyscallHandler syscalls[] = {
@@ -118,15 +123,14 @@ SyscallHandler syscalls[] = {
     (SyscallHandler)sys_draw_rect,
     (SyscallHandler)sys_regs,
     (SyscallHandler)sys_draw_buffer,
-    (SyscallHandler)sys_play_sound
+    (SyscallHandler)sys_play_sound,
+    (SyscallHandler)sys_play_music
 };
 
 uint64_t syscallDispatcher(uint64_t syscall, uint64_t p1, uint64_t p2, uint64_t p3, uint64_t p4, uint64_t p5) {
-    
-    if(syscall < sizeof(syscalls) / sizeof(syscalls[0])){
+    if(syscall < sizeof(syscalls) / sizeof(syscalls[0]))
         return syscalls[syscall](p1, p2, p3, p4, p5);
-    } 
-    
-    puts("[syscall unknown]"); // TODO podríamos hacer que esto sea una excepción
-    return -1;
+        
+    puts("[syscall unknown]");
+    return ENOSYS;
 }

@@ -5,6 +5,7 @@ uint64_t printInt(uint64_t n);
 uint64_t printHex(uint64_t n);
 uint64_t print(char* string);
 
+int readLine(char * buffer, int maxSize);
 uint64_t readString(char* string);
 uint64_t readHex();
 uint64_t readInt();
@@ -38,20 +39,28 @@ int readLine(char * buffer, int maxSize) {
     int index = 0;
     char c;
 
-    while (index < maxSize - 1 && (c = getChar())) {
-        if (c == '\n') {            
-            putChar(c);
+    while (index < maxSize - 1) {
+        c = getChar(); 
+
+        if (c == '\n') {
+            putChar('\n');
             break;
-        } else if (c == '\b' && index > 0) {
+            
+        } else if (c == '\b') {
+            if (index > 0) {
+                index--;
+                putChar('\b');
+            }
+            
+        } else if (c != 0) { 
+            buffer[index] = c;
+            index++;
             putChar(c);
-            index--;
-        } else { 
-            putChar(c);
-            buffer[index++] = c;
-        }        
+        }
     }
 
-    buffer[index] = 0;     
+    buffer[index] = 0; 
+    
     return index;
 }
 
@@ -320,4 +329,14 @@ uint64_t readString(char* string){
     }
     string[index] = 0;
     return index;
+}
+
+void playBackgroundMelody(uint32_t* notes, uint64_t* durations, uint64_t count){
+    sys_play_music(notes, durations, count);
+}
+
+void playMelody(uint32_t* notes, uint64_t* durations, uint64_t count){
+    for(int i = 0; i < count; i++){
+        sys_play_sound((uint64_t)notes[i], durations[i]);
+    }
 }

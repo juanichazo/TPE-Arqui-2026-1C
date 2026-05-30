@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <soundDriver.h>
 #include <console.h>
 #include <lib.h>
 
@@ -82,7 +83,10 @@ void saveKeyToBuffer(){
         shifted = 1;
     else if (scancode == 0xAA || scancode == 0xB6)
         shifted = 0;
+    else if (scancode == 0x1D || scancode == 0x38)
+        sd_beep(880, 4);
 }
+
 
 
 char keyboard_get_char() {

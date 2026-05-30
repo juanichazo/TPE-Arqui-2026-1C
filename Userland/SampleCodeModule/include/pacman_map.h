@@ -1,6 +1,7 @@
-#include <stdint.h>
 #ifndef PACMAN_MAP_H
 #define PACMAN_MAP_H
+
+#include <stdint.h>
 
 #define MAP_ROWS 38
 #define MAP_COLS 28

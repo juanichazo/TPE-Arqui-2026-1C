@@ -11,6 +11,7 @@ GLOBAL sys_draw_rect
 GLOBAL sys_regs
 GLOBAL sys_draw_buffer
 GLOBAL sys_play_sound
+GLOBAL sys_play_music
 GLOBAL reset_tsc
 
 section .text
@@ -70,6 +71,9 @@ sys_draw_buffer
 
 sys_play_sound
     syscall 12
+
+sys_play_music
+    syscall 13
 
 reset_tsc: ; TODO esta función habría que moverla a otro lado probablemente
     xor rax, rax
