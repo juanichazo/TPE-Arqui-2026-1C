@@ -14,6 +14,7 @@
 #define NOTE_F5  698
 #define NOTE_GS5 831
 #define NOTE_A5  880
+#define NOTE_E6 1319
 
 /*
  * 18 ticks = 1 segundo
@@ -62,7 +63,7 @@ const uint32_t melodyFrequencies[] = {
     NOTE_B5
 };
 
-const uint32_t melodyDurations[] = {
+const uint64_t melodyDurations[] = {
     2,2,2,2,
     1,2,3,2,
 
@@ -77,5 +78,16 @@ const uint32_t melodyDurations[] = {
 };
 
 #define MELODY_NOTE_COUNT sizeof(melodyFrequencies) / sizeof(melodyFrequencies[0])
+
+const uint32_t pelletFrequencies[] = {
+    NOTE_B5,
+    NOTE_E6
+};
+
+const uint32_t pelletDurations[] = {
+    1, 1
+};
+
+#define PELLET_NOTE_COUNT 2;
 
 #endif

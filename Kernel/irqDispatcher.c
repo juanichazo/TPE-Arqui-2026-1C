@@ -2,6 +2,7 @@
 #include <videoDriver.h>
 #include <stdint.h>
 #include <keyboardDriver.h>
+#include <soundDriver.h>
 #include <console.h>
 
 void int_20();
@@ -21,6 +22,7 @@ void irqDispatcher(uint64_t irq) {
 
 void int_20() {
 	timer_handler();
+	sd_music_step();
 }
 
 void int_21(){

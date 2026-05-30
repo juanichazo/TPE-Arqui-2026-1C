@@ -2,7 +2,7 @@
 #include "include/libc.h"
 #include <libc.h>
 #include <pacman_audio.h>
-#include "include/pacman_map.h"
+#include <pacman_map.h>
 
 #define NUM_GHOSTS 4
 
@@ -717,7 +717,7 @@ void handleCollision(void)
         return;
     }
 
-    respawnEntities(currentState == PLAYING_2P ? 1 : 0);
+    respawnEntities(currentState == PLAYING_2P);
     drawHUD();
     game_tick = 0;
     sleep(30);
@@ -860,35 +860,9 @@ void gameLoop(void)
     }
 }
 
-static void printInt(int num)
-{
-    if (num == 0)
-    {
-        putChar('0');
-        return;
-    }
-
-    char buf[12];
-    int i = 0;
-
-    while (num > 0)
-    {
-        buf[i++] = (char)('0' + num % 10);
-        num /= 10;
-    }
-
-    for (int j = i - 1; j >= 0; j--)
-    {
-        putChar(buf[j]);
-    }
-}
-
 void startPacman(void)
 {
-    for (int i = 0; i < MELODY_NOTE_COUNT; i++)
-    {
-        sys_play_sound(melodyFrequencies[i], melodyDurations[i]);
-    }
+    playMelody(melodyFrequencies, melodyDurations, MELODY_NOTE_COUNT);
 
     while (1)
     {
@@ -934,7 +908,7 @@ void startPacman(void)
         setTextSize(10);
         setTextColor(0xFFFFFF, 0x000000);
 
-        initGame(currentState == PLAYING_2P ? 1 : 0);
+        initGame(currentState == PLAYING_2P);
 
         gameLoop();
 
@@ -955,9 +929,7 @@ void startPacman(void)
 
         setTextSize(16);
         setTextColor(0xFFFFFF, 0x000000);
-        puts("  Score: ");
-        printInt(score);
-        putChar('\n');
+        printf("  Score: %d\n", score);
 
         sleep(50);
         clearScreen();

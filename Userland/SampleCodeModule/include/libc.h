@@ -27,4 +27,6 @@ void drawRectangle(uint64_t x1, uint64_t y1, uint64_t x2, uint64_t y2, uint32_t 
 void getTime();
 void sleep(uint64_t ticks);
 
+void playMelody(uint32_t* notes, uint64_t* durations, uint64_t count);
+
 #endif

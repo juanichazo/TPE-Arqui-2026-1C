@@ -31,3 +31,38 @@ void sd_beep(uint32_t freq, uint64_t time)
     sleep(time);
     sd_nosound();
 }
+
+uint32_t* current_freqs;
+uint64_t* current_durations;
+uint64_t time_remaining;
+uint64_t freqs_remianing;
+uint8_t playing = 0;
+
+void sd_play_music(uint32_t* freqs, uint64_t* durations, uint64_t count){
+    current_freqs = freqs;
+    current_durations = durations;
+    freqs_remianing = count;
+    
+    if(freqs_remianing--){
+        playing = 1;
+        sd_play_sound(*(current_freqs++));
+        time_remaining = *(current_durations++);
+    }
+}
+
+void sd_music_step(){
+    if(!playing) return;
+
+    if(time_remaining-- <= 0){
+        if(freqs_remianing <= 0){
+            sd_nosound();
+            playing = 0;
+            return;
+        }
+
+        freqs_remianing--;
+        
+        sd_play_sound(*(current_freqs++));
+        time_remaining = *(current_durations++);
+    }
+}

@@ -322,3 +322,7 @@ uint64_t readString(char* string){
     string[index] = 0;
     return index;
 }
+
+void playMelody(uint32_t* notes, uint64_t* durations, uint64_t count){
+    sys_play_music(notes, durations, count);
+}
