@@ -28,5 +28,6 @@ void getTime();
 void sleep(uint64_t ticks);
 
 void playMelody(uint32_t* notes, uint64_t* durations, uint64_t count);
+void playBackgroundMelody(uint32_t* notes, uint64_t* durations, uint64_t count);
 
 #endif

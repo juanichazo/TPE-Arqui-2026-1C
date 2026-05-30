@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "include/libc.h"
+#include <libc.h>
 #include <libc.h>
 #include <pacman_audio.h>
 #include <pacman_map.h>
@@ -862,8 +862,6 @@ void gameLoop(void)
 
 void startPacman(void)
 {
-    playMelody(melodyFrequencies, melodyDurations, MELODY_NOTE_COUNT);
-
     while (1)
     {
         currentState = MENU;
@@ -910,6 +908,7 @@ void startPacman(void)
 
         initGame(currentState == PLAYING_2P);
 
+        playMelody(melodyFrequencies, melodyDurations, MELODY_NOTE_COUNT);
         gameLoop();
 
         drawRectangle(0, 0, X_RESOLUTION - 1, Y_RESOLUTION - 1, 0x000000);

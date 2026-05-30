@@ -80,14 +80,14 @@ const uint64_t melodyDurations[] = {
 #define MELODY_NOTE_COUNT sizeof(melodyFrequencies) / sizeof(melodyFrequencies[0])
 
 const uint32_t pelletFrequencies[] = {
-    NOTE_B5,
-    NOTE_E6
+    NOTE_B4,
+    0
 };
 
 const uint32_t pelletDurations[] = {
     1, 1
 };
 
-#define PELLET_NOTE_COUNT 2;
+#define PELLET_NOTE_COUNT 1
 
 #endif

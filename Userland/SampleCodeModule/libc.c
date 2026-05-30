@@ -323,6 +323,12 @@ uint64_t readString(char* string){
     return index;
 }
 
-void playMelody(uint32_t* notes, uint64_t* durations, uint64_t count){
+void playBackgroundMelody(uint32_t* notes, uint64_t* durations, uint64_t count){
     sys_play_music(notes, durations, count);
+}
+
+void playMelody(uint32_t* notes, uint64_t* durations, uint64_t count){
+    for(int i = 0; i < count; i++){
+        sys_play_sound((uint64_t)notes[i], durations[i]);
+    }
 }
