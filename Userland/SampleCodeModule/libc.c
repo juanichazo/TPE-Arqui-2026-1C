@@ -39,20 +39,28 @@ int readLine(char * buffer, int maxSize) {
     int index = 0;
     char c;
 
-    while (index < maxSize - 1 && (c = getChar())) {
-        if (c == '\n') {            
-            putChar(c);
+    while (index < maxSize - 1) {
+        c = getChar(); 
+
+        if (c == '\n') {
+            putChar('\n');
             break;
-        } else if (c == '\b' && index > 0) {
+            
+        } else if (c == '\b') {
+            if (index > 0) {
+                index--;
+                putChar('\b');
+            }
+            
+        } else if (c != 0) { 
+            buffer[index] = c;
+            index++;
             putChar(c);
-            index--;
-        } else { 
-            putChar(c);
-            buffer[index++] = c;
-        }        
+        }
     }
 
-    buffer[index] = 0;     
+    buffer[index] = 0; 
+    
     return index;
 }
 
