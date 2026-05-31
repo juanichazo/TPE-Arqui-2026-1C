@@ -1,6 +1,5 @@
 #include <stdint.h>
 #include <libc.h>
-#include <libc.h>
 #include <pacman_audio.h>
 #include <pacman_map.h>
 
@@ -28,8 +27,15 @@
 #define STARTING_LIVES 3
 
 #define GHOST_MOVE_INTERVAL 2
+#define FRIGHTEN_DURATION 80
+#define SCORE_GHOST_EAT 200
+#define COLOR_FRIGHTENED 0x0000CC
+#define FRIGHTEN_FLASH_THRESHOLD 20
 
 static const int GHOST_RELEASE[4] = {0, 20, 40, 60};
+static const int GHOST_START_X[NUM_GHOSTS] = {13, 11, 13, 15};
+static const int GHOST_START_Y[NUM_GHOSTS] = {11, 14, 14, 14};
+static const int GHOST_START_IN_HOUSE[NUM_GHOSTS] = {0, 1, 1, 1};
 
 static int tileToLogicValue(int tile)
 {
@@ -88,6 +94,16 @@ int ghost_bmp[8][8] = {
     {1, 1, 1, 0, 0, 1, 1, 1},
     {1, 0, 0, 0, 0, 0, 0, 1}};
 
+static int ghost_eyes_bmp[8][8] = {
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 1, 1, 0, 0, 1, 1, 0},
+    {0, 1, 1, 0, 0, 1, 1, 0},
+    {0, 0, 1, 0, 0, 1, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0, 0, 0, 0}};
+
 int pacman_mouth_frame = 0;
 
 static const uint8_t digit_bmp[10][5] = {
@@ -119,6 +135,9 @@ typedef struct
     uint32_t color;
     int is_player_2;
     int in_house;
+    int frightened;
+    int frighten_timer;
+    int returning;
 } Entity;
 
 typedef enum
@@ -354,13 +373,34 @@ void drawEntity(Entity *e)
     }
     else
     {
+        if (e->returning)
+        {
+            for (int y = 0; y < 8; y++)
+                for (int x = 0; x < 8; x++)
+                    if (ghost_eyes_bmp[y][x])
+                        drawRect(px + x, py + y, 1, 1, 0xFFFFFF);
+            return;
+        }
+
+        uint32_t draw_color;
+        if (e->frightened)
+        {
+            if (e->frighten_timer < FRIGHTEN_FLASH_THRESHOLD && (game_tick / 4) % 2 == 0)
+                draw_color = 0xFFFFFF;
+            else
+                draw_color = COLOR_FRIGHTENED;
+        }
+        else
+        {
+            draw_color = e->color;
+        }
         for (int y = 0; y < 8; y++)
         {
             for (int x = 0; x < 8; x++)
             {
                 if (ghost_bmp[y][x])
                 {
-                    drawRect(px + x, py + y, 1, 1, e->color);
+                    drawRect(px + x, py + y, 1, 1, draw_color);
                 }
             }
         }
@@ -423,6 +463,9 @@ static void respawnEntities(int two_players_mode)
         ghosts[i].is_player_2 = (i == 0) ? two_players_mode : 0;
         ghosts[i].prev_x = ghosts[i].x;
         ghosts[i].prev_y = ghosts[i].y;
+        ghosts[i].frightened = 0;
+        ghosts[i].frighten_timer = 0;
+        ghosts[i].returning = 0;
     }
 
     pacman.prev_x = pacman.x;
@@ -515,20 +558,92 @@ void moveEntity(Entity *e)
             map[ny][nx] = 0;
             score += SCORE_BIG_DOT;
             dots_eaten++;
+            for (int i = 0; i < NUM_GHOSTS; i++)
+            {
+                ghosts[i].frightened = 1;
+                ghosts[i].frighten_timer = FRIGHTEN_DURATION;
+            }
         }
     }
 }
 
 void moveGhostAI(Entity *ghost, int ghost_id)
 {
+    static const int dx[4] = {0, 0, -1, 1};
+    static const int dy[4] = {-1, 1, 0, 0};
+    static const Direction dirs[4] = {UP, DOWN, LEFT, RIGHT};
+
+    if (ghost->returning)
+    {
+        int tx = 13, ty = 14;
+        Direction opp = oppositeDir(ghost->current_dir);
+        Direction best = NONE;
+        int best_dist = 99999;
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (dirs[i] == opp && ghost->current_dir != NONE) continue;
+            int nx = ghost->x + dx[i];
+            int ny = ghost->y + dy[i];
+            if (nx < 0) nx = MAP_WIDTH - 1;
+            else if (nx >= MAP_WIDTH) nx = 0;
+            if (ny < 0 || ny >= MAP_HEIGHT) continue;
+            if (map[ny][nx] == 1) continue;
+            int dist = absi(nx - tx) + absi(ny - ty);
+            if (dist < best_dist || (dist == best_dist && dirs[i] == ghost->current_dir))
+            {
+                best_dist = dist;
+                best = dirs[i];
+            }
+        }
+        if (best == NONE) best = opp;
+        if (best != NONE)
+        {
+            ghost->current_dir = best;
+            moveEntity(ghost);
+        }
+
+        if (absi(ghost->x - 13) + absi(ghost->y - 14) <= 1)
+        {
+            ghost->returning = 0;
+            ghost->in_house = 1;
+            ghost->x = 13;
+            ghost->y = 14;
+            ghost->current_dir = NONE;
+        }
+        return;
+    }
+
     if (game_tick < GHOST_RELEASE[ghost_id])
     {
         return;
     }
 
-    static const int dx[4] = {0, 0, -1, 1};
-    static const int dy[4] = {-1, 1, 0, 0};
-    static const Direction dirs[4] = {UP, DOWN, LEFT, RIGHT};
+    if (ghost->frightened && !ghost->in_house)
+    {
+        Direction opp = oppositeDir(ghost->current_dir);
+        Direction valid[4];
+        int count = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            if (dirs[i] == opp && ghost->current_dir != NONE)
+                continue;
+            int nx = ghost->x + dx[i];
+            int ny = ghost->y + dy[i];
+            if (nx < 0) nx = MAP_WIDTH - 1;
+            else if (nx >= MAP_WIDTH) nx = 0;
+            if (ny < 0 || ny >= MAP_HEIGHT) continue;
+            if (map[ny][nx] == 1) continue;
+            if (pacman_tilemap[ny + TILEMAP_ROW_OFFSET][nx] == TILE_GHOST_GATE) continue;
+            valid[count++] = dirs[i];
+        }
+        if (count > 0)
+            ghost->current_dir = valid[(ghost->x * 7 + ghost->y * 13 + game_tick) % count];
+        else
+            ghost->current_dir = opp;
+        moveEntity(ghost);
+        return;
+    }
 
     int tx, ty;
 
@@ -809,7 +924,9 @@ void gameLoop(void)
 
         for (int i = 0; i < NUM_GHOSTS; i++)
         {
-            if (ghosts[i].is_player_2)
+            if (ghosts[i].returning)
+                moveGhostAI(&ghosts[i], i);
+            else if (ghosts[i].is_player_2)
                 moveEntity(&ghosts[i]);
             else if (game_tick % GHOST_MOVE_INTERVAL == 0)
                 moveGhostAI(&ghosts[i], i);
@@ -837,23 +954,50 @@ void gameLoop(void)
 
             if (same_tile || crossed)
             {
-                handleCollision();
+                if (ghosts[i].frightened && !ghosts[i].in_house)
+                {
+                    score += SCORE_GHOST_EAT;
+                    ghosts[i].frightened = 0;
+                    ghosts[i].frighten_timer = 0;
+                    ghosts[i].returning = 1;
+                }
+                else if (!ghosts[i].frightened && !ghosts[i].returning)
+                {
+                    handleCollision();
 
-                if (currentState == GAME_OVER)
+                    if (currentState == GAME_OVER)
+                        break;
+
+                    for (int j = 0; j < NUM_GHOSTS; j++)
+                    {
+                        ghosts[j].frightened = 0;
+                        ghosts[j].frighten_timer = 0;
+                        ghosts[j].returning = 0;
+                    }
+
+                    drawMap();
+                    renderFrame();
+                    drawHUD();
+                    last_score = score;
+                    last_lives = lives;
+
                     break;
-
-                drawMap();
-                renderFrame();
-                drawHUD();
-                last_score = score;
-                last_lives = lives;
-
-                break;
+                }
             }
         }
 
         if (dots_eaten >= total_dots)
             currentState = WIN;
+
+        for (int i = 0; i < NUM_GHOSTS; i++)
+        {
+            if (ghosts[i].frighten_timer > 0)
+            {
+                ghosts[i].frighten_timer--;
+                if (ghosts[i].frighten_timer == 0)
+                    ghosts[i].frightened = 0;
+            }
+        }
 
         game_tick++;
         sleep(2);
