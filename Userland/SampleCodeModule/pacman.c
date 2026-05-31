@@ -27,6 +27,7 @@
 #define STARTING_LIVES 3
 
 #define GHOST_MOVE_INTERVAL 2
+#define VIS_SPEED 4
 #define FRIGHTEN_DURATION 80
 #define SCORE_GHOST_EAT 200
 #define COLOR_FRIGHTENED 0x0000CC
@@ -138,6 +139,9 @@ typedef struct
     int frightened;
     int frighten_timer;
     int returning;
+    int vis_x, vis_y;
+    int prev_vis_x, prev_vis_y;
+    Direction next_dir;
 } Entity;
 
 typedef enum
@@ -334,8 +338,8 @@ void drawMap(void)
 void drawEntity(Entity *e)
 {
     int (*bmp)[8] = (pacman_mouth_frame == 0) ? pacman_bmp_open : pacman_bmp_closed;
-    int px = e->x * BLOCK_SIZE;
-    int py = e->y * BLOCK_SIZE;
+    int px = e->vis_x;
+    int py = e->vis_y;
 
     if (e == &pacman)
     {
@@ -470,6 +474,20 @@ static void respawnEntities(int two_players_mode)
 
     pacman.prev_x = pacman.x;
     pacman.prev_y = pacman.y;
+    pacman.vis_x = pacman.x * BLOCK_SIZE;
+    pacman.vis_y = pacman.y * BLOCK_SIZE;
+    pacman.prev_vis_x = pacman.vis_x;
+    pacman.prev_vis_y = pacman.vis_y;
+    pacman.next_dir = NONE;
+
+    for (int i = 0; i < NUM_GHOSTS; i++)
+    {
+        ghosts[i].vis_x = ghosts[i].x * BLOCK_SIZE;
+        ghosts[i].vis_y = ghosts[i].y * BLOCK_SIZE;
+        ghosts[i].prev_vis_x = ghosts[i].vis_x;
+        ghosts[i].prev_vis_y = ghosts[i].vis_y;
+        ghosts[i].next_dir = NONE;
+    }
 }
 
 void initGame(int two_players_mode)
@@ -819,9 +837,15 @@ void handleCollision(void)
 {
     lives--;
 
+    // Limpiar todos los sprites antes del flash de muerte.
+    // La colisión se detecta en espacio lógico pero los fantasmas pueden estar
+    // en posiciones vis distintas, dejando artifacts superpuestos con pacman.
+    drawMap();
+    for (int i = 0; i < NUM_GHOSTS; i++)
+        drawEntity(&ghosts[i]);
+
     uint32_t saved_color = pacman.color;
     pacman.color = 0xFF0000;
-    redrawTile(pacman.x, pacman.y);
     drawEntity(&pacman);
     sleep(20);
     pacman.color = saved_color;
@@ -846,18 +870,28 @@ static void markDirty(int x, int y)
         dirty[y][x] = 1;
 }
 
+static void markVisDirty(int vx, int vy)
+{
+    int tx = vx / BLOCK_SIZE;
+    int ty = vy / BLOCK_SIZE;
+    markDirty(tx,     ty);
+    markDirty(tx + 1, ty);
+    markDirty(tx,     ty + 1);
+    markDirty(tx + 1, ty + 1);
+}
+
 static void renderFrame()
 {
     for (int y = 0; y < MAP_HEIGHT; y++)
         for (int x = 0; x < MAP_WIDTH; x++)
             dirty[y][x] = 0;
 
-    markDirty(pacman.prev_x, pacman.prev_y);
-    markDirty(pacman.x, pacman.y);
+    markVisDirty(pacman.prev_vis_x, pacman.prev_vis_y);
+    markVisDirty(pacman.vis_x,      pacman.vis_y);
     for (int i = 0; i < NUM_GHOSTS; i++)
     {
-        markDirty(ghosts[i].prev_x, ghosts[i].prev_y);
-        markDirty(ghosts[i].x, ghosts[i].y);
+        markVisDirty(ghosts[i].prev_vis_x, ghosts[i].prev_vis_y);
+        markVisDirty(ghosts[i].vis_x,      ghosts[i].vis_y);
     }
 
     for (int y = 0; y < MAP_HEIGHT; y++)
@@ -883,6 +917,44 @@ static void drawHUDIfChanged()
     }
 }
 
+static void advanceVis(Entity *e)
+{
+    e->prev_vis_x = e->vis_x;
+    e->prev_vis_y = e->vis_y;
+
+    int tx = e->x * BLOCK_SIZE;
+    int ty = e->y * BLOCK_SIZE;
+
+    // Túnel: si la distancia es mayor que media pantalla, snap instantáneo.
+    // Animar el cruce causaría que vis_x salga del mapa, generando artifacts.
+    int half_w = (MAP_WIDTH * BLOCK_SIZE) / 2;
+    if (tx - e->vis_x > half_w || e->vis_x - tx > half_w)
+        e->vis_x = tx;
+
+    if      (e->vis_x < tx) { e->vis_x += VIS_SPEED; if (e->vis_x > tx) e->vis_x = tx; }
+    else if (e->vis_x > tx) { e->vis_x -= VIS_SPEED; if (e->vis_x < tx) e->vis_x = tx; }
+
+    if      (e->vis_y < ty) { e->vis_y += VIS_SPEED; if (e->vis_y > ty) e->vis_y = ty; }
+    else if (e->vis_y > ty) { e->vis_y -= VIS_SPEED; if (e->vis_y < ty) e->vis_y = ty; }
+}
+
+static int isVisAligned(Entity *e)
+{
+    return e->vis_x == e->x * BLOCK_SIZE && e->vis_y == e->y * BLOCK_SIZE;
+}
+
+static int dirPassable(int x, int y, Direction d)
+{
+    static const int ddx[4] = {0, 0, -1, 1};
+    static const int ddy[4] = {-1, 1, 0, 0};
+    int nx = x + ddx[d];
+    int ny = y + ddy[d];
+    if (nx < 0) nx = MAP_WIDTH - 1;
+    else if (nx >= MAP_WIDTH) nx = 0;
+    if (ny < 0 || ny >= MAP_HEIGHT) return 0;
+    return map[ny][nx] != 1;
+}
+
 void gameLoop(void)
 {
     drawRectangle(0, 0, X_RESOLUTION - 1, Y_RESOLUTION - 1, 0x000000);
@@ -893,64 +965,91 @@ void gameLoop(void)
 
     while (currentState != GAME_OVER && currentState != WIN)
     {
+        // --- Input (bufferizado) ---
         char key = getCharNoWait();
         if (key != 0)
         {
-            if (key == 'w')
-                pacman.current_dir = UP;
-            else if (key == 's')
-                pacman.current_dir = DOWN;
-            else if (key == 'a')
-                pacman.current_dir = LEFT;
-            else if (key == 'd')
-                pacman.current_dir = RIGHT;
-            else if (key == 'q')
-                currentState = GAME_OVER;
+            if      (key == 'w') pacman.next_dir = UP;
+            else if (key == 's') pacman.next_dir = DOWN;
+            else if (key == 'a') pacman.next_dir = LEFT;
+            else if (key == 'd') pacman.next_dir = RIGHT;
+            else if (key == 'q') currentState = GAME_OVER;
 
             if (ghosts[0].is_player_2)
             {
-                if (key == 'i')
-                    ghosts[0].current_dir = UP;
-                else if (key == 'k')
-                    ghosts[0].current_dir = DOWN;
-                else if (key == 'j')
-                    ghosts[0].current_dir = LEFT;
-                else if (key == 'l')
-                    ghosts[0].current_dir = RIGHT;
+                if      (key == 'i') ghosts[0].next_dir = UP;
+                else if (key == 'k') ghosts[0].next_dir = DOWN;
+                else if (key == 'j') ghosts[0].next_dir = LEFT;
+                else if (key == 'l') ghosts[0].next_dir = RIGHT;
             }
         }
 
-        moveEntity(&pacman);
-
+        // --- Avanzar posiciones visuales ---
+        advanceVis(&pacman);
         for (int i = 0; i < NUM_GHOSTS; i++)
+            advanceVis(&ghosts[i]);
+
+        // --- Lógica de Pacman: solo cuando su vis llegó al tile destino ---
+        if (isVisAligned(&pacman))
         {
-            if (ghosts[i].returning)
-                moveGhostAI(&ghosts[i], i);
-            else if (ghosts[i].is_player_2)
-                moveEntity(&ghosts[i]);
-            else if (game_tick % GHOST_MOVE_INTERVAL == 0)
-                moveGhostAI(&ghosts[i], i);
+            if (pacman.next_dir != NONE && dirPassable(pacman.x, pacman.y, pacman.next_dir))
+            {
+                pacman.current_dir = pacman.next_dir;
+                pacman.next_dir = NONE;
+            }
+            moveEntity(&pacman);
+
+            if (pacman.current_dir != NONE)
+                pacman_mouth_frame = 1 - pacman_mouth_frame;
+            else
+                pacman_mouth_frame = 0;
+
+            for (int i = 0; i < NUM_GHOSTS; i++)
+            {
+                if (ghosts[i].frighten_timer > 0)
+                {
+                    ghosts[i].frighten_timer--;
+                    if (ghosts[i].frighten_timer == 0)
+                        ghosts[i].frightened = 0;
+                }
+            }
+
+            if (dots_eaten >= total_dots)
+                currentState = WIN;
+
+            game_tick++;
         }
 
-        if (pacman.current_dir != NONE)
-            pacman_mouth_frame = 1 - pacman_mouth_frame;
-        else
-            pacman_mouth_frame = 0;
-
-        renderFrame();
-        drawHUDIfChanged();
-
+        // --- Lógica de cada fantasma: independiente, cuando su propio vis llegó ---
         for (int i = 0; i < NUM_GHOSTS; i++)
         {
-            int same_tile =
-                (pacman.x == ghosts[i].x &&
-                 pacman.y == ghosts[i].y);
+            if (!isVisAligned(&ghosts[i])) continue;
 
-            int crossed =
-                (pacman.x == ghosts[i].prev_x &&
-                 pacman.y == ghosts[i].prev_y &&
-                 pacman.prev_x == ghosts[i].x &&
-                 pacman.prev_y == ghosts[i].y);
+            if (ghosts[i].returning)
+            {
+                moveGhostAI(&ghosts[i], i);
+            }
+            else if (ghosts[i].is_player_2)
+            {
+                if (ghosts[i].next_dir != NONE && dirPassable(ghosts[i].x, ghosts[i].y, ghosts[i].next_dir))
+                {
+                    ghosts[i].current_dir = ghosts[i].next_dir;
+                    ghosts[i].next_dir = NONE;
+                }
+                moveEntity(&ghosts[i]);
+            }
+            else
+            {
+                moveGhostAI(&ghosts[i], i);
+            }
+        }
+
+        // --- Colisiones (posiciones lógicas) ---
+        for (int i = 0; i < NUM_GHOSTS; i++)
+        {
+            int same_tile = (pacman.x == ghosts[i].x && pacman.y == ghosts[i].y);
+            int crossed   = (pacman.x == ghosts[i].prev_x && pacman.y == ghosts[i].prev_y &&
+                             pacman.prev_x == ghosts[i].x  && pacman.prev_y == ghosts[i].y);
 
             if (same_tile || crossed)
             {
@@ -963,6 +1062,8 @@ void gameLoop(void)
                 }
                 else if (!ghosts[i].frightened && !ghosts[i].returning)
                 {
+                    pacman.vis_x = pacman.x * BLOCK_SIZE;
+                    pacman.vis_y = pacman.y * BLOCK_SIZE;
                     handleCollision();
 
                     if (currentState == GAME_OVER)
@@ -980,27 +1081,15 @@ void gameLoop(void)
                     drawHUD();
                     last_score = score;
                     last_lives = lives;
-
                     break;
                 }
             }
         }
 
-        if (dots_eaten >= total_dots)
-            currentState = WIN;
-
-        for (int i = 0; i < NUM_GHOSTS; i++)
-        {
-            if (ghosts[i].frighten_timer > 0)
-            {
-                ghosts[i].frighten_timer--;
-                if (ghosts[i].frighten_timer == 0)
-                    ghosts[i].frightened = 0;
-            }
-        }
-
-        game_tick++;
-        sleep(2);
+        // --- Render ---
+        renderFrame();
+        drawHUDIfChanged();
+        sleep(1);
     }
 }
 
