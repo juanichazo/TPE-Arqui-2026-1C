@@ -83,7 +83,7 @@ void clear(){
 
 void setsize(char* params[]){
     uint64_t size = string_to_int(params[0]);
-    if(sys_settextsize(size)){
+    if(sys_settextsize(size) == 1){ // FAILURE definido con 1
         printf("%d is not a valid size\n", size);
     }
 }

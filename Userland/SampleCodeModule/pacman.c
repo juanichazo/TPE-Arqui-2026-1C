@@ -65,45 +65,125 @@ static int tileToLogicValue(int tile)
 
 int map[MAP_HEIGHT][MAP_WIDTH];
 
-int pacman_bmp_open[8][8] = {
-    {0, 0, 1, 1, 1, 1, 0, 0},
-    {0, 1, 1, 1, 1, 1, 0, 0},
-    {1, 1, 1, 1, 1, 0, 0, 0},
-    {1, 1, 1, 1, 0, 0, 0, 0},
-    {1, 1, 1, 1, 0, 0, 0, 0},
-    {1, 1, 1, 1, 1, 0, 0, 0},
-    {0, 1, 1, 1, 1, 1, 0, 0},
-    {0, 0, 1, 1, 1, 1, 0, 0}};
+int pacman_bmp_open[12][12] = {
+    {0,0,0,1,1,1,1,1,0,0,0,0},
+    {0,0,1,1,1,1,1,1,1,0,0,0},
+    {0,1,1,1,1,1,1,1,1,1,0,0},
+    {1,1,1,1,1,1,1,1,1,0,0,0},
+    {1,1,1,1,1,1,1,0,0,0,0,0},
+    {1,1,1,1,1,0,0,0,0,0,0,0},
+    {1,1,1,1,1,0,0,0,0,0,0,0},
+    {1,1,1,1,1,1,1,0,0,0,0,0},
+    {1,1,1,1,1,1,1,1,1,0,0,0},
+    {0,1,1,1,1,1,1,1,1,1,0,0},
+    {0,0,1,1,1,1,1,1,1,0,0,0},
+    {0,0,0,1,1,1,1,1,0,0,0,0},
+};
 
-int pacman_bmp_closed[8][8] = {
-    {0, 0, 1, 1, 1, 1, 0, 0},
-    {0, 1, 1, 1, 1, 1, 1, 0},
-    {1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1},
-    {0, 1, 1, 1, 1, 1, 1, 0},
-    {0, 0, 1, 1, 1, 1, 0, 0}};
+int pacman_bmp_closed[12][12] = {
+    {0,0,0,1,1,1,1,1,1,0,0,0},
+    {0,0,1,1,1,1,1,1,1,1,0,0},
+    {0,1,1,1,1,1,1,1,1,1,1,0},
+    {1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1},
+    {0,1,1,1,1,1,1,1,1,1,1,0},
+    {0,0,1,1,1,1,1,1,1,1,0,0},
+    {0,0,0,1,1,1,1,1,1,0,0,0},
+};
 
-int ghost_bmp[8][8] = {
-    {0, 0, 1, 1, 1, 1, 0, 0},
-    {0, 1, 1, 1, 1, 1, 1, 0},
-    {1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 1, 1, 0, 0, 1, 1, 1},
-    {1, 0, 0, 0, 0, 0, 0, 1}};
+int ghost_bmp[12][12] = {
+    {0,0,1,1,1,1,1,1,1,1,0,0},
+    {0,1,1,1,1,1,1,1,1,1,1,0},
+    {1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,1,1,0,0,1,1,0,0,1,1,1},
+    {1,0,0,0,0,1,1,0,0,0,0,1},
+};
 
-static int ghost_eyes_bmp[8][8] = {
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 1, 1, 0, 0, 1, 1, 0},
-    {0, 1, 1, 0, 0, 1, 1, 0},
-    {0, 0, 1, 0, 0, 1, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0}};
+static int ghost_eyes_bmp[12][12] = {
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,0,0,0,1,1,0,0,0},
+    {0,1,1,1,1,0,1,1,1,1,0,0},
+    {0,1,1,1,1,0,1,1,1,1,0,0},
+    {0,0,1,1,0,0,0,1,1,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+};
+
+static int ghost_pupil_bmp[12][12] = {
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,1,0,0,0,0,1,0,0,0},
+    {0,0,0,1,0,0,0,0,1,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+};
+
+static int ghost_scared_eyes_bmp[12][12] = {
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,1,1,0,0,0,0,1,1,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+};
+
+static int ghost_scared_mouth_bmp[12][12] = {
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,1,1,1,0,1,1,0,1,1,1,0},
+    {0,1,0,0,1,0,0,1,0,0,1,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+};
+
+static int ghost_eyes_only_bmp[12][12] = {
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,1,1,0,0,0,0,1,1,0,0,0},
+    {0,1,1,0,0,0,0,1,1,0,0,0},
+    {0,0,1,0,0,0,0,0,1,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+};
 
 int pacman_mouth_frame = 0;
 
@@ -230,11 +310,11 @@ static void drawHUD(void)
 
     for (int i = 0; i < lives && i < 5; i++)
     {
-        int lx = HUD_X + i * 18;
+        int lx = HUD_X + i * 28;
         int ly = HUD_Y + 62;
-        for (int y = 0; y < 8; y++)
+        for (int y = 0; y < 12; y++)
         {
-            for (int x = 0; x < 8; x++)
+            for (int x = 0; x < 12; x++)
             {
                 if (pacman_bmp_closed[y][x])
                 {
@@ -252,53 +332,49 @@ void drawWallTile(int px, int py, int tile_type)
     drawRect(px, py, BLOCK_SIZE, BLOCK_SIZE, 0x000000);
 
     int mid = BLOCK_SIZE / 2;
-    int thick = 2; // Grosor de la pared
+    int thick = 2;
 
-    // Dibujamos según el tipo específico de pared
     switch (tile_type)
     {
     case TILE_WALL_H:
-        // Línea horizontal de lado a lado
         drawRect(px, py + mid - 1, BLOCK_SIZE, thick, wallColor);
         break;
 
     case TILE_WALL_V:
-        // Línea vertical de arriba a abajo
         drawRect(px + mid - 1, py, thick, BLOCK_SIZE, wallColor);
         break;
 
-    case TILE_CORNER_TL:                                                 // Esquina Superior Izquierda (dobla hacia abajo y derecha)
-        drawRect(px + mid - 1, py + mid - 1, mid + 1, thick, wallColor); // Derecha
-        drawRect(px + mid - 1, py + mid - 1, thick, mid + 1, wallColor); // Abajo
+    case TILE_CORNER_TL:                                                 
+        drawRect(px + mid - 1, py + mid - 1, mid + 1, thick, wallColor); 
+        drawRect(px + mid - 1, py + mid - 1, thick, mid + 1, wallColor); 
         break;
 
-    case TILE_CORNER_TR:                                                 // Esquina Superior Derecha (dobla hacia abajo e izquierda)
-        drawRect(px, py + mid - 1, mid + 1, thick, wallColor);           // Izquierda
-        drawRect(px + mid - 1, py + mid - 1, thick, mid + 1, wallColor); // Abajo
+    case TILE_CORNER_TR:                                                 
+        drawRect(px, py + mid - 1, mid + 1, thick, wallColor);           
+        drawRect(px + mid - 1, py + mid - 1, thick, mid + 1, wallColor); 
         break;
 
-    case TILE_CORNER_BL:                                                 // Esquina Inferior Izquierda (dobla hacia arriba y derecha)
-        drawRect(px + mid - 1, py + mid - 1, mid + 1, thick, wallColor); // Derecha
-        drawRect(px + mid - 1, py, thick, mid, wallColor);               // Arriba
+    case TILE_CORNER_BL:                                                 
+        drawRect(px + mid - 1, py + mid - 1, mid + 1, thick, wallColor); 
+        drawRect(px + mid - 1, py, thick, mid, wallColor);              
         break;
 
-    case TILE_CORNER_BR:                                       // Esquina Inferior Derecha (dobla hacia arriba e izquierda)
-        drawRect(px, py + mid - 1, mid + 1, thick, wallColor); // Izquierda
-        drawRect(px + mid - 1, py, thick, mid, wallColor);     // Arriba
+    case TILE_CORNER_BR:                                       
+        drawRect(px, py + mid - 1, mid + 1, thick, wallColor); 
+        drawRect(px + mid - 1, py, thick, mid, wallColor);  
         break;
 
-    case TILE_T_UP:                                               // Forma de T hacia arriba
-        drawRect(px, py + mid - 1, BLOCK_SIZE, thick, wallColor); // Horizontal completa
-        drawRect(px + mid - 1, py, thick, mid, wallColor);        // Palito hacia arriba
+    case TILE_T_UP:                                               
+        drawRect(px, py + mid - 1, BLOCK_SIZE, thick, wallColor); 
+        drawRect(px + mid - 1, py, thick, mid, wallColor);  
         break;
 
-    case TILE_T_DOWN:                                             // Forma de T hacia abajo
-        drawRect(px, py + mid - 1, BLOCK_SIZE, thick, wallColor); // Horizontal completa
-        drawRect(px + mid - 1, py + mid, thick, mid, wallColor);  // Palito hacia abajo
+    case TILE_T_DOWN:                                             
+        drawRect(px, py + mid - 1, BLOCK_SIZE, thick, wallColor); 
+        drawRect(px + mid - 1, py + mid, thick, mid, wallColor);  
         break;
 
     default:
-        // Si es otro tipo de pared no especificado, dibujamos un puntito para debuggear
         drawRect(px + mid - 1, py + mid - 1, thick, thick, wallColor);
         break;
     }
@@ -337,36 +413,31 @@ void drawMap(void)
 
 void drawEntity(Entity *e)
 {
-    int (*bmp)[8] = (pacman_mouth_frame == 0) ? pacman_bmp_open : pacman_bmp_closed;
+    int (*bmp)[12] = (pacman_mouth_frame == 0) ? pacman_bmp_open : pacman_bmp_closed;
     int px = e->vis_x;
     int py = e->vis_y;
 
-    if (e == &pacman)
-    {
-        for (int y = 0; y < 8; y++)
-        {
-            for (int x = 0; x < 8; x++)
-            {
-                if (!bmp[y][x])
-                {
+    if (e == &pacman){
+        for (int y = 0; y < 12; y++){
+            for (int x = 0; x < 12; x++){
+                if (!bmp[y][x]){
                     continue;
                 }
 
                 int tx = x, ty = y;
 
-                switch (e->current_dir)
-                {
+                switch (e->current_dir){
                 case LEFT:
-                    tx = 7 - x;
+                    tx = 11 - x;
                     break;
 
                 case DOWN:
-                    tx = 7 - y;
+                    tx = 11 - y;
                     ty = x;
                     break;
                 case UP:
                     tx = y;
-                    ty = 7 - x;
+                    ty = 11 - x;
                     break;
                 default:
                     break;
@@ -375,37 +446,47 @@ void drawEntity(Entity *e)
             }
         }
     }
-    else
-    {
-        if (e->returning)
-        {
-            for (int y = 0; y < 8; y++)
-                for (int x = 0; x < 8; x++)
-                    if (ghost_eyes_bmp[y][x])
-                        drawRect(px + x, py + y, 1, 1, 0xFFFFFF);
-            return;
-        }
+    else{
+    if (e->returning){
+        for (int y = 0; y < 12; y++)
+            for (int x = 0; x < 12; x++)
+                if (ghost_eyes_only_bmp[y][x])
+                    drawRect(px + x, py + y, 1, 1, 0xFFFFFF);
+        return;
+    }
 
-        uint32_t draw_color;
-        if (e->frightened)
-        {
-            if (e->frighten_timer < FRIGHTEN_FLASH_THRESHOLD && (game_tick / 4) % 2 == 0)
-                draw_color = 0xFFFFFF;
-            else
-                draw_color = COLOR_FRIGHTENED;
-        }
+    if (e->frightened){
+        uint32_t body_color;
+        if (e->frighten_timer < FRIGHTEN_FLASH_THRESHOLD && (game_tick / 4) % 2 == 0)
+            body_color = 0xFFFFFF;
         else
-        {
-            draw_color = e->color;
-        }
-        for (int y = 0; y < 8; y++)
-        {
-            for (int x = 0; x < 8; x++)
-            {
+            body_color = COLOR_FRIGHTENED;
+
+        for (int y = 0; y < 12; y++)
+            for (int x = 0; x < 12; x++)
                 if (ghost_bmp[y][x])
-                {
-                    drawRect(px + x, py + y, 1, 1, draw_color);
-                }
+                    drawRect(px + x, py + y, 1, 1, body_color);
+
+        for (int y = 0; y < 12; y++)
+            for (int x = 0; x < 12; x++){
+                if (ghost_scared_eyes_bmp[y][x])
+                    drawRect(px + x, py + y, 1, 1, 0xFF8080);
+                if (ghost_scared_mouth_bmp[y][x])
+                    drawRect(px + x, py + y, 1, 1, 0xFF8080);
+            }
+    }
+    else{
+        for (int y = 0; y < 12; y++)
+            for (int x = 0; x < 12; x++)
+                if (ghost_bmp[y][x])
+                    drawRect(px + x, py + y, 1, 1, e->color);
+
+        for (int y = 0; y < 12; y++)
+            for (int x = 0; x < 12; x++){
+                if (ghost_eyes_bmp[y][x])
+                    drawRect(px + x, py + y, 1, 1, 0xFFFFFF);
+                if (ghost_pupil_bmp[y][x])
+                    drawRect(px + x, py + y, 1, 1, 0x0066FF);
             }
         }
     }
@@ -679,7 +760,7 @@ void moveGhostAI(Entity *ghost, int ghost_id)
         tx = pacman.x;
         ty = pacman.y;
 
-        if (ghost_id == 1) // Pinky (emboscada)
+        if (ghost_id == 1)
         {
             switch (pacman.current_dir)
             {
@@ -699,7 +780,7 @@ void moveGhostAI(Entity *ghost, int ghost_id)
                 break;
             }
         }
-        else if (ghost_id == 2) // Inky (flanqueo)
+        else if (ghost_id == 2) 
         {
             int mid_x = pacman.x + (pacman.current_dir == RIGHT ? 2 : pacman.current_dir == LEFT ? -2
                                                                                                  : 0);
@@ -708,7 +789,7 @@ void moveGhostAI(Entity *ghost, int ghost_id)
             tx = 2 * mid_x - ghosts[0].x;
             ty = 2 * mid_y - ghosts[0].y;
         }
-        else if (ghost_id == 3) // Clyde (dispersión)
+        else if (ghost_id == 3) 
         {
             if (absi(ghost->x - pacman.x) + absi(ghost->y - pacman.y) < 8)
             {
@@ -965,7 +1046,6 @@ void gameLoop(void)
 
     while (currentState != GAME_OVER && currentState != WIN)
     {
-        // --- Input (bufferizado) ---
         char key = getCharNoWait();
         if (key != 0)
         {
@@ -984,12 +1064,10 @@ void gameLoop(void)
             }
         }
 
-        // --- Avanzar posiciones visuales ---
         advanceVis(&pacman);
         for (int i = 0; i < NUM_GHOSTS; i++)
             advanceVis(&ghosts[i]);
 
-        // --- Lógica de Pacman: solo cuando su vis llegó al tile destino ---
         if (isVisAligned(&pacman))
         {
             if (pacman.next_dir != NONE && dirPassable(pacman.x, pacman.y, pacman.next_dir))
@@ -1020,7 +1098,6 @@ void gameLoop(void)
             game_tick++;
         }
 
-        // --- Lógica de cada fantasma: independiente, cuando su propio vis llegó ---
         for (int i = 0; i < NUM_GHOSTS; i++)
         {
             if (!isVisAligned(&ghosts[i])) continue;
@@ -1044,7 +1121,6 @@ void gameLoop(void)
             }
         }
 
-        // --- Colisiones (posiciones lógicas) ---
         for (int i = 0; i < NUM_GHOSTS; i++)
         {
             int same_tile = (pacman.x == ghosts[i].x && pacman.y == ghosts[i].y);
@@ -1086,7 +1162,6 @@ void gameLoop(void)
             }
         }
 
-        // --- Render ---
         renderFrame();
         drawHUDIfChanged();
         sleep(1);
