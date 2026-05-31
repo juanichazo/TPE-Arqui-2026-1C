@@ -80,23 +80,25 @@ SECTION .text
     mov [regs + 8*13], r14
     mov [regs + 8*14], r15
 
+	push rax ; para preservarlo
+
     ; extraemos registros del stack
-    mov rbx, [rsp]          ; RIP
-    mov [regs + 8*15], rbx 
+    mov rax, [rsp + 8]          ; RIP
+    mov [regs + 8*15], rax 
     
-    mov rbx, [rsp + 8]      ; CS
-    mov [regs + 8*16], rbx
+    mov rax, [rsp + 16]      ; CS
+    mov [regs + 8*16], rax
     
-    mov rbx, [rsp + 16]     ; RFLAGS
-    mov [regs + 8*17], rbx 
+    mov rax, [rsp + 24]     ; RFLAGS
+    mov [regs + 8*17], rax 
     
-    mov rbx, [rsp + 24]     ; rsp de userland 
-    mov [regs + 8*18], rbx
+    mov rax, [rsp + 32]     ; rsp de userland 
+    mov [regs + 8*18], rax
 
-	mov rbx, [rsp + 32]		; SS
-	mov [regs + 8*19], rbx
+	mov rax, [rsp + 40]		; SS
+	mov [regs + 8*19], rax
 
-	mov rax, regs
+	pop rax
 %endmacro
 
 %macro irqHandlerMaster 1
@@ -252,7 +254,7 @@ haltcpu:
 	ret
 
 getregs:
-	mov eax, regs
+	mov rax, regs
 	ret
 
 SECTION .data
