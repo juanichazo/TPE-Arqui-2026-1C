@@ -21,4 +21,4 @@
 
 *.swp
 
-./Bootloader/*
+/Bootloader/
