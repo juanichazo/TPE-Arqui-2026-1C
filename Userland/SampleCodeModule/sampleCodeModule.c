@@ -2,7 +2,7 @@
 #include <user_syscalls.h>
 #include <pacman.h>
 
-#define BUFFER_SIZE 100
+#define BUFFER_SIZE 255
 
 char line_buffer[BUFFER_SIZE+1];
 char* params[BUFFER_SIZE+1];
@@ -23,7 +23,7 @@ void help(){
     puts(" regs               : Muestra registros de la CPU");
 }
 
-uint64_t hash(unsigned char *str){
+uint64_t hash(char *str){
     uint64_t hash = 0x1234;
     int c;
     while ((c = *str++))
@@ -31,7 +31,7 @@ uint64_t hash(unsigned char *str){
     return hash;
 }
 
-uint64_t printHash(char* params[]){
+void printHash(char* params[]){
     printf("hash for %s: %d\n", params[0], hash(params[0]));
 }
 
@@ -78,7 +78,7 @@ void echo(){
 
 void clear(){
     char clear[2] = {14, 0};
-    print(clear);
+    printf(clear);
 }
 
 void setsize(char* params[]){
@@ -127,7 +127,7 @@ int main() {
 
     while(1){
         sys_setcolor(0x30FF30, 0x0);
-        print(shell_message);
+        printf(shell_message);
         sys_setcolor(0xFFFFFF, 0x0);
         
         readLine(line_buffer, BUFFER_SIZE);

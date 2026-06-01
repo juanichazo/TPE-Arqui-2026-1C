@@ -5,7 +5,6 @@ uint64_t printInt(uint64_t n);
 uint64_t printHex(uint64_t n);
 uint64_t print(char* string);
 
-int readLine(char * buffer, int maxSize);
 uint64_t readString(char* string);
 uint64_t readHex();
 uint64_t readInt();
@@ -213,7 +212,7 @@ uint64_t printHex(uint64_t n){
     // caso especial
     if (n == 0) {
         putChar('0');
-        return;
+        return 1;
     }
 
     // generar dígitos en orden inverso
@@ -275,7 +274,7 @@ uint64_t readInt(){
     uint64_t result = 0;
     char c;
 
-    while(c = lineBuffer[bufferIdx++]) {
+    while((c = lineBuffer[bufferIdx++])) {
         if (c >= '0' && c <= '9') {
             result = result * 10 + (uint64_t)(c - '0');
         } else {
@@ -291,7 +290,7 @@ uint64_t readHex(){
     char c;
     int started = 0;
 
-    while (c = lineBuffer[bufferIdx++]) {
+    while ((c = lineBuffer[bufferIdx++])) {
         if (!started && c == '0') {
             char n = lineBuffer[bufferIdx++];
             if (n == 'x' || n == 'X') {
@@ -320,7 +319,7 @@ uint64_t readString(char* string){
     int index = 0;
     char c;
 
-    while (c = lineBuffer[bufferIdx++]) {
+    while ((c = lineBuffer[bufferIdx++])) {
         if (c == '\n' || c == ' ') {
             break;
         } else {

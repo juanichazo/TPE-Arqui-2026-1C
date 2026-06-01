@@ -14,5 +14,6 @@ uint64_t print(char* string, uint64_t count);
 uint64_t readLine(char* buffer, uint64_t max);
 
 void redraw();
+void clearScreen();
 
 #endif

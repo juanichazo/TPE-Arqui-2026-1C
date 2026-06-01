@@ -1,4 +1,6 @@
 #include <stdint.h>
+#include <libc.h>
+
 #define BIG_SCALE   8  
 #define BIG_GAP     4
 #define BIG_W       (5 * BIG_SCALE + BIG_GAP) 
@@ -244,8 +246,7 @@ static void drawHLine(int y, int x1, int x2, int thick, uint32_t color)
 }
 
 
-void drawMenuScreen(void)
-{
+void drawMenuScreen(){
     drawRectangle(0, 0, X_RESOLUTION - 1, Y_RESOLUTION - 1, 0x000000);
 
     drawDotBorder(COLOR_PACMAN);
@@ -292,8 +293,7 @@ void drawMenuScreen(void)
 
 }
 
-void drawGameOverScreen(int final_score)
-{
+void drawGameOverScreen(int final_score){
     drawRectangle(0, 0, X_RESOLUTION - 1, Y_RESOLUTION - 1, 0x000000);
 
     drawDotBorder(0xFF0000);
@@ -321,8 +321,7 @@ void drawGameOverScreen(int final_score)
 }
 
 
-void drawWinScreen(int final_score)
-{
+void drawWinScreen(int final_score) {
     drawRectangle(0, 0, X_RESOLUTION - 1, Y_RESOLUTION - 1, 0x000000);
 
     drawDotBorder(COLOR_PACMAN);

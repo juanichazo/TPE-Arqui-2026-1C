@@ -9,8 +9,6 @@
 // DECLARACIÓN DE PROTOTIPOS
 //******************************************************************************
 
-static void setup_IDT_entry(int index, uint64_t offset, uint8_t access);
 void load_idt();
-
 
 #endif // _IDTLOADER_H_

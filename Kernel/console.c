@@ -51,9 +51,7 @@ void putChar(char c){
 		return;
 	}
 	if(c == 14){ // 14 es el char correspondiente a borrar la pantalla
-		memset(buffer, 0, BUFFER_WIDTH);
-		drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
-		currentY=0;
+		clearScreen();
 		return;
 	}
 
@@ -131,7 +129,7 @@ uint64_t readLine(char* buffer, uint64_t max){
     char c;    
 	while (chars_read < max) {
 		toggle_cursor();
-		if (c = keyboard_get_char()) {
+		if ((c = keyboard_get_char())) {
 			buffer[chars_read++] = c;
 		} else {
 			// Si el buffer está vacío duermo la CPU hasta que el teclado dispare una nueva interrupción 
@@ -194,6 +192,12 @@ void redraw(){
 	currentY = max - min;
 	
 	currentX = 0; */
+}
+
+void clearScreen(){
+	memset(buffer, 0, BUFFER_WIDTH);
+	drawRect(0, 0, getScreenWidth(), getScreenHeight(), 0);
+	currentY=0;
 }
 
 
