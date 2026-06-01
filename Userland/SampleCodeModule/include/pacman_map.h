@@ -35,7 +35,7 @@ typedef enum {
  * 2 = White/Yellow (Pellets / Items)
  * 3 = Pink (Ghost House Gate)
  */
-const uint64_t pacman_tile_bitmaps[NUM_TILES][TILE_SIZE][TILE_SIZE] = {
+static const uint64_t pacman_tile_bitmaps[NUM_TILES][TILE_SIZE][TILE_SIZE] = {
     // [0] TILE_EMPTY
     {
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, //                     
@@ -350,7 +350,7 @@ const uint64_t pacman_tile_bitmaps[NUM_TILES][TILE_SIZE][TILE_SIZE] = {
 
 };
 
-const int pacman_tilemap[MAP_ROWS][MAP_COLS] = {
+static const int pacman_tilemap[MAP_ROWS][MAP_COLS] = {
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},//InterfazSuperior
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},//InterfazSuperior
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},//InterfazSuperior

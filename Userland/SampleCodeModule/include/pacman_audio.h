@@ -22,7 +22,7 @@
  * 1 tick ≈ 55 ms
  */
 
-const uint32_t melodyFrequencies[] = {
+static const uint32_t melodyFrequencies[] = {
     NOTE_B4,
     NOTE_B5,
     NOTE_FS5,
@@ -63,7 +63,7 @@ const uint32_t melodyFrequencies[] = {
     NOTE_B5
 };
 
-const uint64_t melodyDurations[] = {
+static const uint64_t melodyDurations[] = {
     2,2,2,2,
     1,2,3,2,
 
@@ -79,12 +79,12 @@ const uint64_t melodyDurations[] = {
 
 #define MELODY_NOTE_COUNT sizeof(melodyFrequencies) / sizeof(melodyFrequencies[0])
 
-const uint32_t pelletFrequencies[] = {
+static const uint32_t pelletFrequencies[] = {
     NOTE_B4,
     0
 };
 
-const uint32_t pelletDurations[] = {
+static const uint32_t pelletDurations[] = {
     1, 1
 };
 
