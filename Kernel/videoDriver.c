@@ -54,11 +54,7 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 }
 
 void drawFromArray(uint64_t* bmp, uint64_t x, uint64_t y, uint64_t width, uint64_t height) {
-    uint8_t * rowBuffer = (uint8_t *) VBE_mode_info->framebuffer + (y * VBE_mode_info->pitch);
-    uint64_t offset;
-
 	for(int j = y; j < y + width; j++){
-		
         for(int i = x; i < x + width; i++){
 			putPixel(*(bmp++), i, j);
         }
@@ -106,11 +102,11 @@ void scrollScreenUp(uint64_t pixels){
 void drawChar(char c, uint64_t x, uint64_t y, uint64_t text_color, uint64_t bg_color, uint64_t char_size){
 	int offset_x = x * ubuntuMono_inf.width * char_size + 1;
 	int offset_y = y * ubuntuMono_inf.height * char_size + 1;
-	uint64_t color;
+	int ch = (int)c;
 
 	for(int j = 0; j < ubuntuMono_inf.height * char_size; j++){
 		for(int i = 0; i < ubuntuMono_inf.width * char_size; i++){
-			if(ubuntuMono_bmp[c][j / char_size] & (1 << (i/char_size)))
+			if(ubuntuMono_bmp[ch][j / char_size] & (1 << (i/char_size)))
 				putPixel(text_color, i + offset_x, j + offset_y);
 			else
 				putPixel(bg_color, i + offset_x, j + offset_y);

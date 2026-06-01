@@ -5,7 +5,7 @@
 
 #define KEYBOARD_BUFFER_SIZE 128
 
-extern readKeyboard();
+extern uint8_t readKeyboard();
 
 static char keyboardBuffer[KEYBOARD_BUFFER_SIZE];
 static uint64_t keyboardReadIndex = 0;

@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <lib.h>
 #include <interrupts.h>
+#include <console.h>
 
 void * memset(void * destination, int32_t c, uint64_t length)
 {
@@ -79,10 +80,10 @@ void savedRegs(){
 void printRegisters() {
     char hexBuffer[25];
     for (int i = 0; i < 19; i++) {
-        print((char*)regNames[i]);
-        print(": ");
+        print((char*)regNames[i], 10);
+        print(": ", 2);
         uint64ToHexStr(regs_for_printing[i], hexBuffer); 
-        print(hexBuffer);
-        print("\n");
+        print(hexBuffer, 100);
+        print("\n", 1);
     }
 }

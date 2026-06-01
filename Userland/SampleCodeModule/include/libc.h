@@ -16,6 +16,7 @@ void printRegisters();
 char getChar();
 char getCharNoWait();
 uint64_t scanf(char* format, ...);
+int readLine(char * buffer, int maxSize);
 
 int strncontains(char* string, uint64_t size, char* expression);
 void strtok(char* string, uint64_t size, char delim, char* tokens[]);

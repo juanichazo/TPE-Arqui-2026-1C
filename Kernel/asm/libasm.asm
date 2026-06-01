@@ -48,7 +48,7 @@ readKeyboard:
 	movzx rax, al
 	ret
 
-tsc: ; TODO esta función habría que moverla a otro lado probablemente
+tsc: 
     xor rax, rax
     xor rdx, rdx
     rdtsc

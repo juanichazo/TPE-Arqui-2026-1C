@@ -52,6 +52,11 @@ int main()
     load_idt();
 
     int userland_return = ((EntryPoint)userCodeModuleAddress)();
+
+    print("Returned from Userland\n", 23);
+    print("Shutting down", 13);
+    for(int i = 0; i < 1000000000; i++);
+    clearScreen();
     
     return 0;
 }
