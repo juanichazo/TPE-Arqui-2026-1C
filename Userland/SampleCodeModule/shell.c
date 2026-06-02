@@ -96,7 +96,7 @@ void runShell(){
         }
         if(!is_command){
             if(strncontains(line_buffer, BUFFER_SIZE, "exit"))
-                return 0;
+                return;
                 
             printf("%s no es un comando\n", line_buffer);
         }

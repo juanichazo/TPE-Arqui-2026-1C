@@ -79,15 +79,54 @@ static const uint64_t melodyDurations[] = {
 
 #define MELODY_NOTE_COUNT sizeof(melodyFrequencies) / sizeof(melodyFrequencies[0])
 
-static const uint32_t pelletFrequencies[] = {
+#define NOTE_E6  1319
+#define NOTE_C6  1047
+#define NOTE_A5   880
+#define NOTE_F5   698
+
+#define NOTE_B5  988
+#define NOTE_F5  698
+
+const uint32_t frightenedLoopFrequencies[] = {
+    NOTE_B5,
+    NOTE_F5,
+    NOTE_B5,
+    NOTE_F5,
+    NOTE_B5,
+    NOTE_F5,
+    NOTE_B5,
+    NOTE_F5
+};
+
+const uint64_t frightenedLoopDurations[] = {
+    2, 2, 2, 2, 2, 2, 2, 2
+};
+
+#define FRIGHTENED_NOTE_COUNT 8
+
+#define NOTE_G5  784
+#define NOTE_E5  659
+#define NOTE_C5  523
+#define NOTE_A4  440
+#define NOTE_F4  349
+#define NOTE_D5  587
+
+const uint32_t deathFrequencies[] = {
+    NOTE_G5,
+    NOTE_F5,
+    NOTE_E5,
+    NOTE_DS5,
+    NOTE_D5,
+    NOTE_C5,
     NOTE_B4,
-    0
+    NOTE_A4
 };
 
-static const uint32_t pelletDurations[] = {
-    1, 1
+const uint64_t deathDurations[] = {
+    2,2,2,2,
+    2,2,2,6
 };
 
-#define PELLET_NOTE_COUNT 1
+#define DEATH_NOTE_COUNT 8
 
 #endif

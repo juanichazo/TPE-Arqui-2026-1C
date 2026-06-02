@@ -510,6 +510,8 @@ void moveEntity(Entity *e)
                 ghosts[i].frightened = 1;
                 ghosts[i].frighten_timer = FRIGHTEN_DURATION;
             }
+
+            playBackgroundMelody(frightenedLoopFrequencies, frightenedLoopDurations, FRIGHTENED_NOTE_COUNT);
         }
     }
 }
@@ -764,6 +766,7 @@ static void redrawTile(int x, int y)
 
 void handleCollision(void)
 {
+    playBackgroundMelody(deathFrequencies, deathDurations, DEATH_NOTE_COUNT);
     lives--;
 
     // Limpiar todos los sprites antes del flash de muerte.
