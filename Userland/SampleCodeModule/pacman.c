@@ -161,6 +161,7 @@ static void drawHUD(void)
     {
         int lx = HUD_X + i * 28;
         int ly = HUD_Y + 62;
+
         for (int y = 0; y < 12; y++)
         {
             for (int x = 0; x < 12; x++)
@@ -286,10 +287,19 @@ void drawEntity(Entity *e)
                 int tx = x, ty = y;
                 switch (e->current_dir)
                 {
-                case LEFT: tx = 11 - x;         break;
-                case DOWN: tx = 11 - y; ty = x;  break;
-                case UP:   tx = y; ty = 11 - x;  break;
-                default:                          break;
+                case LEFT:
+                    tx = 11 - x;
+                    break;
+                case DOWN:
+                    tx = 11 - y;
+                    ty = x;
+                    break;
+                case UP:
+                    tx = y;
+                    ty = 11 - x;
+                    break;
+                default:
+                    break;
                 }
                 drawRect(px + tx, py + ty, 1, 1, e->color);
             }
@@ -306,14 +316,15 @@ void drawEntity(Entity *e)
     if (e->frightened)
     {
         uint32_t body_color = (e->frighten_timer < FRIGHTEN_FLASH_THRESHOLD && (game_tick / 4) % 2 == 0)
-            ? 0xFFFFFF : COLOR_FRIGHTENED;
-        drawBitmap12(ghost_bmp,            px, py, body_color);
+                                  ? 0xFFFFFF
+                                  : COLOR_FRIGHTENED;
+        drawBitmap12(ghost_bmp, px, py, body_color);
         drawBitmap12(ghost_scared_eyes_bmp, px, py, 0xFF8080);
         drawBitmap12(ghost_scared_mouth_bmp, px, py, 0xFF8080);
     }
     else
     {
-        drawBitmap12(ghost_bmp,      px, py, e->color);
+        drawBitmap12(ghost_bmp, px, py, e->color);
         drawBitmap12(ghost_eyes_bmp, px, py, 0xFFFFFF);
         drawBitmap12(ghost_pupil_bmp, px, py, 0x0066FF);
     }
@@ -328,11 +339,16 @@ static Direction oppositeDir(Direction d)
 {
     switch (d)
     {
-    case UP:    return DOWN;
-    case DOWN:  return UP;
-    case LEFT:  return RIGHT;
-    case RIGHT: return LEFT;
-    default:    return NONE;
+    case UP:
+        return DOWN;
+    case DOWN:
+        return UP;
+    case LEFT:
+        return RIGHT;
+    case RIGHT:
+        return LEFT;
+    default:
+        return NONE;
     }
 }
 
@@ -406,11 +422,20 @@ void moveEntity(Entity *e)
 
     switch (e->current_dir)
     {
-    case UP:    ny--; break;
-    case DOWN:  ny++; break;
-    case LEFT:  nx--; break;
-    case RIGHT: nx++; break;
-    default:          break;
+    case UP:
+        ny--;
+        break;
+    case DOWN:
+        ny++;
+        break;
+    case LEFT:
+        nx--;
+        break;
+    case RIGHT:
+        nx++;
+        break;
+    default:
+        break;
     }
 
     if (nx < 0)
@@ -447,8 +472,6 @@ void moveEntity(Entity *e)
     }
 }
 
-// Elige la direccion optima hacia (tx, ty). Si gate_passable=0, trata la puerta
-// de la ghost house como pared. Retorna opp como fallback si no hay opcion mejor.
 static Direction chooseDir(Entity *ghost, int tx, int ty, int gate_passable)
 {
     static const int dx[4] = {0, 0, -1, 1};
@@ -461,22 +484,38 @@ static Direction chooseDir(Entity *ghost, int tx, int ty, int gate_passable)
 
     for (int i = 0; i < 4; i++)
     {
-        if (dirs[i] == opp && ghost->current_dir != NONE) continue;
+        if (dirs[i] == opp && ghost->current_dir != NONE)
+            continue;
+
         int nx = ghost->x + dx[i];
         int ny = ghost->y + dy[i];
-        if (nx < 0) nx = MAP_WIDTH - 1;
-        else if (nx >= MAP_WIDTH) nx = 0;
-        if (ny < 0 || ny >= MAP_HEIGHT) continue;
-        if (map[ny][nx] == 1) continue;
-        if (!gate_passable && pacman_tilemap[ny + TILEMAP_ROW_OFFSET][nx] == TILE_GHOST_GATE) continue;
+        
+        if (nx < 0)
+            nx = MAP_WIDTH - 1;
+        else if (nx >= MAP_WIDTH)
+            nx = 0;
+        
+        if (ny < 0 || ny >= MAP_HEIGHT)
+            continue;
+        
+        if (map[ny][nx] == 1)
+            continue;
+        
+        if (!gate_passable && pacman_tilemap[ny + TILEMAP_ROW_OFFSET][nx] == TILE_GHOST_GATE)
+            continue;
+        
         int dist = absi(nx - tx) + absi(ny - ty);
+        
         if (dist < best_dist || (dist == best_dist && dirs[i] == ghost->current_dir))
         {
             best_dist = dist;
             best = dirs[i];
         }
     }
-    if (best == NONE) best = opp;
+
+    if (best == NONE)
+        best = opp;
+
     return best;
 }
 
@@ -489,11 +528,13 @@ void moveGhostAI(Entity *ghost, int ghost_id)
     if (ghost->returning)
     {
         Direction best = chooseDir(ghost, 13, 14, 1);
+
         if (best != NONE)
         {
             ghost->current_dir = best;
             moveEntity(ghost);
         }
+
         if (absi(ghost->x - 13) + absi(ghost->y - 14) <= 1)
         {
             ghost->returning = 0;
@@ -513,21 +554,34 @@ void moveGhostAI(Entity *ghost, int ghost_id)
         Direction opp = oppositeDir(ghost->current_dir);
         Direction valid[4];
         int count = 0;
+
         for (int i = 0; i < 4; i++)
         {
-            if (dirs[i] == opp && ghost->current_dir != NONE) continue;
+            if (dirs[i] == opp && ghost->current_dir != NONE)
+                continue;
+
             int nx = ghost->x + dx[i];
             int ny = ghost->y + dy[i];
-            if (nx < 0) nx = MAP_WIDTH - 1;
-            else if (nx >= MAP_WIDTH) nx = 0;
-            if (ny < 0 || ny >= MAP_HEIGHT) continue;
-            if (map[ny][nx] == 1) continue;
-            if (pacman_tilemap[ny + TILEMAP_ROW_OFFSET][nx] == TILE_GHOST_GATE) continue;
+
+            if (nx < 0)
+                nx = MAP_WIDTH - 1;
+            else if (nx >= MAP_WIDTH)
+                nx = 0;
+
+            if (ny < 0 || ny >= MAP_HEIGHT)
+                continue;
+
+            if (map[ny][nx] == 1)
+                continue;
+
+            if (pacman_tilemap[ny + TILEMAP_ROW_OFFSET][nx] == TILE_GHOST_GATE)
+                continue;
+                
             valid[count++] = dirs[i];
         }
         ghost->current_dir = count > 0
-            ? valid[(ghost->x * 7 + ghost->y * 13 + game_tick) % count]
-            : opp;
+                                 ? valid[(ghost->x * 7 + ghost->y * 13 + game_tick) % count]
+                                 : opp;
         moveEntity(ghost);
         return;
     }
@@ -545,17 +599,26 @@ void moveGhostAI(Entity *ghost, int ghost_id)
     {
         switch (pacman.current_dir)
         {
-        case UP:    ty -= 4; break;
-        case DOWN:  ty += 4; break;
-        case LEFT:  tx -= 4; break;
-        case RIGHT: tx += 4; break;
-        default:             break;
+        case UP:
+            ty -= 4;
+            break;
+        case DOWN:
+            ty += 4;
+            break;
+        case LEFT:
+            tx -= 4;
+            break;
+        case RIGHT:
+            tx += 4;
+            break;
+        default:
+            break;
         }
     }
     else if (ghost_id == 2)
     {
         int mid_x = pacman.x + (pacman.current_dir == RIGHT ? 2 : pacman.current_dir == LEFT ? -2 : 0);
-        int mid_y = pacman.y + (pacman.current_dir == DOWN  ? 2 : pacman.current_dir == UP   ? -2 : 0);
+        int mid_y = pacman.y + (pacman.current_dir == DOWN ? 2 : pacman.current_dir == UP ? -2 : 0);
         tx = 2 * mid_x - ghosts[0].x;
         ty = 2 * mid_y - ghosts[0].y;
     }
@@ -629,9 +692,9 @@ static void markVisDirty(int vx, int vy)
 {
     int tx = vx / BLOCK_SIZE;
     int ty = vy / BLOCK_SIZE;
-    markDirty(tx,     ty);
+    markDirty(tx, ty);
     markDirty(tx + 1, ty);
-    markDirty(tx,     ty + 1);
+    markDirty(tx, ty + 1);
     markDirty(tx + 1, ty + 1);
 }
 
@@ -642,11 +705,11 @@ static void renderFrame()
             dirty[y][x] = 0;
 
     markVisDirty(pacman.prev_vis_x, pacman.prev_vis_y);
-    markVisDirty(pacman.vis_x,      pacman.vis_y);
+    markVisDirty(pacman.vis_x, pacman.vis_y);
     for (int i = 0; i < NUM_GHOSTS; i++)
     {
         markVisDirty(ghosts[i].prev_vis_x, ghosts[i].prev_vis_y);
-        markVisDirty(ghosts[i].vis_x,      ghosts[i].vis_y);
+        markVisDirty(ghosts[i].vis_x, ghosts[i].vis_y);
     }
 
     for (int y = 0; y < MAP_HEIGHT; y++)
@@ -660,7 +723,7 @@ static void renderFrame()
 }
 
 static int last_score = -1;
-static int last_lives  = -1;
+static int last_lives = -1;
 
 static void drawHUDIfChanged()
 {
@@ -686,11 +749,31 @@ static void advanceVis(Entity *e)
     if (tx - e->vis_x > half_w || e->vis_x - tx > half_w)
         e->vis_x = tx;
 
-    if      (e->vis_x < tx) { e->vis_x += VIS_SPEED; if (e->vis_x > tx) e->vis_x = tx; }
-    else if (e->vis_x > tx) { e->vis_x -= VIS_SPEED; if (e->vis_x < tx) e->vis_x = tx; }
+    if (e->vis_x < tx)
+    {
+        e->vis_x += VIS_SPEED;
+        if (e->vis_x > tx)
+            e->vis_x = tx;
+    }
+    else if (e->vis_x > tx)
+    {
+        e->vis_x -= VIS_SPEED;
+        if (e->vis_x < tx)
+            e->vis_x = tx;
+    }
 
-    if      (e->vis_y < ty) { e->vis_y += VIS_SPEED; if (e->vis_y > ty) e->vis_y = ty; }
-    else if (e->vis_y > ty) { e->vis_y -= VIS_SPEED; if (e->vis_y < ty) e->vis_y = ty; }
+    if (e->vis_y < ty)
+    {
+        e->vis_y += VIS_SPEED;
+        if (e->vis_y > ty)
+            e->vis_y = ty;
+    }
+    else if (e->vis_y > ty)
+    {
+        e->vis_y -= VIS_SPEED;
+        if (e->vis_y < ty)
+            e->vis_y = ty;
+    }
 }
 
 static int isVisAligned(Entity *e)
@@ -704,9 +787,12 @@ static int dirPassable(int x, int y, Direction d)
     static const int ddy[4] = {-1, 1, 0, 0};
     int nx = x + ddx[d];
     int ny = y + ddy[d];
-    if (nx < 0) nx = MAP_WIDTH - 1;
-    else if (nx >= MAP_WIDTH) nx = 0;
-    if (ny < 0 || ny >= MAP_HEIGHT) return 0;
+    if (nx < 0)
+        nx = MAP_WIDTH - 1;
+    else if (nx >= MAP_WIDTH)
+        nx = 0;
+    if (ny < 0 || ny >= MAP_HEIGHT)
+        return 0;
     return map[ny][nx] != 1;
 }
 
@@ -724,18 +810,27 @@ void gameLoop(void)
         char key = getCharNoWait();
         if (key != 0)
         {
-            if      (key == 'w') pacman.next_dir = UP;
-            else if (key == 's') pacman.next_dir = DOWN;
-            else if (key == 'a') pacman.next_dir = LEFT;
-            else if (key == 'd') pacman.next_dir = RIGHT;
-            else if (key == 'q') currentState = GAME_OVER;
+            if (key == 'w')
+                pacman.next_dir = UP;
+            else if (key == 's')
+                pacman.next_dir = DOWN;
+            else if (key == 'a')
+                pacman.next_dir = LEFT;
+            else if (key == 'd')
+                pacman.next_dir = RIGHT;
+            else if (key == 'q')
+                currentState = GAME_OVER;
 
             if (ghosts[0].is_player_2)
             {
-                if      (key == 'i') ghosts[0].next_dir = UP;
-                else if (key == 'k') ghosts[0].next_dir = DOWN;
-                else if (key == 'j') ghosts[0].next_dir = LEFT;
-                else if (key == 'l') ghosts[0].next_dir = RIGHT;
+                if (key == 'i')
+                    ghosts[0].next_dir = UP;
+                else if (key == 'k')
+                    ghosts[0].next_dir = DOWN;
+                else if (key == 'j')
+                    ghosts[0].next_dir = LEFT;
+                else if (key == 'l')
+                    ghosts[0].next_dir = RIGHT;
             }
         }
 
@@ -775,7 +870,8 @@ void gameLoop(void)
 
         for (int i = 0; i < NUM_GHOSTS; i++)
         {
-            if (!isVisAligned(&ghosts[i])) continue;
+            if (!isVisAligned(&ghosts[i]))
+                continue;
 
             if (ghosts[i].returning)
             {
@@ -799,8 +895,8 @@ void gameLoop(void)
         for (int i = 0; i < NUM_GHOSTS; i++)
         {
             int same_tile = (pacman.x == ghosts[i].x && pacman.y == ghosts[i].y);
-            int crossed   = (pacman.x == ghosts[i].prev_x && pacman.y == ghosts[i].prev_y &&
-                             pacman.prev_x == ghosts[i].x  && pacman.prev_y == ghosts[i].y);
+            int crossed = (pacman.x == ghosts[i].prev_x && pacman.y == ghosts[i].prev_y &&
+                           pacman.prev_x == ghosts[i].x && pacman.prev_y == ghosts[i].y);
 
             if (same_tile || crossed)
             {
