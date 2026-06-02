@@ -299,7 +299,7 @@ void drawEntity(Entity *e)
         for (int y = 0; y < 12; y++)
             for (int x = 0; x < 12; x++)
                 if (ghost_eyes_only_bmp[y][x])
-                    drawRect(px + x, py + y, 1, 1, 0xFFFFFF);
+                    drawPixel( 0xFFFFFF, px + x, py + y);
         return;
     }
 
@@ -585,7 +585,7 @@ void moveGhostAI(Entity *ghost, int ghost_id)
             valid[count++] = dirs[i];
         }
         if (count > 0)
-            ghost->current_dir = valid[(ghost->x * 7 + ghost->y * 13 + game_tick) % count];
+            ghost->current_dir = valid[(ghost->x * 7 + ghost->y * 13 + game_tick) % count]; // pseudo-random
         else
             ghost->current_dir = opp;
         moveEntity(ghost);

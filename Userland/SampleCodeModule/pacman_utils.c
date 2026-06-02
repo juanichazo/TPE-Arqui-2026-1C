@@ -113,8 +113,7 @@ static void drawBigTextCentered(const char *s, int py, uint32_t color, int scale
     }
 }
 
-static void drawBigNumberCentered(int num, int py, uint32_t color, int scale)
-{
+static void drawBigNumberCentered(int num, int py, uint32_t color, int scale){
     char buf[16];
     int i = 0;
     if (num == 0) { buf[i++] = '0'; }
@@ -124,41 +123,7 @@ static void drawBigNumberCentered(int num, int py, uint32_t color, int scale)
         for (int j = cnt - 1; j >= 0; j--) buf[i++] = '0' + rev[j];
     }
     buf[i] = '\0';
-
-    int step = 5 * scale + 4;
-    int w = i * step;
-    int px = (X_RESOLUTION - w) / 2;
-
-    static const uint8_t digs[10][7] = {
-        {0x0E,0x11,0x13,0x15,0x19,0x11,0x0E}, // 0 
-        {0x04,0x0C,0x04,0x04,0x04,0x04,0x0E}, 
-        {0x0E,0x11,0x01,0x06,0x08,0x10,0x1F}, 
-        {0x1F,0x01,0x02,0x06,0x01,0x11,0x0E}, 
-        {0x02,0x06,0x0A,0x12,0x1F,0x02,0x02}, 
-        {0x1F,0x10,0x1E,0x01,0x01,0x11,0x0E}, 
-        {0x06,0x08,0x10,0x1E,0x11,0x11,0x0E},
-        {0x1F,0x01,0x02,0x04,0x08,0x08,0x08}, 
-        {0x0E,0x11,0x11,0x0E,0x11,0x11,0x0E}, 
-        {0x0E,0x11,0x11,0x0F,0x01,0x02,0x0C}, // 9 
-    };
-
-    for (int d = 0; d < i; d++)
-    {
-        int digit = buf[d] - '0';
-        for (int row = 0; row < 7; row++)
-        {
-            uint8_t bits = digs[digit][row];
-            for (int col = 0; col < 5; col++)
-            {
-                if ((bits >> (4 - col)) & 1)
-                {
-                    int x1 = px + d * step + col * scale;
-                    int y1 = py + row * scale;
-                    drawRectangle(x1, y1, x1 + scale - 1, y1 + scale - 1, color);
-                }
-            }
-        }
-    }
+    drawBigTextCentered(buf, py, color, scale);
 }
 
 static void drawDotBorder(uint32_t color)
