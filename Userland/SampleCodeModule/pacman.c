@@ -585,7 +585,7 @@ void moveGhostAI(Entity *ghost, int ghost_id)
             valid[count++] = dirs[i];
         }
         if (count > 0)
-            ghost->current_dir = valid[(ghost->x * 7 + ghost->y * 13 + game_tick) % count];
+            ghost->current_dir = valid[(ghost->x * 7 + ghost->y * 13 + game_tick) % count]; // pseudo-random
         else
             ghost->current_dir = opp;
         moveEntity(ghost);
