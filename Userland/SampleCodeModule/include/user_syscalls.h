@@ -22,5 +22,7 @@ uint64_t sys_draw_buffer(uint64_t* bmp, uint64_t x, uint64_t y, uint64_t width, 
 uint64_t sys_play_sound(uint64_t freq, uint64_t time);
 uint64_t sys_play_music(uint32_t* freqs, uint64_t* durations, uint64_t count);
 uint64_t reset_tsc();
+uint64_t hash_asm(char* str);
+uint64_t bruteforce_hashcode();
 
 #endif
