@@ -94,11 +94,12 @@ Limpia la pantalla.
 
 ### `size <n>`
 
-Cambia el tamaño del texto en la shell. El parámetro `n` es un número entero positivo entre 1 y 3.
+Cambia el tamaño del texto en la shell. El parámetro `n` puede ser 1, 2 o 3.
 
 ```
-@shell> size 16
-@shell> size 10
+@shell> size 1
+@shell> size 2
+@shell> size 3
 ```
 
 Si el valor ingresado no es válido, el sistema lo indica con un mensaje de error.
@@ -107,7 +108,7 @@ Si el valor ingresado no es válido, el sistema lo indica con un mensaje de erro
 
 ### `regs`
 
-Muestra el valor actual de todos los registros del procesador (RAX, RBX, RCX, RDX, RSI, RDI, RSP, RBP, R8–R15, RIP, RFLAGS, CS).
+Muestra el valor actual de todos los registros del procesador (RAX, RBX, RCX, RDX, RSI, RDI, RSP, RBP, R8–R15, RIP, RFLAGS, CS, SS).
 
 ```
 @shell> regs
