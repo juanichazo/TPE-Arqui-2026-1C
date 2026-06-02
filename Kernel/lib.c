@@ -60,7 +60,7 @@ static const char *regNames[] = {
 void uint64ToHexStr(uint64_t num, char *str) {
     str[0] = '0';
     str[1] = 'x';
-    for (int i = 15; i >= 0; i--) {
+    for (int i = 7; i >= 0; i--) {
         int digit = num & 0xF;
         str[i + 2] = (digit < 10) ? (digit + '0') : (digit - 10 + 'A');
         num >>= 4;

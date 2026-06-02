@@ -6,6 +6,7 @@
 extern void puts(char* string);
 
 void exceptionDispatcher(int exception, uint64_t *registers) {
+    savedRegs();
     if (exception == ZERO_EXCEPTION_ID){
         puts("\nEXCEPCION: DIVISION POR CERO\n");
     }
@@ -15,6 +16,6 @@ void exceptionDispatcher(int exception, uint64_t *registers) {
         puts("EXCEPCION DESCONOCIDA");
     }
     
-    printRegisters(registers);
+    printRegisters();
     puts("\nRecuperando sistema... Volviendo a la Shell.\n");
 }
