@@ -69,8 +69,10 @@ void uint64ToHexStr(uint64_t num, char *str) {
 }
 
 static uint64_t regs_for_printing[20] = {0};
+uint8_t empty = 1;
 
 void savedRegs(){
+	empty = 0;
 	uint64_t* saved = getregs();
 	for(int i = 0; i < 20; i++){
 		regs_for_printing[i] = saved[i];
@@ -78,6 +80,10 @@ void savedRegs(){
 }
 
 void printRegisters() {
+	if(empty){
+		print("Registros no guardados, tocar tab para tomar una snapshot\n", 58);
+		return;
+	}
     char hexBuffer[25];
     for (int i = 0; i < 19; i++) {
         print((char*)regNames[i], 10);

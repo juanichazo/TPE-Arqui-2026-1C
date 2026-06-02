@@ -1,6 +1,7 @@
 #include <libc.h>
 #include <user_syscalls.h>
 #include <pacman.h>
+#include <kernelCracker.h>
 
 #define BUFFER_SIZE 255
 
@@ -23,57 +24,11 @@ void help(){
     puts(" regs               : Muestra registros de la CPU");
 }
 
-uint64_t hash(char *str){
-    uint64_t hash = 0x1234;
-    int c;
-    while ((c = *str++))
-        hash = ((hash << 5) + hash) + c; // hash * 33 + c
-    return hash;
-}
-
-void printHash(char* params[]){
-    printf("hash for %s: %d\n", params[0], hash(params[0]));
-}
-
-#define MAX_HASH_LENGTH 5
-
-uint64_t bruteforce_hashcode(){
-    char solution[MAX_HASH_LENGTH + 1] = {0};
-    solution[0] = 'a';
-    uint64_t time1 = reset_tsc();
-    int found = 0;
-    
-    while(solution[MAX_HASH_LENGTH] == 0){
-        if(sys_gethash() == hash(solution)){
-            found = 1;
-            break;
-        }
-        for(int i = 0; i <= MAX_HASH_LENGTH; i++){
-            if(solution[i] == 0) solution[i] = 'a';
-            else solution[i]++;
-            if (solution[i] <= 'z') break;
-            solution[i] = 'a';
-        }
+void echo(char* params[0]){
+    while(*params){
+        printf("%s ", *(params++));
     }
-
-    if(found)
-        puts(solution);
-    else
-        puts("couldnt find solution");
-    
-    uint64_t time2 = reset_tsc();
-    printf("%d cpu cycles\n", time2 - time1);
-    
-    return time2 - time1; 
-}
-
-
-void sethash(char* params[]){
-    sys_sethash(string_to_int(params[0]));
-}
-
-void echo(){
-    puts(line_buffer + 5);
+    putChar('\n');
 }
 
 void clear(){
@@ -84,7 +39,7 @@ void clear(){
 void setsize(char* params[]){
     uint64_t size = string_to_int(params[0]);
     if(sys_settextsize(size) == 1){ // FAILURE definido con 1
-        printf("%d is not a valid size\n", size);
+        printf("%d no es un tamano valido\n", size);
     }
 }
 
@@ -141,9 +96,9 @@ void runShell(){
         }
         if(!is_command){
             if(strncontains(line_buffer, BUFFER_SIZE, "exit"))
-                return 0;
+                return;
                 
-            printf("%s is not a command\n", line_buffer);
+            printf("%s no es un comando\n", line_buffer);
         }
     }
 }

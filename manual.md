@@ -143,7 +143,8 @@ Ejemplo de salida:
 Provocando Invalid Opcode...
 [EXCEPCION: Invalid Opcode]
 RIP: 0x...
-RAX: 0x... RBX: 0x... ...
+RAX: 0x... 
+RBX: 0x... ...
 ```
 
 ---
@@ -169,7 +170,7 @@ Calcula e imprime el valor del hash para el texto dado.
 
 ```
 @shell> hash hola
-hash for hola: 2087101688
+hash de hola: 2087101688
 ```
 
 Útil para obtener el hash de una cadena conocida antes de cargarlo con `sethash`.
@@ -190,12 +191,13 @@ Carga en el kernel el valor de hash objetivo que `bruteforce` deberá encontrar.
 
 Inicia la búsqueda por fuerza bruta del string que genera el hash actualmente cargado en el kernel. Prueba todas las combinaciones de letras minúsculas de `a` a `zzzzz`.
 
-Al finalizar imprime el string encontrado y los ciclos de CPU insumidos.
+Al finalizar imprime el string encontrado, los ciclos de CPU insumidos y el tiempo en milisegundos.
 
 ```
 @shell> bruteforce
 hola
-1234567890 cpu cycles
+1234567890 ciclos de cpu
+5400 ms
 ```
 
 Si no existe ninguna combinación de hasta 5 letras que genere ese hash, imprime `couldnt find solution`.

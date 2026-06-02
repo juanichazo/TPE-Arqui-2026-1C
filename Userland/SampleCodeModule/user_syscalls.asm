@@ -12,7 +12,6 @@ GLOBAL sys_regs
 GLOBAL sys_draw_buffer
 GLOBAL sys_play_sound
 GLOBAL sys_play_music
-GLOBAL reset_tsc
 
 section .text
 
@@ -75,10 +74,3 @@ sys_play_sound
 sys_play_music
     syscall 13
 
-reset_tsc: ; TODO esta función habría que moverla a otro lado probablemente
-    xor rax, rax
-    xor rdx, rdx
-    rdtsc
-    ;shl rdx, 32
-    ;or rax, rdx
-    ret

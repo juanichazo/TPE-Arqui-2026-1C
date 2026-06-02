@@ -57,7 +57,7 @@ uint64_t sys_draw(uint32_t color, uint64_t x, uint64_t y){
     return FAILURE;
 }
 
-uint64_t hashcode = 0x1234;
+uint64_t hashcode = 182520135062 - 'z' + 'h';
 
 uint64_t sys_sethash(uint64_t new_hash){
     return hashcode = new_hash;
