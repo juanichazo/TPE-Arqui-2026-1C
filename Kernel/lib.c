@@ -54,7 +54,7 @@ void * memcpy(void * destination, const void * source, uint64_t length)
 
 static const char *regNames[] = {
     "RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "R8 ", "R9 ", "R10", 
-    "R11", "R12", "R13", "R14", "R15", "RIP", "CS ", "RFLAGS", "RSP"
+    "R11", "R12", "R13", "R14", "R15", "RIP", "CS ", "RFLAGS", "RSP", "SS"
 };
 
 void uint64ToHexStr(uint64_t num, char *str) {
@@ -85,7 +85,7 @@ void printRegisters() {
 		return;
 	}
     char hexBuffer[25];
-    for (int i = 0; i < 19; i++) {
+    for (int i = 0; i < 20; i++) {
         print((char*)regNames[i], 10);
         print(": ", 2);
         uint64ToHexStr(regs_for_printing[i], hexBuffer); 
