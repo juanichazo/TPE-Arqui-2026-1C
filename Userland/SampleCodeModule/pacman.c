@@ -299,7 +299,7 @@ void drawEntity(Entity *e)
         for (int y = 0; y < 12; y++)
             for (int x = 0; x < 12; x++)
                 if (ghost_eyes_only_bmp[y][x])
-                    drawPixel( 0xFFFFFF, px + x, py + y);
+                    drawRect(px + x, py + y, 1, 1, 0xFFFFFF);
         return;
     }
 
