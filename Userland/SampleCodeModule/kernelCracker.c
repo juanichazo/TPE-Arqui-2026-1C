@@ -10,7 +10,7 @@ uint64_t hash(char *str){
 }
 
 void printHash(char* params[]){
-    printf("hash for %s: %d\n", params[0], hash_asm(params[0]));
+    printf("hash de %s: %d\n", params[0], hash_asm(params[0]));
 }
 
 #define MAX_HASH_LENGTH 5
@@ -37,9 +37,9 @@ uint64_t bruteforce_hashcode(){
     if(*end == 0)
         puts(solution);
     else
-        puts("couldnt find solution");
+        puts("no se encontro solucion");
     
-    printf("%d cpu cycles\n", total_cycles);
+    printf("%d ciclos de cpu\n", total_cycles);
     uint64_t cpu_timer1 = reset_tsc();
     sleep(20);
     uint64_t cycles_per_ms = (reset_tsc() - cpu_timer1) / 1000;

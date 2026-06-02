@@ -24,8 +24,11 @@ void help(){
     puts(" regs               : Muestra registros de la CPU");
 }
 
-void echo(){
-    puts(line_buffer + 5);
+void echo(char* params[0]){
+    while(*params){
+        printf("%s ", *(params++));
+    }
+    putChar('\n');
 }
 
 void clear(){
@@ -36,7 +39,7 @@ void clear(){
 void setsize(char* params[]){
     uint64_t size = string_to_int(params[0]);
     if(sys_settextsize(size) == 1){ // FAILURE definido con 1
-        printf("%d is not a valid size\n", size);
+        printf("%d no es un tamano valido\n", size);
     }
 }
 
@@ -95,7 +98,7 @@ void runShell(){
             if(strncontains(line_buffer, BUFFER_SIZE, "exit"))
                 return 0;
                 
-            printf("%s is not a command\n", line_buffer);
+            printf("%s no es un comando\n", line_buffer);
         }
     }
 }
