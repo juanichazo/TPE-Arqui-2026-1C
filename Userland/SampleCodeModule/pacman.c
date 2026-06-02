@@ -7,6 +7,7 @@ static const int GHOST_RELEASE[4] = {0, 20, 40, 60};
 static const int GHOST_START_X[NUM_GHOSTS] = {13, 11, 13, 15};
 static const int GHOST_START_Y[NUM_GHOSTS] = {11, 14, 14, 14};
 static const int GHOST_START_IN_HOUSE[NUM_GHOSTS] = {0, 1, 1, 1};
+static const uint32_t GHOST_COLORS[NUM_GHOSTS] = {COLOR_BLINKY, COLOR_PINKY, COLOR_INKY, COLOR_CLYDE};
 
 static int tileToLogicValue(int tile)
 {
@@ -91,8 +92,8 @@ int total_dots = 0;
 int dots_eaten = 0;
 int game_tick = 0;
 
-#define DPIX 4 // Para la escala de los pixeles de los digitos
-#define DGAP 2 // Separacion entre numeros
+#define DPIX 4
+#define DGAP 2
 #define DSTEP (3 * DPIX + DGAP)
 
 #define HUD_X 10
@@ -192,34 +193,34 @@ void drawWallTile(int px, int py, int tile_type)
         drawRect(px + mid - 1, py, thick, BLOCK_SIZE, wallColor);
         break;
 
-    case TILE_CORNER_TL:                                                 
-        drawRect(px + mid - 1, py + mid - 1, mid + 1, thick, wallColor); 
-        drawRect(px + mid - 1, py + mid - 1, thick, mid + 1, wallColor); 
+    case TILE_CORNER_TL:
+        drawRect(px + mid - 1, py + mid - 1, mid + 1, thick, wallColor);
+        drawRect(px + mid - 1, py + mid - 1, thick, mid + 1, wallColor);
         break;
 
-    case TILE_CORNER_TR:                                                 
-        drawRect(px, py + mid - 1, mid + 1, thick, wallColor);           
-        drawRect(px + mid - 1, py + mid - 1, thick, mid + 1, wallColor); 
+    case TILE_CORNER_TR:
+        drawRect(px, py + mid - 1, mid + 1, thick, wallColor);
+        drawRect(px + mid - 1, py + mid - 1, thick, mid + 1, wallColor);
         break;
 
-    case TILE_CORNER_BL:                                                 
-        drawRect(px + mid - 1, py + mid - 1, mid + 1, thick, wallColor); 
-        drawRect(px + mid - 1, py, thick, mid, wallColor);              
+    case TILE_CORNER_BL:
+        drawRect(px + mid - 1, py + mid - 1, mid + 1, thick, wallColor);
+        drawRect(px + mid - 1, py, thick, mid, wallColor);
         break;
 
-    case TILE_CORNER_BR:                                       
-        drawRect(px, py + mid - 1, mid + 1, thick, wallColor); 
-        drawRect(px + mid - 1, py, thick, mid, wallColor);  
+    case TILE_CORNER_BR:
+        drawRect(px, py + mid - 1, mid + 1, thick, wallColor);
+        drawRect(px + mid - 1, py, thick, mid, wallColor);
         break;
 
-    case TILE_T_UP:                                               
-        drawRect(px, py + mid - 1, BLOCK_SIZE, thick, wallColor); 
-        drawRect(px + mid - 1, py, thick, mid, wallColor);  
+    case TILE_T_UP:
+        drawRect(px, py + mid - 1, BLOCK_SIZE, thick, wallColor);
+        drawRect(px + mid - 1, py, thick, mid, wallColor);
         break;
 
-    case TILE_T_DOWN:                                             
-        drawRect(px, py + mid - 1, BLOCK_SIZE, thick, wallColor); 
-        drawRect(px + mid - 1, py + mid, thick, mid, wallColor);  
+    case TILE_T_DOWN:
+        drawRect(px, py + mid - 1, BLOCK_SIZE, thick, wallColor);
+        drawRect(px + mid - 1, py + mid, thick, mid, wallColor);
         break;
 
     default:
@@ -259,84 +260,62 @@ void drawMap(void)
     }
 }
 
+static void drawBitmap12(int (*bmp)[12], int px, int py, uint32_t color)
+{
+    for (int y = 0; y < 12; y++)
+        for (int x = 0; x < 12; x++)
+            if (bmp[y][x])
+                drawRect(px + x, py + y, 1, 1, color);
+}
+
 void drawEntity(Entity *e)
 {
-    int (*bmp)[12] = (pacman_mouth_frame == 0) ? pacman_bmp_open : pacman_bmp_closed;
     int px = e->vis_x;
     int py = e->vis_y;
 
-    if (e == &pacman){
-        for (int y = 0; y < 12; y++){
-            for (int x = 0; x < 12; x++){
-                if (!bmp[y][x]){
+    if (e == &pacman)
+    {
+        int (*bmp)[12] = (pacman_mouth_frame == 0) ? pacman_bmp_open : pacman_bmp_closed;
+        for (int y = 0; y < 12; y++)
+        {
+            for (int x = 0; x < 12; x++)
+            {
+                if (!bmp[y][x])
                     continue;
-                }
 
                 int tx = x, ty = y;
-
-                switch (e->current_dir){
-                case LEFT:
-                    tx = 11 - x;
-                    break;
-
-                case DOWN:
-                    tx = 11 - y;
-                    ty = x;
-                    break;
-                case UP:
-                    tx = y;
-                    ty = 11 - x;
-                    break;
-                default:
-                    break;
+                switch (e->current_dir)
+                {
+                case LEFT: tx = 11 - x;         break;
+                case DOWN: tx = 11 - y; ty = x;  break;
+                case UP:   tx = y; ty = 11 - x;  break;
+                default:                          break;
                 }
                 drawRect(px + tx, py + ty, 1, 1, e->color);
             }
         }
-    }
-    else{
-    if (e->returning){
-        for (int y = 0; y < 12; y++)
-            for (int x = 0; x < 12; x++)
-                if (ghost_eyes_only_bmp[y][x])
-                    drawRect(px + x, py + y, 1, 1, 0xFFFFFF);
         return;
     }
 
-    if (e->frightened){
-        uint32_t body_color;
-        if (e->frighten_timer < FRIGHTEN_FLASH_THRESHOLD && (game_tick / 4) % 2 == 0)
-            body_color = 0xFFFFFF;
-        else
-            body_color = COLOR_FRIGHTENED;
-
-        for (int y = 0; y < 12; y++)
-            for (int x = 0; x < 12; x++)
-                if (ghost_bmp[y][x])
-                    drawRect(px + x, py + y, 1, 1, body_color);
-
-        for (int y = 0; y < 12; y++)
-            for (int x = 0; x < 12; x++){
-                if (ghost_scared_eyes_bmp[y][x])
-                    drawRect(px + x, py + y, 1, 1, 0xFF8080);
-                if (ghost_scared_mouth_bmp[y][x])
-                    drawRect(px + x, py + y, 1, 1, 0xFF8080);
-            }
+    if (e->returning)
+    {
+        drawBitmap12(ghost_eyes_only_bmp, px, py, 0xFFFFFF);
+        return;
     }
-    else{
-        for (int y = 0; y < 12; y++)
-            for (int x = 0; x < 12; x++)
-                if (ghost_bmp[y][x])
-                    drawRect(px + x, py + y, 1, 1, e->color);
 
-        for (int y = 0; y < 12; y++)
-            for (int x = 0; x < 12; x++){
-                if (ghost_eyes_bmp[y][x])
-                    drawRect(px + x, py + y, 1, 1, 0xFFFFFF);
-                if (ghost_pupil_bmp[y][x])
-                    drawRect(px + x, py + y, 1, 1, 0x0066FF);
-            }
-        }
+    if (e->frightened)
+    {
+        uint32_t body_color = (e->frighten_timer < FRIGHTEN_FLASH_THRESHOLD && (game_tick / 4) % 2 == 0)
+            ? 0xFFFFFF : COLOR_FRIGHTENED;
+        drawBitmap12(ghost_bmp,            px, py, body_color);
+        drawBitmap12(ghost_scared_eyes_bmp, px, py, 0xFF8080);
+        drawBitmap12(ghost_scared_mouth_bmp, px, py, 0xFF8080);
+    }
+    else
+    {
+        drawBitmap12(ghost_bmp,      px, py, e->color);
+        drawBitmap12(ghost_eyes_bmp, px, py, 0xFFFFFF);
+        drawBitmap12(ghost_pupil_bmp, px, py, 0x0066FF);
     }
 }
 
@@ -349,21 +328,22 @@ static Direction oppositeDir(Direction d)
 {
     switch (d)
     {
-    case UP:
-        return DOWN;
-
-    case DOWN:
-        return UP;
-
-    case LEFT:
-        return RIGHT;
-
-    case RIGHT:
-        return LEFT;
-
-    default:
-        return NONE;
+    case UP:    return DOWN;
+    case DOWN:  return UP;
+    case LEFT:  return RIGHT;
+    case RIGHT: return LEFT;
+    default:    return NONE;
     }
+}
+
+static void initEntityVis(Entity *e)
+{
+    e->prev_x = e->x;
+    e->prev_y = e->y;
+    e->vis_x = e->x * BLOCK_SIZE;
+    e->vis_y = e->y * BLOCK_SIZE;
+    e->prev_vis_x = e->vis_x;
+    e->prev_vis_y = e->vis_y;
 }
 
 static void respawnEntities(int two_players_mode)
@@ -371,51 +351,23 @@ static void respawnEntities(int two_players_mode)
     pacman.x = 13;
     pacman.y = 23;
     pacman.current_dir = NONE;
-    pacman.color = COLOR_PACMAN;
-
-    ghosts[0].x = 13;
-    ghosts[0].y = 11;
-    ghosts[0].color = COLOR_BLINKY;
-    ghosts[0].in_house = 0;
-    ghosts[1].x = 11;
-    ghosts[1].y = 14;
-    ghosts[1].color = COLOR_PINKY;
-    ghosts[1].in_house = 1;
-    ghosts[2].x = 13;
-    ghosts[2].y = 14;
-    ghosts[2].color = COLOR_INKY;
-    ghosts[2].in_house = 1;
-    ghosts[3].x = 15;
-    ghosts[3].y = 14;
-    ghosts[3].color = COLOR_CLYDE;
-    ghosts[3].in_house = 1;
-
-    for (int i = 0; i < 4; i++)
-    {
-        ghosts[i].current_dir = NONE;
-        ghosts[i].is_player_2 = (i == 0) ? two_players_mode : 0;
-        ghosts[i].prev_x = ghosts[i].x;
-        ghosts[i].prev_y = ghosts[i].y;
-        ghosts[i].frightened = 0;
-        ghosts[i].frighten_timer = 0;
-        ghosts[i].returning = 0;
-    }
-
-    pacman.prev_x = pacman.x;
-    pacman.prev_y = pacman.y;
-    pacman.vis_x = pacman.x * BLOCK_SIZE;
-    pacman.vis_y = pacman.y * BLOCK_SIZE;
-    pacman.prev_vis_x = pacman.vis_x;
-    pacman.prev_vis_y = pacman.vis_y;
     pacman.next_dir = NONE;
+    pacman.color = COLOR_PACMAN;
+    initEntityVis(&pacman);
 
     for (int i = 0; i < NUM_GHOSTS; i++)
     {
-        ghosts[i].vis_x = ghosts[i].x * BLOCK_SIZE;
-        ghosts[i].vis_y = ghosts[i].y * BLOCK_SIZE;
-        ghosts[i].prev_vis_x = ghosts[i].vis_x;
-        ghosts[i].prev_vis_y = ghosts[i].vis_y;
+        ghosts[i].x = GHOST_START_X[i];
+        ghosts[i].y = GHOST_START_Y[i];
+        ghosts[i].color = GHOST_COLORS[i];
+        ghosts[i].in_house = GHOST_START_IN_HOUSE[i];
+        ghosts[i].current_dir = NONE;
         ghosts[i].next_dir = NONE;
+        ghosts[i].is_player_2 = (i == 0) ? two_players_mode : 0;
+        ghosts[i].frightened = 0;
+        ghosts[i].frighten_timer = 0;
+        ghosts[i].returning = 0;
+        initEntityVis(&ghosts[i]);
     }
 }
 
@@ -445,9 +397,7 @@ void initGame(int two_players_mode)
 void moveEntity(Entity *e)
 {
     if (e->current_dir == NONE)
-    {
         return;
-    }
 
     e->prev_x = e->x;
     e->prev_y = e->y;
@@ -456,38 +406,20 @@ void moveEntity(Entity *e)
 
     switch (e->current_dir)
     {
-    case UP:
-        ny--;
-        break;
-
-    case DOWN:
-        ny++;
-        break;
-
-    case LEFT:
-        nx--;
-        break;
-    case RIGHT:
-        nx++;
-        break;
-
-    default:
-        break;
+    case UP:    ny--; break;
+    case DOWN:  ny++; break;
+    case LEFT:  nx--; break;
+    case RIGHT: nx++; break;
+    default:          break;
     }
 
     if (nx < 0)
-    {
         nx = MAP_WIDTH - 1;
-    }
     else if (nx >= MAP_WIDTH)
-    {
         nx = 0;
-    }
 
     if (map[ny][nx] == 1)
-    {
         return;
-    }
 
     e->x = nx;
     e->y = ny;
@@ -510,10 +442,42 @@ void moveEntity(Entity *e)
                 ghosts[i].frightened = 1;
                 ghosts[i].frighten_timer = FRIGHTEN_DURATION;
             }
-
             playBackgroundMelody(frightenedLoopFrequencies, frightenedLoopDurations, FRIGHTENED_NOTE_COUNT);
         }
     }
+}
+
+// Elige la direccion optima hacia (tx, ty). Si gate_passable=0, trata la puerta
+// de la ghost house como pared. Retorna opp como fallback si no hay opcion mejor.
+static Direction chooseDir(Entity *ghost, int tx, int ty, int gate_passable)
+{
+    static const int dx[4] = {0, 0, -1, 1};
+    static const int dy[4] = {-1, 1, 0, 0};
+    static const Direction dirs[4] = {UP, DOWN, LEFT, RIGHT};
+
+    Direction opp = oppositeDir(ghost->current_dir);
+    Direction best = NONE;
+    int best_dist = 99999;
+
+    for (int i = 0; i < 4; i++)
+    {
+        if (dirs[i] == opp && ghost->current_dir != NONE) continue;
+        int nx = ghost->x + dx[i];
+        int ny = ghost->y + dy[i];
+        if (nx < 0) nx = MAP_WIDTH - 1;
+        else if (nx >= MAP_WIDTH) nx = 0;
+        if (ny < 0 || ny >= MAP_HEIGHT) continue;
+        if (map[ny][nx] == 1) continue;
+        if (!gate_passable && pacman_tilemap[ny + TILEMAP_ROW_OFFSET][nx] == TILE_GHOST_GATE) continue;
+        int dist = absi(nx - tx) + absi(ny - ty);
+        if (dist < best_dist || (dist == best_dist && dirs[i] == ghost->current_dir))
+        {
+            best_dist = dist;
+            best = dirs[i];
+        }
+    }
+    if (best == NONE) best = opp;
+    return best;
 }
 
 void moveGhostAI(Entity *ghost, int ghost_id)
@@ -524,34 +488,12 @@ void moveGhostAI(Entity *ghost, int ghost_id)
 
     if (ghost->returning)
     {
-        int tx = 13, ty = 14;
-        Direction opp = oppositeDir(ghost->current_dir);
-        Direction best = NONE;
-        int best_dist = 99999;
-
-        for (int i = 0; i < 4; i++)
-        {
-            if (dirs[i] == opp && ghost->current_dir != NONE) continue;
-            int nx = ghost->x + dx[i];
-            int ny = ghost->y + dy[i];
-            if (nx < 0) nx = MAP_WIDTH - 1;
-            else if (nx >= MAP_WIDTH) nx = 0;
-            if (ny < 0 || ny >= MAP_HEIGHT) continue;
-            if (map[ny][nx] == 1) continue;
-            int dist = absi(nx - tx) + absi(ny - ty);
-            if (dist < best_dist || (dist == best_dist && dirs[i] == ghost->current_dir))
-            {
-                best_dist = dist;
-                best = dirs[i];
-            }
-        }
-        if (best == NONE) best = opp;
+        Direction best = chooseDir(ghost, 13, 14, 1);
         if (best != NONE)
         {
             ghost->current_dir = best;
             moveEntity(ghost);
         }
-
         if (absi(ghost->x - 13) + absi(ghost->y - 14) <= 1)
         {
             ghost->returning = 0;
@@ -564,9 +506,7 @@ void moveGhostAI(Entity *ghost, int ghost_id)
     }
 
     if (game_tick < GHOST_RELEASE[ghost_id])
-    {
         return;
-    }
 
     if (ghost->frightened && !ghost->in_house)
     {
@@ -575,8 +515,7 @@ void moveGhostAI(Entity *ghost, int ghost_id)
         int count = 0;
         for (int i = 0; i < 4; i++)
         {
-            if (dirs[i] == opp && ghost->current_dir != NONE)
-                continue;
+            if (dirs[i] == opp && ghost->current_dir != NONE) continue;
             int nx = ghost->x + dx[i];
             int ny = ghost->y + dy[i];
             if (nx < 0) nx = MAP_WIDTH - 1;
@@ -586,163 +525,48 @@ void moveGhostAI(Entity *ghost, int ghost_id)
             if (pacman_tilemap[ny + TILEMAP_ROW_OFFSET][nx] == TILE_GHOST_GATE) continue;
             valid[count++] = dirs[i];
         }
-        if (count > 0)
-            ghost->current_dir = valid[(ghost->x * 7 + ghost->y * 13 + game_tick) % count]; // pseudo-random
-        else
-            ghost->current_dir = opp;
+        ghost->current_dir = count > 0
+            ? valid[(ghost->x * 7 + ghost->y * 13 + game_tick) % count]
+            : opp;
         moveEntity(ghost);
         return;
     }
 
-    int tx, ty;
+    int tx = pacman.x, ty = pacman.y;
 
     if (ghost->in_house)
     {
         tx = 13;
         ty = 11;
         if (ghost->y <= 11)
-        {
             ghost->in_house = 0;
-        }
     }
-    else
+    else if (ghost_id == 1)
     {
-        tx = pacman.x;
-        ty = pacman.y;
-
-        if (ghost_id == 1)
+        switch (pacman.current_dir)
         {
-            switch (pacman.current_dir)
-            {
-            case UP:
-                ty -= 4;
-                break;
-            case DOWN:
-                ty += 4;
-                break;
-            case LEFT:
-                tx -= 4;
-                break;
-            case RIGHT:
-                tx += 4;
-                break;
-            default:
-                break;
-            }
-        }
-        else if (ghost_id == 2) 
-        {
-            int mid_x = pacman.x + (pacman.current_dir == RIGHT ? 2 : pacman.current_dir == LEFT ? -2
-                                                                                                 : 0);
-            int mid_y = pacman.y + (pacman.current_dir == DOWN ? 2 : pacman.current_dir == UP ? -2
-                                                                                              : 0);
-            tx = 2 * mid_x - ghosts[0].x;
-            ty = 2 * mid_y - ghosts[0].y;
-        }
-        else if (ghost_id == 3) 
-        {
-            if (absi(ghost->x - pacman.x) + absi(ghost->y - pacman.y) < 8)
-            {
-                tx = 0;
-                ty = MAP_HEIGHT - 1;
-            }
+        case UP:    ty -= 4; break;
+        case DOWN:  ty += 4; break;
+        case LEFT:  tx -= 4; break;
+        case RIGHT: tx += 4; break;
+        default:             break;
         }
     }
-
-    Direction opp = oppositeDir(ghost->current_dir);
-    Direction best = NONE;
-    int best_dist = 99999;
-
-    for (int i = 0; i < 4; i++)
+    else if (ghost_id == 2)
     {
-        if (dirs[i] == opp && ghost->current_dir != NONE)
-        {
-            continue;
-        }
-
-        int nx = ghost->x + dx[i];
-        int ny = ghost->y + dy[i];
-
-        if (nx < 0)
-        {
-            nx = MAP_WIDTH - 1;
-        }
-        else if (nx >= MAP_WIDTH)
-        {
-            nx = 0;
-        }
-
-        if (ny < 0 || ny >= MAP_HEIGHT)
-        {
-            continue;
-        }
-
-        int is_wall = (map[ny][nx] == 1);
-
-        if (pacman_tilemap[ny + TILEMAP_ROW_OFFSET][nx] == TILE_GHOST_GATE)
-        {
-            if (ghost->in_house)
-            {
-                is_wall = 0;
-            }
-            else
-            {
-                is_wall = 1; // para que el rojo no entre al rectángulo
-            }
-        }
-
-        if (is_wall)
-        {
-            continue;
-        }
-
-        int dist = absi(nx - tx) + absi(ny - ty);
-
-        if (dist < best_dist || (dist == best_dist && dirs[i] == ghost->current_dir))
-        {
-            best_dist = dist;
-            best = dirs[i];
-        }
+        int mid_x = pacman.x + (pacman.current_dir == RIGHT ? 2 : pacman.current_dir == LEFT ? -2 : 0);
+        int mid_y = pacman.y + (pacman.current_dir == DOWN  ? 2 : pacman.current_dir == UP   ? -2 : 0);
+        tx = 2 * mid_x - ghosts[0].x;
+        ty = 2 * mid_y - ghosts[0].y;
     }
-
-    if (best == NONE)
+    else if (ghost_id == 3 && absi(ghost->x - pacman.x) + absi(ghost->y - pacman.y) < 8)
     {
-        for (int i = 0; i < 4; i++)
-        {
-            if (dirs[i] == opp && ghost->current_dir != NONE)
-            {
-                continue;
-            }
-
-            int nx = ghost->x + dx[i];
-            int ny = ghost->y + dy[i];
-
-            if (nx < 0)
-                nx = MAP_WIDTH - 1;
-            else if (nx >= MAP_WIDTH)
-                nx = 0;
-
-            if (ny < 0 || ny >= MAP_HEIGHT)
-                continue;
-
-            if (map[ny][nx] != 1)
-            {
-                best = dirs[i];
-                break;
-            }
-        }
-
-        if (best == NONE)
-        {
-            best = opp;
-        }
+        tx = 0;
+        ty = MAP_HEIGHT - 1;
     }
 
-    if (best != NONE)
-    {
-        ghost->current_dir = best;
-        moveEntity(ghost);
-    }
+    ghost->current_dir = chooseDir(ghost, tx, ty, ghost->in_house);
+    moveEntity(ghost);
 }
 
 static void redrawTile(int x, int y)
@@ -769,7 +593,6 @@ void handleCollision(void)
     playBackgroundMelody(deathFrequencies, deathDurations, DEATH_NOTE_COUNT);
     lives--;
 
-    // Limpiar todos los sprites antes del flash de muerte.
     // La colisión se detecta en espacio lógico pero los fantasmas pueden estar
     // en posiciones vis distintas, dejando artifacts superpuestos con pacman.
     drawMap();
@@ -1020,6 +843,13 @@ void gameLoop(void)
     }
 }
 
+static void resetUI(void)
+{
+    clearScreen();
+    setTextSize(10);
+    setTextColor(0xFFFFFF, 0x000000);
+}
+
 void startPacman(void)
 {
     while (1)
@@ -1029,46 +859,33 @@ void startPacman(void)
 
         while (currentState == MENU)
         {
-
             char key = getCharNoWait();
             if (key == '1')
-            {
                 currentState = PLAYING_1P;
-            }
             else if (key == '2')
-            {
                 currentState = PLAYING_2P;
-            }
             else if (key == 'q' || key == 'Q')
             {
-                clearScreen();
-                setTextSize(10);
-                setTextColor(0xFFFFFF, 0x000000);
+                resetUI();
                 return;
             }
         }
 
-        clearScreen();
-        setTextSize(10);
-        setTextColor(0xFFFFFF, 0x000000);
-
+        resetUI();
         initGame(currentState == PLAYING_2P);
-
         gameLoop();
 
         drawRectangle(0, 0, X_RESOLUTION - 1, Y_RESOLUTION - 1, 0x000000);
         clearScreen();
         setTextSize(28);
 
-        if(currentState == WIN) 
+        if (currentState == WIN)
             drawWinScreen(score);
-        else                    
+        else
             drawGameOverScreen(score);
 
         sleep(50);
-        clearScreen();
-        setTextSize(10);
-        setTextColor(0xFFFFFF, 0x000000);
+        resetUI();
 
         return;
     }
