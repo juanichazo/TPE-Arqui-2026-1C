@@ -656,8 +656,6 @@ void handleCollision(void)
     playBackgroundMelody(deathFrequencies, deathDurations, DEATH_NOTE_COUNT);
     lives--;
 
-    // La colisión se detecta en espacio lógico pero los fantasmas pueden estar
-    // en posiciones vis distintas, dejando artifacts superpuestos con pacman.
     drawMap();
     for (int i = 0; i < NUM_GHOSTS; i++)
         drawEntity(&ghosts[i]);
@@ -706,6 +704,7 @@ static void renderFrame()
 
     markVisDirty(pacman.prev_vis_x, pacman.prev_vis_y);
     markVisDirty(pacman.vis_x, pacman.vis_y);
+
     for (int i = 0; i < NUM_GHOSTS; i++)
     {
         markVisDirty(ghosts[i].prev_vis_x, ghosts[i].prev_vis_y);
@@ -743,8 +742,6 @@ static void advanceVis(Entity *e)
     int tx = e->x * BLOCK_SIZE;
     int ty = e->y * BLOCK_SIZE;
 
-    // Túnel: si la distancia es mayor que media pantalla, snap instantáneo.
-    // Animar el cruce causaría que vis_x salga del mapa, generando artifacts.
     int half_w = (MAP_WIDTH * BLOCK_SIZE) / 2;
     if (tx - e->vis_x > half_w || e->vis_x - tx > half_w)
         e->vis_x = tx;
@@ -787,10 +784,12 @@ static int dirPassable(int x, int y, Direction d)
     static const int ddy[4] = {-1, 1, 0, 0};
     int nx = x + ddx[d];
     int ny = y + ddy[d];
+
     if (nx < 0)
         nx = MAP_WIDTH - 1;
     else if (nx >= MAP_WIDTH)
         nx = 0;
+        
     if (ny < 0 || ny >= MAP_HEIGHT)
         return 0;
     return map[ny][nx] != 1;
