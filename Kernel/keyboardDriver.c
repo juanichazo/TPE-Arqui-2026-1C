@@ -39,20 +39,19 @@ uint64_t keyboard_buffer_available(void) {
 void keyboard_push(char c) {
     uint64_t next = keyboard_next(keyboardWriteIndex);
     if (next == keyboardReadIndex) {
-        return; // buffer full, drop char
+        return; 
     }
     keyboardBuffer[keyboardWriteIndex] = c;
     keyboardWriteIndex = next;
 }
 
 
-// copies keyboard buffer, returns 0 if buffer is empty
 uint64_t keyboard_read(char *buffer, uint64_t maxLen) {
     uint64_t count = 0;
 
     while (count < maxLen) {
         if (keyboard_buffer_available() == 0) {
-            return 0; // Busy-wait until a key arrives. IRQ1 will keep filling the buffer.
+            return 0; 
         }
 
         char c = keyboardBuffer[keyboardReadIndex];

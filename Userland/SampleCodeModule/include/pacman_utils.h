@@ -34,7 +34,6 @@
 #define TILE_SIZE 20
 #define NUM_TILES 13
 
-// Tile Types Identifier
 typedef enum {
     TILE_EMPTY        = 0,
     TILE_PELLET       = 1,
