@@ -1,5 +1,5 @@
 #include <kernelCracker.h>
-
+#include <libc.h>
 
 uint64_t hash(char *str){
     uint64_t hash = 0x1234;

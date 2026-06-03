@@ -2,7 +2,7 @@ GLOBAL reset_tsc
 GLOBAL hash_asm
 GLOBAL get_next
 
-reset_tsc: ; TODO esta función habría que moverla a otro lado probablemente
+reset_tsc:
     xor rax, rax
     xor rdx, rdx
     rdtsc

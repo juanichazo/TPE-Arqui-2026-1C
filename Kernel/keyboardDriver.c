@@ -73,6 +73,7 @@ void saveKeyToBuffer(){
         char c = scancodeToAscii[scancode];
         if (c == '\t') {
             savedRegs();
+            return;
         }
         if (c != 0) {
             keyboard_push(c);
