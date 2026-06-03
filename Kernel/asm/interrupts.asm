@@ -218,7 +218,7 @@ _irq05Handler:
 _syscall80Handler:
 	syscallHandler
 
-_exception00Handler: ; estos dos pueden hacerse con una macro
+_exception00Handler: 
 	snapshot_regs
     mov rax, 0              ; id de la excepción (0 = División por cero) 
     jmp exceptionMasterHandler
