@@ -72,7 +72,7 @@ void drawRect(uint64_t x1, uint64_t y1, uint64_t x2, uint64_t y2, uint64_t color
 	if (y2 >= VBE_mode_info->height)
 		y2 = VBE_mode_info->height - 1;
 
-	uint64_t width = (x2 - x1 + 1) * 3;
+	uint64_t width = (x2 - x1 + 1) * bytesPerPixel;
 	uint8_t blue = color & 0xFF;
 	uint8_t green = (color >> 8) & 0xFF;
 	uint8_t red = (color >> 16) & 0xFF;
