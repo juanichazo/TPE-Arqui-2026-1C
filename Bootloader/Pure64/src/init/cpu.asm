@@ -25,10 +25,10 @@ init_cpu:
 	mov cr3, rax
 
 ; Disable MTRRs and Configure default memory type to UC
-	mov ecx, 0x000002FF
-	rdmsr
+	;mov ecx, 0x000002FF
+	;rdmsr
 	and eax, 0xFFFFF300		; Clear MTRR Enable (Bit 11), Fixed Range MTRR Enable (Bit 10), and Default Memory Type (Bits 7:0) to UC (0x00)
-	wrmsr
+	;wrmsr
 
 ; Setup variable-size address ranges
 ; Cache 0-64 MiB as type 6 (WB) cache
